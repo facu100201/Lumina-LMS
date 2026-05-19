@@ -65,10 +65,10 @@ app.use(cors({
   credentials: true
 }));
 
-// Auth routes: stricter rate limit (20 attempts / 15 min)
+// Auth routes: stricter rate limit (20 attempts / 15 min; relaxed in test env)
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 20,
+  max: process.env.NODE_ENV === 'test' ? 1000 : 20,
   message: { error: 'Demasiados intentos. Intenta en 15 minutos.' }
 });
 

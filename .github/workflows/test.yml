@@ -31,6 +31,8 @@ jobs:
 
       - name: Run Playwright tests
         run: npx playwright test
+        env:
+          NODE_ENV: test
 
       - name: Upload test report
         if: always()
