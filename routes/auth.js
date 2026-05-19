@@ -1,36 +1,9 @@
 const express = require('express');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const router = express.Router();
+const bcrypt  = require('bcryptjs');
+const jwt     = require('jsonwebtoken');
+const router  = express.Router();
+const { getDb } = require('../db/database');
 
-// Local demo users — credentials match js/auth0-config.js TEST_CREDENTIALS
-// Passwords are bcrypt hashes of 'Temporal#123' (cost factor 10)
-const USERS = [
-  {
-    id: 1,
-    email: 'admin@gmail.com',
-    // hash of 'Temporal#123'
-    passwordHash: '$2a$10$mESZShS9uxQihJ/ecbRZ.uQGrLpjBEXPgzbU5KOzRA8hC4biLaX12',
-    name: 'Administrador',
-    role: 'admin'
-  },
-  {
-    id: 2,
-    email: 'profesor@gmail.com',
-    passwordHash: '$2a$10$SGAqYWFprqK2YDW2584n/ebgNKVNDKDmaGr77MlHHvYcPyobZKCeu',
-    name: 'Dr. Ana García',
-    role: 'teacher'
-  },
-  {
-    id: 3,
-    email: 'estudiante@gmail.com',
-    passwordHash: '$2a$10$KeSB2n/Op1AV5z0jfERykO5.6z5HFBZj8y45g0vZPNPtWiPlO9Rpq',
-    name: 'Juan Pérez',
-    role: 'student'
-  }
-];
-
-// Strong deterministic secret for local demo (no external env var needed)
 const JWT_SECRET = process.env.JWT_SECRET || 'lumina-jwt-local-dev-secret-2024-z3m8n';
 
 function buildPublicUser(user) {
@@ -46,32 +19,35 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ error: 'Email y contraseña son requeridos' });
     }
 
-    const user = USERS.find(u => u.email === email.toLowerCase().trim());
+    const db   = getDb();
+    const user = db.prepare('SELECT * FROM users WHERE email = ? AND status = ?')
+                   .get(email.toLowerCase().trim(), 'active');
+
     if (!user) {
       return res.status(401).json({ error: 'Credenciales inválidas' });
     }
 
-    const valid = await bcrypt.compare(password, user.passwordHash);
+    const valid = await bcrypt.compare(password, user.password_hash);
     if (!valid) {
       return res.status(401).json({ error: 'Credenciales inválidas' });
     }
 
     const publicUser = buildPublicUser(user);
-
-    // Create server-side session
     req.session.user = publicUser;
 
-    // Issue JWT (used by frontend localStorage flow)
     const token = jwt.sign(
       { userId: user.id, email: user.email, role: user.role },
       JWT_SECRET,
       { expiresIn: '24h' }
     );
 
+    db.prepare('INSERT INTO activity_log (user_id, action, detail) VALUES (?, ?, ?)')
+      .run(user.id, 'login', `Login desde ${req.ip}`);
+
     res.json({ success: true, user: publicUser, token });
 
-  } catch (error) {
-    console.error('Login error:', error);
+  } catch (err) {
+    console.error('Login error:', err);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 });
@@ -81,11 +57,11 @@ router.post('/logout', (req, res) => {
   req.session.destroy(err => {
     if (err) return res.status(500).json({ error: 'Error al cerrar sesión' });
     res.clearCookie('connect.sid');
-    res.json({ success: true, message: 'Sesión cerrada' });
+    res.json({ success: true });
   });
 });
 
-// GET /auth/check — used by app.js on every page load
+// GET /auth/check
 router.get('/check', (req, res) => {
   if (req.session.user) {
     res.json({ authenticated: true, user: req.session.user });

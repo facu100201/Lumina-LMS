@@ -212,3 +212,8 @@ performance.log
 # Testing artifacts
 test-results/
 playwright-report/
+
+# SQLite database (auto-generated on first run)
+db/lumina.db
+db/lumina.db-shm
+db/lumina.db-wal
