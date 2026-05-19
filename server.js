@@ -10,6 +10,7 @@ const authRoutes = require('./routes/auth');
 const apiRoutes  = require('./routes/api');
 const chatbotRoutes = require('./routes/chatbot');
 const { router: metricsRouter, trackRequest } = require('./routes/metrics');
+const { closeDb } = require('./db/database');
 
 const app = express();
 const PORT = process.env.PORT || 5501;
@@ -145,6 +146,22 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Error interno del servidor' });
 });
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Lumina LMS corriendo en http://localhost:${PORT}`);
 });
+
+function gracefulShutdown(signal) {
+  console.log(`\n[server] ${signal} — cerrando gracefully…`);
+  server.close(() => {
+    closeDb();
+    console.log('[server] Servidor HTTP cerrado.');
+    process.exit(0);
+  });
+  setTimeout(() => {
+    console.error('[server] Forzando cierre tras timeout.');
+    process.exit(1);
+  }, 5000).unref();
+}
+
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+process.on('SIGINT',  () => gracefulShutdown('SIGINT'));

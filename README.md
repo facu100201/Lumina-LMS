@@ -1,5 +1,10 @@
 # Lumina LMS
 
+[![CI](https://github.com/facu100201/Lumina-LMS/actions/workflows/test.yml/badge.svg)](https://github.com/facu100201/Lumina-LMS/actions/workflows/test.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Node.js](https://img.shields.io/badge/node-%3E%3D18-brightgreen)](https://nodejs.org)
+[![Live Demo](https://img.shields.io/badge/demo-github--pages-blue)](https://facu100201.github.io/Lumina-LMS/html/login.html)
+
 A full-stack Learning Management System (LMS) built from scratch with Node.js, Express, and Vanilla JS. Features role-based access control (admin / teacher / student), a dark design system inspired by Emil Kowalski's aesthetic, and a complete admin dashboard — all running locally with zero external service dependencies.
 
 ---

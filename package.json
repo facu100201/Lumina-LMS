@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Sistema LMS universitario con Node.js, Express y tecnologías web modernas",
   "main": "server.js",
-  "homepage": "https://[tu-usuario].github.io/[nombre-del-repositorio]",
+  "homepage": "https://facu100201.github.io/Lumina-LMS",
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
@@ -12,10 +12,9 @@
     "start-all": "concurrently \"npm run start\" \"npm run chatbot\"",
     "dev-all": "concurrently \"npm run dev\" \"npm run dev-chatbot\"",
     "build": "echo 'Build completed'",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d .",
     "test": "playwright test",
-    "test:report": "playwright show-report tests/playwright-report"
+    "test:report": "playwright show-report tests/playwright-report",
+    "seed:reset": "node scripts/seed-reset.js"
   },
   "keywords": [
     "lms",
@@ -27,14 +26,14 @@
     "chatbot",
     "learning-management-system"
   ],
-  "author": "Lumina Learning Team",
+  "author": "Fernando Acuña <fernando.acuna.ma@usb.edu.mx>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/[tu-usuario]/[nombre-del-repositorio].git"
+    "url": "git+https://github.com/facu100201/Lumina-LMS.git"
   },
   "bugs": {
-    "url": "https://github.com/[tu-usuario]/[nombre-del-repositorio]/issues"
+    "url": "https://github.com/facu100201/Lumina-LMS/issues"
   },
   "dependencies": {
     "axios": "^1.11.0",
@@ -55,6 +54,6 @@
     "nodemon": "^3.0.1"
   },
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=18.0.0"
   }
 }

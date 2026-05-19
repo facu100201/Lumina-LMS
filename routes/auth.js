@@ -6,6 +6,8 @@ const { getDb } = require('../db/database');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'lumina-jwt-local-dev-secret-2024-z3m8n';
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 function buildPublicUser(user) {
   return { id: user.id, email: user.email, name: user.name, role: user.role };
 }
@@ -17,6 +19,12 @@ router.post('/login', async (req, res) => {
 
     if (!email || !password) {
       return res.status(400).json({ error: 'Email y contraseña son requeridos' });
+    }
+    if (!EMAIL_RE.test(email)) {
+      return res.status(400).json({ error: 'Formato de email inválido' });
+    }
+    if (typeof password !== 'string' || password.length < 8) {
+      return res.status(400).json({ error: 'La contraseña debe tener al menos 8 caracteres' });
     }
 
     const db   = getDb();

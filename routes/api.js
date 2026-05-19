@@ -2,6 +2,10 @@ const express = require('express');
 const router  = express.Router();
 const { getDb } = require('../db/database');
 
+const EMAIL_RE      = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const VALID_ROLES   = ['admin', 'teacher', 'student'];
+const VALID_STATUS  = ['active', 'inactive'];
+
 // ── Auth middleware ──────────────────────────────────────────────
 const requireAuth = (req, res, next) => {
   if (req.session.user) return next();
@@ -146,6 +150,10 @@ router.get('/users', requireRole('admin'), (req, res) => {
 router.post('/users', requireRole('admin'), async (req, res) => {
   const { name, email, password, role = 'student' } = req.body;
   if (!name || !email || !password) return res.status(400).json({ error: 'name, email y password son requeridos' });
+  if (typeof name !== 'string' || name.trim().length < 2) return res.status(400).json({ error: 'El nombre debe tener al menos 2 caracteres' });
+  if (!EMAIL_RE.test(email)) return res.status(400).json({ error: 'Formato de email inválido' });
+  if (typeof password !== 'string' || password.length < 8) return res.status(400).json({ error: 'La contraseña debe tener al menos 8 caracteres' });
+  if (!VALID_ROLES.includes(role)) return res.status(400).json({ error: `Rol inválido. Valores permitidos: ${VALID_ROLES.join(', ')}` });
 
   const db   = getDb();
   const hash = await require('bcryptjs').hash(password, 10);
@@ -160,8 +168,9 @@ router.post('/users', requireRole('admin'), async (req, res) => {
 router.patch('/users/:id', requireRole('admin'), (req, res) => {
   const db = getDb();
   const { name, role, status } = req.body;
-  const allowed = ['admin', 'teacher', 'student'];
-  if (role && !allowed.includes(role)) return res.status(400).json({ error: 'Rol inválido' });
+  if (role   && !VALID_ROLES.includes(role))     return res.status(400).json({ error: `Rol inválido. Valores permitidos: ${VALID_ROLES.join(', ')}` });
+  if (status && !VALID_STATUS.includes(status))  return res.status(400).json({ error: `Estado inválido. Valores permitidos: ${VALID_STATUS.join(', ')}` });
+  if (name   && (typeof name !== 'string' || name.trim().length < 2)) return res.status(400).json({ error: 'El nombre debe tener al menos 2 caracteres' });
 
   const user = db.prepare('SELECT id FROM users WHERE id = ?').get(req.params.id);
   if (!user) return res.status(404).json({ error: 'Usuario no encontrado' });

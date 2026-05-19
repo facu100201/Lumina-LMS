@@ -150,4 +150,11 @@ function seed(db) {
   console.log('[DB] Base de datos inicializada con datos demo.');
 }
 
-module.exports = { getDb };
+function closeDb() {
+  if (_db) {
+    _db.close();
+    _db = null;
+  }
+}
+
+module.exports = { getDb, closeDb };
