@@ -6,6 +6,7 @@
   <title>Administración — Lumina LMS</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+  <link href="../styles/a11y.css" rel="stylesheet">
   <script src="https://cdn.auth0.com/js/auth0-spa-js/2.1/auth0-spa-js.production.js"></script>
   <script src="../js/auth0-config.js"></script>
   <script src="../js/auth-guard.js"></script>
@@ -401,9 +402,10 @@
   </style>
 </head>
 <body>
+  <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
 
   <!-- Sidebar -->
-  <aside class="sidebar">
+  <aside class="sidebar" aria-label="Navegación principal">
     <div class="sidebar-logo">
       <div class="logo-mark"><i class="fas fa-shield-alt" style="font-size:13px"></i></div>
       <div>
@@ -471,7 +473,7 @@
   </header>
 
   <!-- Main -->
-  <main class="main">
+  <main class="main" id="main-content">
 
     <div class="page-header">
       <div class="page-title">Panel de Administración</div>

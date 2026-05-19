@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+  <link href="../styles/a11y.css" rel="stylesheet">
 
   <script src="https://cdn.auth0.com/js/auth0-spa-js/2.1/auth0-spa-js.production.js"></script>
   <script src="../js/auth0-config.js"></script>
@@ -566,6 +567,7 @@
   </style>
 </head>
 <body>
+  <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
 
   <!-- ── SIDEBAR ──────────────────────────────────────────── -->
   <aside class="sidebar">
@@ -613,7 +615,7 @@
   </aside>
 
   <!-- ── MAIN ─────────────────────────────────────────────── -->
-  <div class="main">
+  <div class="main" id="main-content" role="main">
 
     <!-- Topbar -->
     <div class="topbar">

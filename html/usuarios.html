@@ -6,6 +6,7 @@
   <title>Usuarios — Lumina LMS</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+  <link href="../styles/a11y.css" rel="stylesheet">
   <script src="https://cdn.auth0.com/js/auth0-spa-js/2.1/auth0-spa-js.production.js"></script>
   <script src="../js/auth0-config.js"></script>
   <script src="../js/auth-guard.js"></script>
@@ -500,6 +501,7 @@
   </style>
 </head>
 <body>
+  <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
 
   <!-- Sidebar -->
   <aside class="sidebar">
@@ -571,7 +573,7 @@
   </header>
 
   <!-- Main -->
-  <main class="main">
+  <main class="main" id="main-content">
 
     <div class="page-header">
       <div class="page-header-left">
@@ -814,11 +816,11 @@
           <td>${statusPill(u.status)}</td>
           <td>
             <div class="action-btns">
-              <button class="action-btn edit" title="Editar" onclick="openEditModal(${u.id})"><i class="fas fa-pen"></i></button>
-              <button class="action-btn" title="${u.status === 'active' ? 'Desactivar' : 'Activar'}" onclick="toggleStatus(${u.id})">
-                <i class="fas fa-${u.status === 'active' ? 'ban' : 'check'}"></i>
+              <button class="action-btn edit" title="Editar" aria-label="Editar usuario ${u.name}" onclick="openEditModal(${u.id})"><i class="fas fa-pen" aria-hidden="true"></i></button>
+              <button class="action-btn" title="${u.status === 'active' ? 'Desactivar' : 'Activar'}" aria-label="${u.status === 'active' ? 'Desactivar' : 'Activar'} usuario ${u.name}" onclick="toggleStatus(${u.id})">
+                <i class="fas fa-${u.status === 'active' ? 'ban' : 'check'}" aria-hidden="true"></i>
               </button>
-              <button class="action-btn del" title="Eliminar" onclick="deleteUser(${u.id})"><i class="fas fa-trash"></i></button>
+              <button class="action-btn del" title="Eliminar" aria-label="Eliminar usuario ${u.name}" onclick="deleteUser(${u.id})"><i class="fas fa-trash" aria-hidden="true"></i></button>
             </div>
           </td>
         </tr>
