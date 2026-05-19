@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const axios = require('axios');
 
 // Configuración del sitio para el contexto del chatbot
 const SITE_CONTEXT = {
@@ -51,84 +50,7 @@ const SITE_CONTEXT = {
     ]
 };
 
-// Función para generar el prompt contextual
-function generateContextualPrompt(userMessage, currentPage, userRole, chatHistory) {
-    const context = `
-Eres un asistente virtual de ${SITE_CONTEXT.name}, una plataforma educativa digital. Tu función es ayudar a los usuarios con:
-
-1. **Navegación del sitio**: Explicar dónde encontrar páginas y funcionalidades
-2. **Información de cursos**: Detalles sobre cursos disponibles
-3. **Proceso de registro**: Cómo crear cuenta y matricularse
-4. **Funcionalidades**: Explicar características de la plataforma
-5. **Soporte técnico**: Resolver problemas básicos
-
-CONTEXTO ACTUAL:
-- Página actual: ${currentPage}
-- Rol del usuario: ${userRole}
-- Nombre del sitio: ${SITE_CONTEXT.name}
-
-ESTRUCTURA DEL SITIO:
-${Object.entries(SITE_CONTEXT.pages).map(([path, desc]) => `- ${path}: ${desc}`).join('\n')}
-
-NAVEGACIÓN PRINCIPAL:
-${Object.entries(SITE_CONTEXT.navigation).map(([name, path]) => `- ${name}: ${path}`).join('\n')}
-
-ROLES DE USUARIO:
-${Object.entries(SITE_CONTEXT.roles).map(([role, desc]) => `- ${role}: ${desc}`).join('\n')}
-
-CARACTERÍSTICAS PRINCIPALES:
-${SITE_CONTEXT.features.map(feature => `- ${feature}`).join('\n')}
-
-INSTRUCCIONES:
-- Responde de manera amigable y profesional en español
-- Proporciona URLs específicas cuando sea relevante
-- Considera el rol del usuario para dar respuestas apropiadas
-- Si no sabes algo, sugiere contactar al soporte
-- Mantén las respuestas concisas pero informativas
-- Usa markdown para formatear cuando sea útil
-
-HISTORIAL DE CHAT (últimos 5 mensajes):
-${chatHistory.map(msg => `${msg.type}: ${msg.content}`).join('\n')}
-
-PREGUNTA DEL USUARIO: ${userMessage}
-
-Responde de manera útil y contextual:`;
-
-    return context;
-}
-
-// Función para obtener respuesta de ChatGPT
-async function getChatGPTResponse(prompt) {
-    try {
-        const response = await axios.post('https://api.openai.com/v1/chat/completions', {
-            model: 'gpt-3.5-turbo',
-            messages: [
-                {
-                    role: 'system',
-                    content: 'Eres un asistente virtual especializado en ayudar con la navegación y uso de plataformas educativas. Responde siempre en español de manera clara y útil.'
-                },
-                {
-                    role: 'user',
-                    content: prompt
-                }
-            ],
-            max_tokens: 500,
-            temperature: 0.7
-        }, {
-            headers: {
-                'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
-                'Content-Type': 'application/json'
-            }
-        });
-
-        return response.data.choices[0].message.content;
-    } catch (error) {
-        console.error('Error al comunicarse con ChatGPT:', error);
-        throw new Error('No se pudo obtener respuesta del asistente');
-    }
-}
-
-// Sistema inteligente de respuestas predefinidas
+// Sistema inteligente de respuestas predefinidas (sin dependencias externas)
 function getFallbackResponse(userMessage, currentPage, userRole) {
     const message = userMessage.toLowerCase();
     

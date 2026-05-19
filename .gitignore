@@ -208,3 +208,7 @@ performance.log
 *.autosave
 *.backup.*
 *~
+
+# Testing artifacts
+test-results/
+playwright-report/

@@ -1,1501 +1,379 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Configuración - Lumina LMS</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
-    <link href="../styles/main.css" rel="stylesheet">
-    <link href="../styles/settings.css" rel="stylesheet">
-    </head>
-<body class="settings-page">
-    <style>
-        /* Estilos para forzar aplicación */
-        body.settings-page {
-            background-color: #ffffff !important;
-            background-image: none !important;
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-        .settings-white-section {
-            background-color: #ffffff !important;
-            padding: 0 !important;
-            margin: 0 !important;
-        }
-        /* Ajustar el contenido principal para el navbar fijo */
-        .main-content {
-            margin-top: 50px !important;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Configuración — Lumina LMS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+  <script src="https://cdn.auth0.com/js/auth0-spa-js/2.1/auth0-spa-js.production.js"></script>
+  <script src="../js/auth0-config.js"></script>
+  <script src="../js/auth-guard.js"></script>
+  <style>
+    :root {
+      --bg:#09090b; --surface:#111113; --card:#18181b; --card-hover:#1c1c20;
+      --border:rgba(255,255,255,.07); --border-subtle:rgba(255,255,255,.04);
+      --accent:#6366f1; --accent-2:#818cf8;
+      --emerald:#10b981; --amber:#f59e0b; --rose:#f43f5e; --sky:#0ea5e9;
+      --text:#fafafa; --text-2:#a1a1aa; --text-3:#71717a;
+      --sidebar-w:240px; --top-h:56px;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;font-size:14px;-webkit-font-smoothing:antialiased;}
 
-                        /* NAVBAR LIMPIO Y SIMPLE */
-                                        .navbar {
-                            background: #334155 !important;
-                            border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
-                            position: fixed !important;
-                            width: 100% !important;
-                            top: 0 !important;
-                            z-index: 1000 !important;
-                            padding: 0.1rem 0.6rem !important;
-                            transition: all 0.3s ease-in-out !important;
-                            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2) !important;
-                            opacity: 1 !important;
-                        }
+    .sidebar{position:fixed;top:0;left:0;width:var(--sidebar-w);height:100vh;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100;}
+    .sidebar-logo{display:flex;align-items:center;gap:10px;padding:20px 20px 16px;border-bottom:1px solid var(--border);}
+    .logo-mark{width:32px;height:32px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0;}
+    .logo-text{font-size:15px;font-weight:700;letter-spacing:-.3px;}
+    .logo-sub{font-size:11px;color:var(--text-3);}
+    .sidebar-nav{flex:1;padding:12px 0;overflow-y:auto;}
+    .nav-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-3);padding:12px 20px 6px;}
+    .nav-item{display:flex;align-items:center;gap:10px;padding:9px 20px;color:var(--text-2);text-decoration:none;font-size:13.5px;font-weight:500;position:relative;transition:color .15s,background .15s;}
+    .nav-item:hover{color:var(--text);background:rgba(255,255,255,.04);}
+    .nav-item.active{color:var(--text);background:rgba(99,102,241,.12);}
+    .nav-item.active .nv-icon{color:var(--accent);}
+    .nav-item.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:20px;background:var(--accent);border-radius:0 2px 2px 0;}
+    .nv-icon{width:16px;text-align:center;font-size:13px;color:var(--text-3);}
+    .sidebar-footer{padding:16px 20px;border-top:1px solid var(--border);}
+    .user-chip{display:flex;align-items:center;gap:10px;}
+    .u-av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;}
+    .u-name{font-size:13px;font-weight:600;color:var(--text);}
+    .u-role{font-size:11px;color:var(--text-3);}
 
-                        .navbar-brand {
-                            font-size: 0.8rem !important;
-                            color: white !important;
-                        }
+    .topbar{position:fixed;top:0;left:var(--sidebar-w);right:0;height:var(--top-h);background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:90;}
+    .tb-title{font-size:15px;font-weight:600;}
+    .tb-right{display:flex;align-items:center;gap:8px;}
+    .tb-btn{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;font-size:13px;font-weight:500;border:1px solid var(--border);background:transparent;color:var(--text-2);cursor:pointer;text-decoration:none;transition:all .15s;}
+    .tb-btn:hover{color:var(--text);border-color:rgba(255,255,255,.15);background:rgba(255,255,255,.04);}
+    .tb-btn-danger{border-color:rgba(244,63,94,.2);color:var(--rose);}
+    .tb-btn-danger:hover{background:rgba(244,63,94,.08);border-color:rgba(244,63,94,.35);}
 
-                        .navbar .nav-link {
-                            padding: 0.1rem 0.4rem !important;
-                            font-size: 1rem !important;
-                            color: white !important;
-                            border-radius: 4px !important;
-                            margin: 0 0.2rem !important;
-                            transition: all 0.3s ease !important;
-                            font-weight: 500 !important;
-                        }
-        
-        /* SOBRESCRIBIR TODOS LOS HOVERS DEL NAVBAR */
-        .navbar .nav-link:hover,
-        .navbar .nav-link:focus,
-        .navbar .nav-link.active,
-        .navbar .nav-link:hover:active,
-        .navbar .nav-link:focus:active,
-        .navbar .nav-link.active:hover,
-        .navbar .nav-link.active:focus {
-            background-color: rgba(255, 255, 255, 0.2) !important;
-            color: white !important;
-            border-color: transparent !important;
-            box-shadow: none !important;
-            text-decoration: none !important;
-        }
-        
-        /* SOBRESCRIBIR CUALQUIER HOVER DE NAV-LINK EN EL NAVBAR */
-        .navbar .nav-item .nav-link:hover,
-        .navbar .nav-item .nav-link:focus,
-        .navbar .nav-item .nav-link.active {
-            background-color: rgba(255, 255, 255, 0.2) !important;
-            color: white !important;
-            border-color: transparent !important;
-            box-shadow: none !important;
-        }
-        
-        /* SOBRESCRIBIR TODOS LOS ELEMENTOS DEL NAVBAR */
-        .navbar *:hover {
-            background-color: transparent !important;
-        }
-        
-        /* ESPECÍFICAMENTE PARA NAV-LINK */
-        .navbar .nav-link:hover {
-            background-color: rgba(255, 255, 255, 0.2) !important;
-            color: white !important;
-        }
-        
-        /* SOBRESCRIBIR LA REGLA ESPECÍFICA DE MAIN.CSS */
-        .navbar .nav-link:hover,
-        .navbar .nav-link.active {
-            background-color: rgba(255, 255, 255, 0.2) !important;
-            color: white !important;
-        }
-        
-        /* REGLA UNIVERSAL PARA CUALQUIER HOVER EN EL NAVBAR */
-        .navbar .nav-link:hover,
-        .navbar .nav-link:focus,
-        .navbar .nav-link.active,
-        .navbar .nav-link:hover:active,
-        .navbar .nav-link:focus:active,
-        .navbar .nav-link.active:hover,
-        .navbar .nav-link.active:focus,
-        .navbar .nav-item .nav-link:hover,
-        .navbar .nav-item .nav-link:focus,
-        .navbar .nav-item .nav-link.active {
-            background-color: rgba(255, 255, 255, 0.2) !important;
-            color: white !important;
-            border: none !important;
-            border-color: transparent !important;
-            outline: none !important;
-            box-shadow: none !important;
-            text-decoration: none !important;
-        }
-        
-        .navbar .dropdown-toggle:hover,
-        .navbar .dropdown-toggle:focus {
-            background-color: rgba(255, 255, 255, 0.2) !important;
-            color: white !important;
-            border: none !important;
-            border-color: transparent !important;
-            outline: none !important;
-            box-shadow: none !important;
-        }
-        
-        /* ELIMINAR TODOS LOS BORDES Y OUTLINES DEL NAVBAR */
-        .navbar .nav-link,
-        .navbar .nav-link:hover,
-        .navbar .nav-link:focus,
-        .navbar .nav-link:active,
-        .navbar .nav-link.active,
-        .navbar .dropdown-toggle,
-        .navbar .dropdown-toggle:hover,
-        .navbar .dropdown-toggle:focus,
-        .navbar .dropdown-toggle:active {
-            border: none !important;
-            border-color: transparent !important;
-            outline: none !important;
-            outline-color: transparent !important;
-            box-shadow: none !important;
-        }
-        
-        /* SOBRESCRIBIR BOOTSTRAP FOCUS */
-        .navbar .nav-link:focus,
-        .navbar .dropdown-toggle:focus {
-            border: none !important;
-            border-color: transparent !important;
-            outline: none !important;
-            outline-color: transparent !important;
-            box-shadow: none !important;
-        }
-        
-        /* ELIMINAR TODOS LOS FOCUS DE BOOTSTRAP */
-        .navbar .nav-link:focus,
-        .navbar .nav-link:focus-visible,
-        .navbar .dropdown-toggle:focus,
-        .navbar .dropdown-toggle:focus-visible,
-        .navbar .navbar-toggler:focus,
-        .navbar .navbar-toggler:focus-visible,
-        .navbar button:focus,
-        .navbar button:focus-visible,
-        .navbar a:focus,
-        .navbar a:focus-visible {
-            border: none !important;
-            border-color: transparent !important;
-            outline: none !important;
-            outline-color: transparent !important;
-            outline-offset: 0 !important;
-            box-shadow: none !important;
-            -webkit-box-shadow: none !important;
-            -moz-box-shadow: none !important;
-        }
-        
-        /* ELIMINAR FOCUS DE TODOS LOS ELEMENTOS DEL NAVBAR */
-        .navbar *:focus,
-        .navbar *:focus-visible {
-            border: none !important;
-            border-color: transparent !important;
-            outline: none !important;
-            outline-color: transparent !important;
-            outline-offset: 0 !important;
-            box-shadow: none !important;
-            -webkit-box-shadow: none !important;
-            -moz-box-shadow: none !important;
-        }
-        
-        /* ESPECÍFICAMENTE PARA EL NAVBAR-TOGGLER FOCUS */
-        .navbar .navbar-toggler:focus,
-        .navbar .navbar-toggler:focus-visible {
-            border: none !important;
-            border-color: transparent !important;
-            outline: none !important;
-            outline-color: transparent !important;
-            outline-offset: 0 !important;
-            box-shadow: none !important;
-            -webkit-box-shadow: none !important;
-            -moz-box-shadow: none !important;
-        }
-        
-        /* SOBRESCRIBIR LA REGLA ESPECÍFICA DE MAIN.CSS PARA NAVBAR-TOGGLER */
-        .navbar .navbar-toggler:focus {
-            box-shadow: none !important;
-            -webkit-box-shadow: none !important;
-            -moz-box-shadow: none !important;
-        }
-        
-        /* ELIMINAR CUALQUIER FOCUS DE BOOTSTRAP */
-        .navbar .btn:focus,
-        .navbar .btn:focus-visible,
-        .navbar .form-control:focus,
-        .navbar .form-control:focus-visible,
-        .navbar .navbar-toggler:focus,
-        .navbar .navbar-toggler:focus-visible,
-        .navbar .dropdown-toggle:focus,
-        .navbar .dropdown-toggle:focus-visible,
-        .navbar .nav-link:focus,
-        .navbar .nav-link:focus-visible,
-        .navbar a:focus,
-        .navbar a:focus-visible,
-        .navbar button:focus,
-        .navbar button:focus-visible {
-            border: none !important;
-            border-color: transparent !important;
-            outline: none !important;
-            outline-color: transparent !important;
-            outline-offset: 0 !important;
-            box-shadow: none !important;
-            -webkit-box-shadow: none !important;
-            -moz-box-shadow: none !important;
-        }
-        
-        /* ELIMINAR FOCUS DE BOOTSTRAP PARA TODOS LOS ELEMENTOS */
-        .navbar *:focus,
-        .navbar *:focus-visible {
-            border: none !important;
-            border-color: transparent !important;
-            outline: none !important;
-            outline-color: transparent !important;
-            outline-offset: 0 !important;
-            box-shadow: none !important;
-            -webkit-box-shadow: none !important;
-            -moz-box-shadow: none !important;
-        }
-        
-        /* ELIMINAR TODOS LOS ESTADOS DE FOCUS POSIBLES */
-        .navbar *:focus,
-        .navbar *:focus-visible,
-        .navbar *:focus-within,
-        .navbar *:focus-visible:focus,
-        .navbar *:focus:focus-visible {
-            border: none !important;
-            border-color: transparent !important;
-            border-width: 0 !important;
-            outline: none !important;
-            outline-color: transparent !important;
-            outline-width: 0 !important;
-            outline-offset: 0 !important;
-            outline-style: none !important;
-            box-shadow: none !important;
-            -webkit-box-shadow: none !important;
-            -moz-box-shadow: none !important;
-            -ms-box-shadow: none !important;
-        }
-        
-        /* SOBRESCRIBIR BOOTSTRAP FOCUS GLOBALLY */
-        .navbar .btn:focus,
-        .navbar .btn:focus-visible,
-        .navbar .btn:focus-within,
-        .navbar .form-control:focus,
-        .navbar .form-control:focus-visible,
-        .navbar .form-control:focus-within,
-        .navbar .navbar-toggler:focus,
-        .navbar .navbar-toggler:focus-visible,
-        .navbar .navbar-toggler:focus-within,
-        .navbar .dropdown-toggle:focus,
-        .navbar .dropdown-toggle:focus-visible,
-        .navbar .dropdown-toggle:focus-within,
-        .navbar .nav-link:focus,
-        .navbar .nav-link:focus-visible,
-        .navbar .nav-link:focus-within,
-        .navbar a:focus,
-        .navbar a:focus-visible,
-        .navbar a:focus-within,
-        .navbar button:focus,
-        .navbar button:focus-visible,
-        .navbar button:focus-within,
-        .navbar input:focus,
-        .navbar input:focus-visible,
-        .navbar input:focus-within,
-        .navbar select:focus,
-        .navbar select:focus-visible,
-        .navbar select:focus-within {
-            border: none !important;
-            border-color: transparent !important;
-            border-width: 0 !important;
-            outline: none !important;
-            outline-color: transparent !important;
-            outline-width: 0 !important;
-            outline-offset: 0 !important;
-            outline-style: none !important;
-            box-shadow: none !important;
-            -webkit-box-shadow: none !important;
-            -moz-box-shadow: none !important;
-            -ms-box-shadow: none !important;
-        }
-        
-        /* ELIMINAR CUALQUIER BORDE AZUL DE BOOTSTRAP */
-        .navbar * {
-            border-color: transparent !important;
-        }
-        
-        .navbar *:hover,
-        .navbar *:focus,
-        .navbar *:active,
-        .navbar *:focus-visible,
-        .navbar *:focus-within {
-            border-color: transparent !important;
-        }
-    </style>
-    
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="../index.html">
-                <img src="../img/LuminaLogoNoTextBlanco.webp" alt="Logo" width="32" height="32" class="me-2">
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+    .main{margin-left:var(--sidebar-w);margin-top:var(--top-h);flex:1;padding:28px;}
+    .page-header{margin-bottom:24px;}
+    .page-title{font-size:22px;font-weight:700;letter-spacing:-.4px;margin-bottom:4px;}
+    .page-sub{font-size:13px;color:var(--text-3);}
 
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="../index.html"><i class="fas fa-home me-1"></i> Inicio</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="cursos-venta.html"><i class="fas fa-book me-1"></i> Cursos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="blog.html"><i class="fas fa-blog me-1"></i> Blog</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="contact.html"><i class="fas fa-envelope me-1"></i> Contacto</a>
-                    </li>
-                    <!-- Botón Mis Cursos (solo para estudiantes) -->
-                    <li class="nav-item" id="misCursosContainer" style="display: none;">
-                        <a class="nav-link mis-cursos-btn" href="courses.html">
-                            <i class="fas fa-graduation-cap me-1"></i> Mis Cursos
-                        </a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" aria-label="Notificaciones">
-                            <i class="fas fa-bell"></i>
-                        </a>
-                    </li>
+    /* Settings layout */
+    .settings-layout{display:grid;grid-template-columns:200px 1fr;gap:20px;}
 
-                    <!-- Dropdown del Carrito -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle position-relative" href="#" id="cartDropdown" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
-                            <i class="fas fa-shopping-cart"></i>
-                            <span id="cartCount"
-                                class="position-absolute top-0 start-100 translate-middle badge bg-danger rounded-pill">0</span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end dropdown-cart" aria-labelledby="cartDropdown">
-                            <li>
-                                <h6 class="dropdown-header fw-bold">Tu carrito</h6>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider my-1">
-                            </li>
-                            <li>
-                                <div id="cartItems" class="px-2" style="max-height: 50vh; overflow-y: auto;">
-                                    <p class="text-muted text-center py-2 mb-0">Tu carrito está vacío</p>
-                                </div>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider my-1">
-                            </li>
-                            <li class="px-2">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <strong>Subtotal:</strong>
-                                    <span id="cartSubtotal" class="fw-bold">$0.00</span>
-                                </div>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider my-1">
-                            </li>
-                            <li class="px-2 mb-1">
-                                <a href="checkout.html" class="btn btn-primary w-100 py-2">
-                                    Ir a pagar
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
+    /* Settings nav */
+    .settings-nav-panel{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:8px;height:fit-content;position:sticky;top:calc(var(--top-h) + 28px);}
+    .sn-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;cursor:pointer;transition:all .15s;color:var(--text-2);font-size:13px;font-weight:500;}
+    .sn-item:hover{background:rgba(255,255,255,.04);color:var(--text);}
+    .sn-item.active{background:rgba(99,102,241,.12);color:var(--text);}
+    .sn-item.active i{color:var(--accent);}
+    .sn-item i{width:14px;text-align:center;font-size:12px;color:var(--text-3);}
 
-                    <!-- Dropdown del Usuario -->
-                    <li class="nav-item dropdown" id="userDropdownContainer" style="display: none;">
-                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
-                            <i id="userAvatarIcon" class="fas fa-user-circle me-1" style="font-size: 24px;"></i>
-                            <span id="userName">Usuario</span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                            <li>
-                                <div class="dropdown-header">
-                                    <div class="d-flex align-items-center">
-                                        <i id="userAvatarLargeIcon" class="fas fa-user-circle me-2" style="font-size: 32px;"></i>
-                                        <div>
-                                            <div id="userNameLarge" class="fw-bold">Usuario</div>
-                                            <small id="userEmail" class="text-muted">usuario@email.com</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="profile.html"><i class="fas fa-user me-2"></i> Mi Perfil</a></li>
-                            <li><a class="dropdown-item" href="settings.html"><i class="fas fa-cog me-2"></i> Configuración</a></li>
-                            <li><a class="dropdown-item" href="courses.html"><i class="fas fa-book me-2"></i> Mis Cursos</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item text-danger" href="#" onclick="handleLogout()"><i class="fas fa-sign-out-alt me-2"></i> Cerrar sesión</a></li>
-                        </ul>
-                    </li>
-                    
-                    <!-- Botón de Login (cuando no está autenticado) -->
-                    <li class="nav-item" id="loginButtonContainer">
-                        <a class="nav-link" href="login.html">
-                            <i class="fas fa-sign-in-alt me-1"></i> Iniciar Sesión
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
+    /* Panel */
+    .settings-panel{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;display:none;}
+    .settings-panel.active-panel{display:block;}
+    .panel-head{padding:20px 24px;border-bottom:1px solid var(--border);}
+    .panel-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:2px;}
+    .panel-sub{font-size:12.5px;color:var(--text-3);}
+
+    /* Form fields */
+    .settings-body{padding:24px;}
+    .field-group{margin-bottom:20px;}
+    .field-label{font-size:12px;font-weight:600;color:var(--text-2);margin-bottom:6px;display:block;text-transform:uppercase;letter-spacing:.04em;}
+    .field-input{width:100%;padding:10px 14px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:9px;color:var(--text);font-family:'Inter',sans-serif;font-size:14px;outline:none;transition:all .2s;}
+    .field-input:focus{border-color:rgba(99,102,241,.5);box-shadow:0 0 0 3px rgba(99,102,241,.1);}
+    .field-input::placeholder{color:var(--text-3);}
+    .field-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+    .field-hint{font-size:11.5px;color:var(--text-3);margin-top:5px;}
+
+    /* Toggle */
+    .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border-subtle);}
+    .toggle-row:last-child{border-bottom:none;}
+    .toggle-left{display:flex;flex-direction:column;gap:2px;}
+    .toggle-name{font-size:13px;font-weight:500;color:var(--text);}
+    .toggle-desc{font-size:12px;color:var(--text-3);}
+    .toggle{position:relative;width:42px;height:24px;cursor:pointer;flex-shrink:0;}
+    .toggle input{opacity:0;width:0;height:0;}
+    .toggle-track{position:absolute;inset:0;background:rgba(255,255,255,.1);border-radius:12px;transition:.2s;}
+    .toggle-track::before{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.4);}
+    .toggle input:checked + .toggle-track{background:var(--accent);}
+    .toggle input:checked + .toggle-track::before{transform:translateX(18px);}
+
+    /* Danger zone */
+    .danger-zone{background:rgba(244,63,94,.04);border:1px solid rgba(244,63,94,.15);border-radius:12px;padding:20px;margin-top:8px;}
+    .danger-title{font-size:13px;font-weight:700;color:var(--rose);margin-bottom:6px;}
+    .danger-desc{font-size:12.5px;color:var(--text-3);margin-bottom:14px;line-height:1.5;}
+    .btn-danger-outline{padding:9px 18px;border-radius:9px;border:1px solid rgba(244,63,94,.35);background:transparent;color:var(--rose);font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;font-family:'Inter',sans-serif;}
+    .btn-danger-outline:hover{background:rgba(244,63,94,.08);}
+
+    /* Save button */
+    .save-btn{padding:10px 22px;border-radius:9px;border:none;background:var(--accent);color:#fff;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;font-family:'Inter',sans-serif;}
+    .save-btn:hover{background:var(--accent-2);}
+
+    /* Section divider */
+    .section-divider{height:1px;background:var(--border);margin:20px 0;}
+
+    /* Security item */
+    .sec-item{display:flex;align-items:center;gap:10px;padding:13px 0;border-bottom:1px solid var(--border-subtle);}
+    .sec-item:last-child{border-bottom:none;}
+    .sec-dot{width:8px;height:8px;border-radius:50%;}
+    .sec-dot.ok{background:var(--emerald);}
+    .sec-dot.warn{background:var(--amber);}
+    .sec-text{flex:1;font-size:13px;color:var(--text-2);}
+    .sec-text strong{color:var(--text);}
+    .sec-action{font-size:12px;font-weight:600;color:var(--accent-2);cursor:pointer;background:none;border:none;font-family:'Inter',sans-serif;}
+    .sec-action:hover{color:var(--text);}
+
+    ::-webkit-scrollbar{width:5px;}
+    ::-webkit-scrollbar-track{background:transparent;}
+    ::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:3px;}
+  </style>
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">L</div>
+      <div><div class="logo-text">Lumina LMS</div><div class="logo-sub">Configuración</div></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-label">Navegación</div>
+      <a class="nav-item" href="courses.html"><span class="nv-icon"><i class="fas fa-th-large"></i></span> Dashboard</a>
+      <a class="nav-item" href="courses.html"><span class="nv-icon"><i class="fas fa-book-open"></i></span> Mis Cursos</a>
+      <a class="nav-item" href="calendar.html"><span class="nv-icon"><i class="fas fa-calendar-alt"></i></span> Calendario</a>
+      <a class="nav-item" href="schedule.html"><span class="nv-icon"><i class="fas fa-clock"></i></span> Horario</a>
+      <a class="nav-item" href="profile.html"><span class="nv-icon"><i class="fas fa-user"></i></span> Mi Perfil</a>
+      <div class="nav-label">Cuenta</div>
+      <a class="nav-item active" href="settings.html"><span class="nv-icon"><i class="fas fa-sliders-h"></i></span> Configuración</a>
     </nav>
-    <!-- Toast para notificaciones -->
-    <div class="toast-container position-fixed bottom-0 end-0 p-3">
-        <div id="addedToCartToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="toast-header bg-success text-white">
-                <strong class="me-auto">¡Añadido al carrito!</strong>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"
-                    aria-label="Close"></button>
-            </div>
-            <div class="toast-body">
-                El curso ha sido añadido a tu carrito de compras.
-            </div>
-        </div>
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="u-av">E</div>
+        <div><div class="u-name">Estudiante</div><div class="u-role">Alumno</div></div>
+      </div>
+    </div>
+  </aside>
+
+  <header class="topbar">
+    <span class="tb-title">Configuración</span>
+    <div class="tb-right">
+      <a href="profile.html" class="tb-btn"><i class="fas fa-user"></i> Perfil</a>
+      <button class="tb-btn tb-btn-danger" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Salir</button>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="page-header">
+      <div class="page-title">Configuración</div>
+      <div class="page-sub">Gestiona tus preferencias y cuenta</div>
     </div>
 
+    <div class="settings-layout">
 
+      <!-- Settings nav -->
+      <div class="settings-nav-panel">
+        <div class="sn-item active" onclick="switchTab('profile')"><i class="fas fa-user"></i> Perfil</div>
+        <div class="sn-item" onclick="switchTab('security')"><i class="fas fa-shield-alt"></i> Seguridad</div>
+        <div class="sn-item" onclick="switchTab('notifications')"><i class="fas fa-bell"></i> Notificaciones</div>
+        <div class="sn-item" onclick="switchTab('appearance')"><i class="fas fa-palette"></i> Apariencia</div>
+        <div class="sn-item" onclick="switchTab('privacy')"><i class="fas fa-eye-slash"></i> Privacidad</div>
+      </div>
 
-    <!-- Main Content -->
-    <main class="main-content">
-        <div class="settings-white-section">
-            <div class="container py-5">
-                <!-- Breadcrumb -->
-                <nav aria-label="breadcrumb" class="mb-4">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="../index.html">Inicio</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Configuración</li>
-                    </ol>
-                </nav>
+      <!-- Panels -->
+      <div>
 
-                <!-- Settings Header -->
-                <div class="settings-header mb-5">
-                    <h1 class="settings-title">
-                        <i class="fas fa-cog me-2"></i> Configuración
-                    </h1>
-                    <p class="settings-subtitle">Gestiona tus preferencias y configuración de cuenta</p>
-                </div>
-
-                <!-- Métricas del Usuario -->
-                <div class="row mb-5">
-                    <div class="col-lg-3 col-md-6 mb-3">
-                        <div class="metric-card">
-                            <div class="metric-icon">
-                                <i class="fas fa-graduation-cap"></i>
-                            </div>
-                            <div class="metric-content">
-                                <h3 class="metric-value">12</h3>
-                                <p class="metric-label">Cursos Inscritos</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6 mb-3">
-                        <div class="metric-card">
-                            <div class="metric-icon">
-                                <i class="fas fa-certificate"></i>
-                            </div>
-                            <div class="metric-content">
-                                <h3 class="metric-value">8</h3>
-                                <p class="metric-label">Certificados</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6 mb-3">
-                        <div class="metric-card">
-                            <div class="metric-icon">
-                                <i class="fas fa-clock"></i>
-                            </div>
-                            <div class="metric-content">
-                                <h3 class="metric-value">156h</h3>
-                                <p class="metric-label">Tiempo de Estudio</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6 mb-3">
-                        <div class="metric-card">
-                            <div class="metric-icon">
-                                <i class="fas fa-star"></i>
-                            </div>
-                            <div class="metric-content">
-                                <h3 class="metric-value">4.8</h3>
-                                <p class="metric-label">Calificación Promedio</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                            <!-- Settings Navigation -->
-                <div class="row">
-                    <div class="col-lg-3 mb-4">
-                        <div class="settings-nav">
-                            <div class="nav-item active" data-target="profile-settings">
-                                <div class="nav-icon">
-                                    <i class="fas fa-user"></i>
-                                </div>
-                                <div class="nav-content">
-                                    <span class="nav-title">Perfil</span>
-                                    <span class="nav-description">Información personal</span>
-                                </div>
-                            </div>
-                            <div class="nav-item" data-target="security-settings">
-                                <div class="nav-icon">
-                                    <i class="fas fa-shield-alt"></i>
-                                </div>
-                                <div class="nav-content">
-                                    <span class="nav-title">Seguridad</span>
-                                    <span class="nav-description">Contraseñas y acceso</span>
-                                </div>
-                            </div>
-                            <div class="nav-item" data-target="notification-settings">
-                                <div class="nav-icon">
-                                    <i class="fas fa-bell"></i>
-                                </div>
-                                <div class="nav-content">
-                                    <span class="nav-title">Notificaciones</span>
-                                    <span class="nav-description">Alertas y mensajes</span>
-                                </div>
-                            </div>
-                            <div class="nav-item" data-target="preference-settings">
-                                <div class="nav-icon">
-                                    <i class="fas fa-sliders-h"></i>
-                                </div>
-                                <div class="nav-content">
-                                    <span class="nav-title">Preferencias</span>
-                                    <span class="nav-description">Idioma y apariencia</span>
-                                </div>
-                            </div>
-                            <div class="nav-item" data-target="privacy-settings">
-                                <div class="nav-icon">
-                                    <i class="fas fa-lock"></i>
-                                </div>
-                                <div class="nav-content">
-                                    <span class="nav-title">Privacidad</span>
-                                    <span class="nav-description">Datos y visibilidad</span>
-                                </div>
-                            </div>
-                            <div class="nav-item" data-target="learning-settings">
-                                <div class="nav-icon">
-                                    <i class="fas fa-brain"></i>
-                                </div>
-                                <div class="nav-content">
-                                    <span class="nav-title">Aprendizaje</span>
-                                    <span class="nav-description">Objetivos y progreso</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                <div class="col-lg-9">
-                    <!-- Profile Settings -->
-                    <div class="settings-section active" id="profile-settings">
-                        <div class="settings-card">
-                            <h3 class="section-title">
-                                <i class="fas fa-user me-2"></i> Información del Perfil
-                            </h3>
-                            <form id="profileForm">
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Nombre Completo</label>
-                                        <input type="text" class="form-control" id="fullNameInput" value="Estudiante" placeholder="Tu nombre completo">
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Email</label>
-                                        <input type="email" class="form-control" id="emailInput" value="estudiante@gmail.com" readonly>
-                                        <small class="text-muted">El email no se puede cambiar</small>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Teléfono</label>
-                                        <input type="tel" class="form-control" id="phoneInput" value="+52 55 1234 5678" placeholder="Tu número de teléfono">
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">País</label>
-                                        <select class="form-select" id="countryInput">
-                                            <option value="">Seleccionar país</option>
-                                            <option value="MX" selected>México</option>
-                                            <option value="ES">España</option>
-                                            <option value="AR">Argentina</option>
-                                            <option value="CO">Colombia</option>
-                                            <option value="PE">Perú</option>
-                                            <option value="CL">Chile</option>
-                                            <option value="US">Estados Unidos</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-12 mb-3">
-                                        <label class="form-label">Biografía</label>
-                                        <textarea class="form-control" id="bioInput" rows="3" placeholder="Cuéntanos un poco sobre ti...">Estudiante apasionado por el aprendizaje en línea.</textarea>
-                                    </div>
-                                </div>
-                                <div class="settings-actions">
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="fas fa-save me-1"></i> Guardar Cambios
-                                    </button>
-                                    <button type="button" class="btn btn-outline-secondary" onclick="resetProfileForm()">
-                                        <i class="fas fa-undo me-1"></i> Restablecer
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-
-                    <!-- Security Settings -->
-                    <div class="settings-section" id="security-settings">
-                        <div class="settings-card">
-                            <h3 class="section-title">
-                                <i class="fas fa-shield-alt me-2"></i> Seguridad de la Cuenta
-                            </h3>
-                            
-                            <!-- Change Password -->
-                            <div class="security-item mb-4">
-                                <h5>Cambiar Contraseña</h5>
-                                <form id="passwordForm">
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Contraseña Actual</label>
-                                            <input type="password" class="form-control" id="currentPassword" placeholder="Tu contraseña actual">
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Nueva Contraseña</label>
-                                            <input type="password" class="form-control" id="newPassword" placeholder="Nueva contraseña">
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Confirmar Nueva Contraseña</label>
-                                            <input type="password" class="form-control" id="confirmPassword" placeholder="Confirmar nueva contraseña">
-                                        </div>
-                                    </div>
-                                    <button type="submit" class="btn btn-warning">
-                                        <i class="fas fa-key me-1"></i> Cambiar Contraseña
-                                    </button>
-                                </form>
-                            </div>
-
-                            <!-- Two-Factor Authentication -->
-                            <div class="security-item mb-4">
-                                <h5>Autenticación de Dos Factores</h5>
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" id="twoFactorToggle">
-                                    <label class="form-check-label" for="twoFactorToggle">
-                                        Habilitar autenticación de dos factores
-                                    </label>
-                                </div>
-                                <small class="text-muted">Añade una capa extra de seguridad a tu cuenta</small>
-                            </div>
-
-                            <!-- Session Management -->
-                            <div class="security-item">
-                                <h5>Gestión de Sesiones</h5>
-                                <p class="text-muted">Sesiones activas en otros dispositivos</p>
-                                <div class="session-list">
-                                    <div class="session-item">
-                                        <div class="session-info">
-                                            <i class="fas fa-desktop me-2"></i>
-                                            <div>
-                                                <strong>Windows - Chrome</strong>
-                                                <small class="text-muted">192.168.1.100 • Última actividad: hace 2 horas</small>
-                                            </div>
-                                        </div>
-                                        <button class="btn btn-sm btn-outline-danger">Terminar</button>
-                                    </div>
-                                    <div class="session-item">
-                                        <div class="session-info">
-                                            <i class="fas fa-mobile-alt me-2"></i>
-                                            <div>
-                                                <strong>iPhone - Safari</strong>
-                                                <small class="text-muted">192.168.1.101 • Última actividad: hace 1 día</small>
-                                            </div>
-                                        </div>
-                                        <button class="btn btn-sm btn-outline-danger">Terminar</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Notification Settings -->
-                    <div class="settings-section" id="notification-settings">
-                        <div class="settings-card">
-                            <h3 class="section-title">
-                                <i class="fas fa-bell me-2"></i> Configuración de Notificaciones
-                            </h3>
-                            
-                            <div class="notification-group mb-4">
-                                <h5>Notificaciones por Email</h5>
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="checkbox" id="emailCourses" checked>
-                                    <label class="form-check-label" for="emailCourses">
-                                        Nuevos cursos disponibles
-                                    </label>
-                                </div>
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="checkbox" id="emailProgress" checked>
-                                    <label class="form-check-label" for="emailProgress">
-                                        Progreso del curso
-                                    </label>
-                                </div>
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="checkbox" id="emailCertificates">
-                                    <label class="form-check-label" for="emailCertificates">
-                                        Certificados completados
-                                    </label>
-                                </div>
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="checkbox" id="emailNewsletter">
-                                    <label class="form-check-label" for="emailNewsletter">
-                                        Newsletter semanal
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="notification-group mb-4">
-                                <h5>Notificaciones Push</h5>
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="checkbox" id="pushReminders" checked>
-                                    <label class="form-check-label" for="pushReminders">
-                                        Recordatorios de estudio
-                                    </label>
-                                </div>
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="checkbox" id="pushAchievements" checked>
-                                    <label class="form-check-label" for="pushAchievements">
-                                        Logros desbloqueados
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="settings-actions">
-                                <button type="button" class="btn btn-primary" onclick="saveNotificationSettings()">
-                                    <i class="fas fa-save me-1"></i> Guardar Preferencias
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Preference Settings -->
-                    <div class="settings-section" id="preference-settings">
-                        <div class="settings-card">
-                            <h3 class="section-title">
-                                <i class="fas fa-sliders-h me-2"></i> Preferencias Generales
-                            </h3>
-                            
-                            <div class="preference-group mb-4">
-                                <h5>Idioma y Región</h5>
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Idioma</label>
-                                        <select class="form-select" id="languageSelect">
-                                            <option value="es" selected>Español</option>
-                                            <option value="en">English</option>
-                                            <option value="fr">Français</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Zona Horaria</label>
-                                        <select class="form-select" id="timezoneSelect">
-                                            <option value="America/Mexico_City" selected>México (GMT-6)</option>
-                                            <option value="America/New_York">Nueva York (GMT-5)</option>
-                                            <option value="Europe/Madrid">Madrid (GMT+1)</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="preference-group mb-4">
-                                <h5>Apariencia</h5>
-                                <div class="form-check form-switch mb-2">
-                                    <input class="form-check-input" type="checkbox" id="darkModeToggle">
-                                    <label class="form-check-label" for="darkModeToggle">
-                                        Modo oscuro
-                                    </label>
-                                </div>
-                                <div class="form-check form-switch mb-2">
-                                    <input class="form-check-input" type="checkbox" id="compactModeToggle">
-                                    <label class="form-check-label" for="compactModeToggle">
-                                        Modo compacto
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="preference-group">
-                                <h5>Reproducción de Video</h5>
-                                <div class="form-check form-switch mb-2">
-                                    <input class="form-check-input" type="checkbox" id="autoplayToggle" checked>
-                                    <label class="form-check-label" for="autoplayToggle">
-                                        Reproducción automática
-                                    </label>
-                                </div>
-                                <div class="form-check form-switch mb-2">
-                                    <input class="form-check-input" type="checkbox" id="subtitlesToggle">
-                                    <label class="form-check-label" for="subtitlesToggle">
-                                        Subtítulos por defecto
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="settings-actions">
-                                <button type="button" class="btn btn-primary" onclick="savePreferenceSettings()">
-                                    <i class="fas fa-save me-1"></i> Guardar Preferencias
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Privacy Settings -->
-                    <div class="settings-section" id="privacy-settings">
-                        <div class="settings-card">
-                            <h3 class="section-title">
-                                <i class="fas fa-lock me-2"></i> Configuración de Privacidad
-                            </h3>
-                            
-                            <div class="privacy-group mb-4">
-                                <h5>Visibilidad del Perfil</h5>
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="profileVisibility" id="profilePublic" checked>
-                                    <label class="form-check-label" for="profilePublic">
-                                        Perfil público
-                                    </label>
-                                </div>
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="profileVisibility" id="profilePrivate">
-                                    <label class="form-check-label" for="profilePrivate">
-                                        Perfil privado
-                                    </label>
-                                </div>
-                                <small class="text-muted">Controla quién puede ver tu información de perfil</small>
-                            </div>
-
-                            <div class="privacy-group mb-4">
-                                <h5>Datos Personales</h5>
-                                <div class="form-check form-switch mb-2">
-                                    <input class="form-check-input" type="checkbox" id="dataAnalytics" checked>
-                                    <label class="form-check-label" for="dataAnalytics">
-                                        Permitir análisis de datos para mejorar la experiencia
-                                    </label>
-                                </div>
-                                <div class="form-check form-switch mb-2">
-                                    <input class="form-check-input" type="checkbox" id="dataMarketing">
-                                    <label class="form-check-label" for="dataMarketing">
-                                        Recibir ofertas y promociones
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="privacy-group">
-                                <h5>Gestión de Datos</h5>
-                                <div class="d-grid gap-2">
-                                    <button type="button" class="btn btn-outline-info" onclick="exportUserData()">
-                                        <i class="fas fa-download me-1"></i> Exportar Mis Datos
-                                    </button>
-                                    <button type="button" class="btn btn-outline-warning" onclick="requestDataDeletion()">
-                                        <i class="fas fa-trash me-1"></i> Solicitar Eliminación de Datos
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Learning Settings -->
-                    <div class="settings-section" id="learning-settings">
-                        <div class="settings-card">
-                            <h3 class="section-title">
-                                <i class="fas fa-brain me-2"></i> Configuración de Aprendizaje
-                            </h3>
-                            
-                            <!-- Objetivos de Aprendizaje -->
-                            <div class="learning-group mb-4">
-                                <h5>Objetivos de Aprendizaje</h5>
-                                <div class="learning-goals">
-                                    <div class="goal-item">
-                                        <div class="goal-header">
-                                            <i class="fas fa-target"></i>
-                                            <span>Horas de estudio semanales</span>
-                                        </div>
-                                        <div class="goal-controls">
-                                            <input type="range" class="form-range" id="weeklyHours" min="1" max="20" value="10">
-                                            <span class="goal-value">10 horas</span>
-                                        </div>
-                                    </div>
-                                    <div class="goal-item">
-                                        <div class="goal-header">
-                                            <i class="fas fa-book"></i>
-                                            <span>Cursos a completar este mes</span>
-                                        </div>
-                                        <div class="goal-controls">
-                                            <input type="range" class="form-range" id="monthlyCourses" min="1" max="10" value="3">
-                                            <span class="goal-value">3 cursos</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Preferencias de Estudio -->
-                            <div class="learning-group mb-4">
-                                <h5>Preferencias de Estudio</h5>
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Duración preferida de sesiones</label>
-                                        <select class="form-select" id="sessionDuration">
-                                            <option value="15">15 minutos</option>
-                                            <option value="30" selected>30 minutos</option>
-                                            <option value="45">45 minutos</option>
-                                            <option value="60">1 hora</option>
-                                            <option value="90">1.5 horas</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Dificultad preferida</label>
-                                        <select class="form-select" id="difficultyLevel">
-                                            <option value="beginner">Principiante</option>
-                                            <option value="intermediate" selected>Intermedio</option>
-                                            <option value="advanced">Avanzado</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-check form-switch mb-2">
-                                    <input class="form-check-input" type="checkbox" id="adaptiveLearning" checked>
-                                    <label class="form-check-label" for="adaptiveLearning">
-                                        Aprendizaje adaptativo
-                                    </label>
-                                </div>
-                                <div class="form-check form-switch mb-2">
-                                    <input class="form-check-input" type="checkbox" id="spacedRepetition" checked>
-                                    <label class="form-check-label" for="spacedRepetition">
-                                        Repetición espaciada
-                                    </label>
-                                </div>
-                            </div>
-
-                            <!-- Recordatorios Inteligentes -->
-                            <div class="learning-group">
-                                <h5>Recordatorios Inteligentes</h5>
-                                <div class="smart-reminders">
-                                    <div class="reminder-item">
-                                        <div class="reminder-icon">
-                                            <i class="fas fa-lightbulb"></i>
-                                        </div>
-                                        <div class="reminder-content">
-                                            <h6>Recordatorio de práctica</h6>
-                                            <p>Te recordaremos practicar conceptos que necesitas reforzar</p>
-                                        </div>
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" id="practiceReminders" checked>
-                                        </div>
-                                    </div>
-                                    <div class="reminder-item">
-                                        <div class="reminder-icon">
-                                            <i class="fas fa-calendar-check"></i>
-                                        </div>
-                                        <div class="reminder-content">
-                                            <h6>Recordatorio de objetivos</h6>
-                                            <p>Notificaciones semanales sobre tu progreso hacia tus objetivos</p>
-                                        </div>
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" id="goalReminders" checked>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="settings-actions">
-                                <button type="button" class="btn btn-primary" onclick="saveLearningSettings()">
-                                    <i class="fas fa-save me-1"></i> Guardar Configuración
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <!-- Profile tab -->
+        <div id="tab-profile" class="settings-panel active-panel">
+          <div class="panel-head">
+            <div class="panel-title">Información de Perfil</div>
+            <div class="panel-sub">Actualiza tu información personal</div>
+          </div>
+          <div class="settings-body">
+            <div class="field-row">
+              <div class="field-group">
+                <label class="field-label">Nombre</label>
+                <input class="field-input" type="text" placeholder="Tu nombre" value="Estudiante">
+              </div>
+              <div class="field-group">
+                <label class="field-label">Apellido</label>
+                <input class="field-input" type="text" placeholder="Tu apellido" value="Demo">
+              </div>
             </div>
+            <div class="field-group">
+              <label class="field-label">Correo Electrónico</label>
+              <input class="field-input" type="email" placeholder="tu@email.com" value="estudiante@gmail.com">
+              <div class="field-hint">Tu correo es tu identificador de cuenta y no puede cambiarse aquí.</div>
+            </div>
+            <div class="field-row">
+              <div class="field-group">
+                <label class="field-label">Teléfono</label>
+                <input class="field-input" type="tel" placeholder="+52 55 0000 0000">
+              </div>
+              <div class="field-group">
+                <label class="field-label">País</label>
+                <input class="field-input" type="text" placeholder="México" value="México">
+              </div>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Biografía</label>
+              <textarea class="field-input" rows="3" placeholder="Cuéntanos algo sobre ti..."></textarea>
+            </div>
+            <button class="save-btn">Guardar Cambios</button>
+          </div>
         </div>
-    </main>
 
-    <!-- Footer -->
-    <footer class="bg-dark text-light py-3 mt-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-4 mb-3">
-                    <img src="../img/LuminaLogoNoText.webp" alt="Logo" style="width: 40px; height: 40px;">
-                    <p class="mt-2 mb-2" style="font-size: 0.9rem;">Iluminando el futuro del aprendizaje en línea.</p>
-                    <div class="mt-2">
-                        <a href="#" class="text-light me-2"><i class="fab fa-facebook"></i></a>
-                        <a href="#" class="text-light me-2"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="text-light me-2"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="text-light me-2"><i class="fab fa-linkedin"></i></a>
-                        <a href="#" class="text-light"><i class="fab fa-youtube"></i></a>
-                    </div>
-                </div>
-
-                <div class="col-lg-2 col-md-6 mb-3">
-                    <h6>Enlaces</h6>
-                    <a href="../index.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-home me-1"></i> Inicio</a>
-                    <a href="cursos-venta.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-book me-1"></i> Cursos</a>
-                    <a href="blog.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-blog me-1"></i> Blog</a>
-                    <a href="contact.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-envelope me-1"></i> Contacto</a>
-                </div>
-
-                <div class="col-lg-2 col-md-6 mb-3">
-                    <h6>Mi cuenta</h6>
-                    <a href="courses.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-graduation-cap me-1"></i> Mis Cursos</a>
-                    <a href="calendar.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-calendar me-1"></i> Calendario</a>
-                    <a href="schedule.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-clock me-1"></i> Horario</a>
-                    <a href="profile.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-user me-1"></i> Perfil</a>
-                </div>
-
-                <div class="col-lg-4 mb-3">
-                    <h6>Contacto</h6>
-                    <p class="mb-1" style="font-size: 0.85rem;"><i class="fas fa-map-marker-alt me-1"></i> 123 Calle Universidad, Ciudad</p>
-                    <p class="mb-1" style="font-size: 0.85rem;"><i class="fas fa-phone me-1"></i> +1 234 567 8900</p>
-                    <p class="mb-1" style="font-size: 0.85rem;"><i class="fas fa-envelope me-1"></i> luminalearning.mx@gmail.com</p>
-                    <a href="contact.html" class="btn btn-outline-light btn-sm mt-1">Contáctanos</a>
-                </div>
+        <!-- Security tab -->
+        <div id="tab-security" class="settings-panel">
+          <div class="panel-head">
+            <div class="panel-title">Seguridad de la Cuenta</div>
+            <div class="panel-sub">Administra contraseña y accesos</div>
+          </div>
+          <div class="settings-body">
+            <div class="sec-item">
+              <div class="sec-dot ok"></div>
+              <div class="sec-text"><strong>Email verificado</strong> — estudiante@gmail.com</div>
+              <button class="sec-action">Cambiar</button>
+            </div>
+            <div class="sec-item">
+              <div class="sec-dot ok"></div>
+              <div class="sec-text"><strong>Contraseña</strong> — Última actualización hace 3 meses</div>
+              <button class="sec-action">Cambiar</button>
+            </div>
+            <div class="sec-item">
+              <div class="sec-dot warn"></div>
+              <div class="sec-text"><strong>Autenticación en dos pasos</strong> — No configurada</div>
+              <button class="sec-action">Activar</button>
+            </div>
+            <div class="sec-item">
+              <div class="sec-dot ok"></div>
+              <div class="sec-text"><strong>Sesión activa</strong> — Windows 11 · Chrome 124</div>
+              <button class="sec-action">Ver todas</button>
             </div>
 
-            <div class="row">
-                <div class="col-12 text-center">
-                    <p class="mb-0" style="font-size: 0.8rem;">© <span id="currentYear"></span> Lumina Learning. Todos los derechos reservados.</p>
-                </div>
+            <div class="section-divider"></div>
+
+            <div class="field-group">
+              <label class="field-label">Contraseña Actual</label>
+              <input class="field-input" type="password" placeholder="••••••••">
             </div>
+            <div class="field-row">
+              <div class="field-group">
+                <label class="field-label">Nueva Contraseña</label>
+                <input class="field-input" type="password" placeholder="••••••••">
+              </div>
+              <div class="field-group">
+                <label class="field-label">Confirmar Contraseña</label>
+                <input class="field-input" type="password" placeholder="••••••••">
+              </div>
+            </div>
+            <button class="save-btn">Actualizar Contraseña</button>
+
+            <div class="section-divider"></div>
+            <div class="danger-zone">
+              <div class="danger-title"><i class="fas fa-exclamation-triangle me-2"></i>Zona de Peligro</div>
+              <div class="danger-desc">Eliminar tu cuenta es una acción permanente. Todos tus datos, cursos e historial serán eliminados y no podrán recuperarse.</div>
+              <button class="btn-danger-outline"><i class="fas fa-trash-alt me-2"></i>Eliminar Cuenta</button>
+            </div>
+          </div>
         </div>
-    </footer>
 
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../js/auth0-config.js"></script>
-    <script>
-        // Objeto del carrito
-        const cart = {
-            items: [],
-            total: 0,
+        <!-- Notifications tab -->
+        <div id="tab-notifications" class="settings-panel">
+          <div class="panel-head">
+            <div class="panel-title">Notificaciones</div>
+            <div class="panel-sub">Configura qué notificaciones recibir</div>
+          </div>
+          <div class="settings-body">
+            <div class="toggle-row">
+              <div class="toggle-left"><span class="toggle-name">Recordatorios de clase</span><span class="toggle-desc">Notificación 30 minutos antes de cada clase</span></div>
+              <label class="toggle"><input type="checkbox" checked><span class="toggle-track"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle-left"><span class="toggle-name">Nuevas tareas</span><span class="toggle-desc">Cuando el profesor publique una nueva tarea</span></div>
+              <label class="toggle"><input type="checkbox" checked><span class="toggle-track"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle-left"><span class="toggle-name">Calificaciones publicadas</span><span class="toggle-desc">Al publicar el resultado de un examen</span></div>
+              <label class="toggle"><input type="checkbox" checked><span class="toggle-track"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle-left"><span class="toggle-name">Mensajes del profesor</span><span class="toggle-desc">Cuando un docente envíe un mensaje</span></div>
+              <label class="toggle"><input type="checkbox"><span class="toggle-track"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle-left"><span class="toggle-name">Boletín semanal</span><span class="toggle-desc">Resumen de actividades cada lunes</span></div>
+              <label class="toggle"><input type="checkbox"><span class="toggle-track"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle-left"><span class="toggle-name">Nuevos cursos disponibles</span><span class="toggle-desc">Ofertas y novedades del catálogo</span></div>
+              <label class="toggle"><input type="checkbox"><span class="toggle-track"></span></label>
+            </div>
+            <div style="margin-top:20px;"><button class="save-btn">Guardar Preferencias</button></div>
+          </div>
+        </div>
 
-            addItem: function (item) {
-                const existingItem = this.items.find(cartItem => cartItem.id === item.id);
-                if (existingItem) {
-                    existingItem.quantity += 1;
-                } else {
-                    this.items.push({ ...item, quantity: 1 });
-                }
-                this.calculateTotal();
-                this.updateUI();
-                this.saveToLocalStorage();
+        <!-- Appearance tab -->
+        <div id="tab-appearance" class="settings-panel">
+          <div class="panel-head">
+            <div class="panel-title">Apariencia</div>
+            <div class="panel-sub">Personaliza la interfaz de la plataforma</div>
+          </div>
+          <div class="settings-body">
+            <div class="toggle-row">
+              <div class="toggle-left"><span class="toggle-name">Modo oscuro</span><span class="toggle-desc">Interfaz con fondo oscuro (predeterminado)</span></div>
+              <label class="toggle"><input type="checkbox" checked><span class="toggle-track"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle-left"><span class="toggle-name">Animaciones reducidas</span><span class="toggle-desc">Desactiva transiciones para mejor rendimiento</span></div>
+              <label class="toggle"><input type="checkbox"><span class="toggle-track"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle-left"><span class="toggle-name">Tamaño de fuente aumentado</span><span class="toggle-desc">Mejora la legibilidad del texto</span></div>
+              <label class="toggle"><input type="checkbox"><span class="toggle-track"></span></label>
+            </div>
+            <div style="margin-top:20px;"><button class="save-btn">Guardar Apariencia</button></div>
+          </div>
+        </div>
 
-                // Mostrar toast
-                const toast = new bootstrap.Toast(document.getElementById('addedToCartToast'));
-                toast.show();
-            },
+        <!-- Privacy tab -->
+        <div id="tab-privacy" class="settings-panel">
+          <div class="panel-head">
+            <div class="panel-title">Privacidad</div>
+            <div class="panel-sub">Controla qué información es visible para otros</div>
+          </div>
+          <div class="settings-body">
+            <div class="toggle-row">
+              <div class="toggle-left"><span class="toggle-name">Mostrar perfil a otros estudiantes</span><span class="toggle-desc">Tu nombre y foto visibles en foros y grupos</span></div>
+              <label class="toggle"><input type="checkbox" checked><span class="toggle-track"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle-left"><span class="toggle-name">Compartir progreso de cursos</span><span class="toggle-desc">Tu avance es visible para compañeros de clase</span></div>
+              <label class="toggle"><input type="checkbox"><span class="toggle-track"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle-left"><span class="toggle-name">Historial de actividad</span><span class="toggle-desc">Permitir que la plataforma guarde tu historial</span></div>
+              <label class="toggle"><input type="checkbox" checked><span class="toggle-track"></span></label>
+            </div>
+            <div style="margin-top:20px;"><button class="save-btn">Guardar Privacidad</button></div>
+          </div>
+        </div>
 
-            removeItem: function (id) {
-                // Convertir id a string para comparación consistente
-                const itemId = String(id);
-                this.items = this.items.filter(item => String(item.id) !== itemId);
-                this.calculateTotal();
-                this.updateUI();
-                this.saveToLocalStorage();
-            },
+      </div>
+    </div>
+  </main>
 
-            calculateTotal: function () {
-                this.total = this.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            },
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    function switchTab(tab) {
+      document.querySelectorAll('.settings-panel').forEach(p => p.classList.remove('active-panel'));
+      document.querySelectorAll('.sn-item').forEach(i => i.classList.remove('active'));
+      document.getElementById('tab-' + tab).classList.add('active-panel');
+      event.currentTarget.classList.add('active');
+    }
 
-            updateUI: function () {
-                // Actualizar contador
-                const totalItems = this.items.reduce((sum, item) => sum + item.quantity, 0);
-                document.getElementById('cartCount').textContent = totalItems;
-
-                // Actualizar lista de items
-                const cartItemsContainer = document.getElementById('cartItems');
-                cartItemsContainer.innerHTML = '';
-
-                if (this.items.length === 0) {
-                    cartItemsContainer.innerHTML = '<p class="text-muted text-center py-2">Tu carrito está vacío</p>';
-                } else {
-                    this.items.forEach(item => {
-                        const itemElement = document.createElement('div');
-                        itemElement.className = 'cart-item d-flex justify-content-between align-items-center py-2';
-                        itemElement.innerHTML = `
-                            <img src="${item.image}" class="cart-item-img rounded" width="40" height="40" alt="${item.title}">
-                            <div class="flex-grow-1 mx-3">
-                                <div class="cart-item-title">${item.title}</div>
-                                <small class="text-muted">${item.quantity} x $${item.price.toFixed(2)}</small>
-                            </div>
-                            <span class="cart-item-price fw-bold">$${(item.price * item.quantity).toFixed(2)}</span>
-                            <button class="btn btn-sm btn-outline-danger remove-item ms-2" data-id="${item.id}" aria-label="Eliminar">
-                                &times;
-                            </button>
-                        `;
-                        cartItemsContainer.appendChild(itemElement);
-                    });
-                }
-
-                // Actualizar subtotal
-                document.getElementById('cartSubtotal').textContent = `$${this.total.toFixed(2)}`;
-            },
-
-            saveToLocalStorage: function () {
-                localStorage.setItem('shoppingCart', JSON.stringify(this.items));
-            },
-
-            loadFromLocalStorage: function () {
-                const savedCart = localStorage.getItem('shoppingCart');
-                if (savedCart) {
-                    this.items = JSON.parse(savedCart);
-                    this.calculateTotal();
-                    this.updateUI();
-                }
-            },
-
-            init: function () {
-                this.loadFromLocalStorage();
-
-                // Delegación de eventos para los botones de eliminar
-                document.addEventListener('click', (e) => {
-                    if (e.target.classList.contains('remove-item')) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        const itemId = e.target.getAttribute('data-id');
-                        if (itemId) {
-                            this.removeItem(itemId);
-                        }
-                    }
-                });
-            }
-        };
-
-        // Inicializar el carrito
-        cart.init();
-
-        document.addEventListener('DOMContentLoaded', function () {
-            // Actualizar año en el footer
-            document.getElementById('currentYear').textContent = new Date().getFullYear();
-
-            // Función global para logout
-            window.handleLogout = async function() {
-                try {
-                    if (window.AuthService) {
-                        window.AuthService.logout();
-                    } else {
-                        localStorage.removeItem('userToken');
-                        localStorage.removeItem('isLoggedIn');
-                        localStorage.removeItem('userData');
-                        window.location.href = 'login.html';
-                    }
-                } catch (error) {
-                    console.error('Error en logout:', error);
-                    window.location.href = 'login.html';
-                }
-            };
-
-            // Verificar autenticación y actualizar navbar
-            async function checkAuthAndUpdateNavbar() {
-                try {
-                    await Auth0Service.initialize();
-                    const isAuthenticated = await Auth0Service.isAuthenticated();
-                    
-                    if (isAuthenticated) {
-                        const user = await Auth0Service.getUser();
-                        updateUserNavbar(user);
-                    } else {
-                        showLoginButton();
-                    }
-                } catch (error) {
-                    console.error('Error verificando autenticación:', error);
-                    showLoginButton();
-                }
-            }
-
-            function updateUserNavbar(user) {
-                // Ocultar botón de login
-                document.getElementById('loginButtonContainer').style.display = 'none';
-                
-                // Mostrar dropdown del usuario
-                const userContainer = document.getElementById('userDropdownContainer');
-                userContainer.style.display = 'block';
-                
-                // Actualizar información del usuario
-                const userName = user.name || user.email.split('@')[0];
-                const userEmail = user.email;
-                
-                // Determinar el rol del usuario
-                let userRole = 'student';
-                if (userEmail === 'admin@gmail.com') {
-                    userRole = 'admin';
-                } else if (userEmail === 'profesor@gmail.com') {
-                    userRole = 'teacher';
-                } else if (userEmail === 'estudiante@gmail.com') {
-                    userRole = 'student';
-                } else {
-                    userRole = user.role || 'student';
-                }
-                
-                // Avatar basado en el rol usando íconos
-                let avatarIcon = 'fa-user-circle';
-                if (userRole === 'admin') {
-                    avatarIcon = 'fa-user-shield';
-                } else if (userRole === 'teacher') {
-                    avatarIcon = 'fa-chalkboard-teacher';
-                } else {
-                    avatarIcon = 'fa-user-graduate';
-                }
-                
-                // Actualizar elementos del navbar
-                document.getElementById('userName').textContent = userName;
-                document.getElementById('userNameLarge').textContent = userName;
-                document.getElementById('userEmail').textContent = userEmail;
-                document.getElementById('userAvatarIcon').className = `fas ${avatarIcon} me-1`;
-                document.getElementById('userAvatarLargeIcon').className = `fas ${avatarIcon} me-2`;
-
-                // Mostrar/ocultar botón "Mis Cursos" según el rol
-                const misCursosContainer = document.getElementById('misCursosContainer');
-                if (misCursosContainer) {
-                    if (userRole === 'student' || userEmail === 'estudiante@gmail.com') {
-                        misCursosContainer.style.display = 'block';
-                        console.log('Mostrando botón Mis Cursos para estudiante:', userEmail);
-                    } else {
-                        misCursosContainer.style.display = 'none';
-                        console.log('Ocultando botón Mis Cursos para rol:', userRole);
-                    }
-                }
-                
-                // Inicializar carrito para usuarios autenticados
-                if (window.cart && typeof window.cart.init === 'function') {
-                    window.cart.init();
-                }
-            }
-
-            function showLoginButton() {
-                // Mostrar botón de login
-                document.getElementById('loginButtonContainer').style.display = 'block';
-                
-                // Ocultar dropdown del usuario
-                document.getElementById('userDropdownContainer').style.display = 'none';
-
-                // Ocultar botón "Mis Cursos"
-                const misCursosContainer = document.getElementById('misCursosContainer');
-                if (misCursosContainer) {
-                    misCursosContainer.style.display = 'none';
-                }
-            }
-
-            // Función para manejar el logout
-            function handleLogout() {
-                Auth0Service.logout();
-                showLoginButton();
-                window.location.href = '../index.html';
-            }
-
-            // Inicializar verificación de autenticación
-            checkAuthAndUpdateNavbar();
-        });
-
-        // Inicializar navegación de configuración
-        function initSettingsNavigation() {
-            const navItems = document.querySelectorAll('.settings-nav .nav-item');
-            const sections = document.querySelectorAll('.settings-section');
-
-            navItems.forEach(item => {
-                item.addEventListener('click', function() {
-                    const target = this.getAttribute('data-target');
-                    
-                    // Remover clase active de todos los elementos
-                    navItems.forEach(nav => nav.classList.remove('active'));
-                    sections.forEach(section => section.classList.remove('active'));
-                    
-                    // Agregar clase active al elemento seleccionado
-                    this.classList.add('active');
-                    document.getElementById(target).classList.add('active');
-                });
-            });
-        }
-
-        // Funciones de formularios
-        function resetProfileForm() {
-            document.getElementById('fullNameInput').value = 'Estudiante';
-            document.getElementById('emailInput').value = 'estudiante@gmail.com';
-            document.getElementById('phoneInput').value = '+52 55 1234 5678';
-            document.getElementById('countryInput').value = 'MX';
-            document.getElementById('bioInput').value = 'Estudiante apasionado por el aprendizaje en línea.';
-        }
-
-        function saveNotificationSettings() {
-            const settings = {
-                emailCourses: document.getElementById('emailCourses').checked,
-                emailProgress: document.getElementById('emailProgress').checked,
-                emailCertificates: document.getElementById('emailCertificates').checked,
-                emailNewsletter: document.getElementById('emailNewsletter').checked,
-                pushReminders: document.getElementById('pushReminders').checked,
-                pushAchievements: document.getElementById('pushAchievements').checked
-            };
-            
-            localStorage.setItem('notificationSettings', JSON.stringify(settings));
-            showSuccessMessage('Configuración de notificaciones guardada');
-        }
-
-        function savePreferenceSettings() {
-            const settings = {
-                language: document.getElementById('languageSelect').value,
-                timezone: document.getElementById('timezoneSelect').value,
-                darkMode: document.getElementById('darkModeToggle').checked,
-                compactMode: document.getElementById('compactModeToggle').checked,
-                autoplay: document.getElementById('autoplayToggle').checked,
-                subtitles: document.getElementById('subtitlesToggle').checked
-            };
-            
-            localStorage.setItem('preferenceSettings', JSON.stringify(settings));
-            showSuccessMessage('Preferencias guardadas');
-        }
-
-        function saveLearningSettings() {
-            const settings = {
-                weeklyHours: document.getElementById('weeklyHours').value,
-                monthlyCourses: document.getElementById('monthlyCourses').value,
-                sessionDuration: document.getElementById('sessionDuration').value,
-                difficultyLevel: document.getElementById('difficultyLevel').value,
-                adaptiveLearning: document.getElementById('adaptiveLearning').checked,
-                spacedRepetition: document.getElementById('spacedRepetition').checked,
-                practiceReminders: document.getElementById('practiceReminders').checked,
-                goalReminders: document.getElementById('goalReminders').checked
-            };
-            
-            localStorage.setItem('learningSettings', JSON.stringify(settings));
-            showSuccessMessage('Configuración de aprendizaje guardada');
-        }
-
-        function exportUserData() {
-            alert('Función de exportación de datos en desarrollo');
-        }
-
-        function requestDataDeletion() {
-            if (confirm('¿Estás seguro de que quieres solicitar la eliminación de tus datos? Esta acción no se puede deshacer.')) {
-                alert('Solicitud de eliminación enviada. Te contactaremos en 30 días.');
-            }
-        }
-
-        function showSuccessMessage(message) {
-            // Crear toast de éxito
-            const toast = document.createElement('div');
-            toast.className = 'alert alert-success alert-dismissible fade show position-fixed';
-            toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
-            toast.innerHTML = `
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            `;
-            document.body.appendChild(toast);
-            
-            // Remover después de 3 segundos
-            setTimeout(() => {
-                if (toast.parentNode) {
-                    toast.parentNode.removeChild(toast);
-                }
-            }, 3000);
-        }
-
-        // Manejar envío de formularios
-        document.getElementById('profileForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const formData = {
-                fullName: document.getElementById('fullNameInput').value,
-                email: document.getElementById('emailInput').value,
-                phone: document.getElementById('phoneInput').value,
-                country: document.getElementById('countryInput').value,
-                bio: document.getElementById('bioInput').value
-            };
-            
-            localStorage.setItem('userSettings', JSON.stringify(formData));
-            showSuccessMessage('Perfil actualizado correctamente');
-        });
-
-        document.getElementById('passwordForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const currentPassword = document.getElementById('currentPassword').value;
-            const newPassword = document.getElementById('newPassword').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            
-            if (newPassword !== confirmPassword) {
-                alert('Las contraseñas no coinciden');
-                return;
-            }
-            
-            if (newPassword.length < 8) {
-                alert('La nueva contraseña debe tener al menos 8 caracteres');
-                return;
-            }
-            
-            // Aquí se implementaría la lógica real de cambio de contraseña
-            alert('Función de cambio de contraseña en desarrollo');
-            this.reset();
-        });
-
-        // Inicializar página
-        document.addEventListener('DOMContentLoaded', function() {
-            // Cargar datos del usuario desde localStorage si están disponibles
-            const userData = localStorage.getItem('auth0.user');
-            if (userData) {
-                try {
-                    const user = JSON.parse(userData);
-                    updateUserInfo(user);
-                } catch (error) {
-                    console.error('Error parsing user data:', error);
-                }
-            }
-            
-            initSettingsNavigation();
-            initLearningSliders();
-        });
-
-        // Inicializar sliders de aprendizaje
-        function initLearningSliders() {
-            const weeklyHoursSlider = document.getElementById('weeklyHours');
-            const monthlyCoursesSlider = document.getElementById('monthlyCourses');
-            
-            if (weeklyHoursSlider) {
-                weeklyHoursSlider.addEventListener('input', function() {
-                    const value = this.value;
-                    const goalValue = this.parentElement.querySelector('.goal-value');
-                    goalValue.textContent = value + ' horas';
-                });
-            }
-            
-            if (monthlyCoursesSlider) {
-                monthlyCoursesSlider.addEventListener('input', function() {
-                    const value = this.value;
-                    const goalValue = this.parentElement.querySelector('.goal-value');
-                    goalValue.textContent = value + ' cursos';
-                });
-            }
-        }
-
-        function updateUserInfo(user) {
-            const userName = user.name || user.email.split('@')[0];
-            const userEmail = user.email;
-            const userRole = user.role || 'student';
-            
-            // Avatar basado en el rol usando íconos
-            let avatarIcon = 'fa-user-circle';
-            if (userRole === 'admin') {
-                avatarIcon = 'fa-user-shield';
-            } else if (userRole === 'teacher') {
-                avatarIcon = 'fa-chalkboard-teacher';
-            } else {
-                avatarIcon = 'fa-user-graduate';
-            }
-            
-            document.getElementById('userAvatarIcon').className = `fas ${avatarIcon}`;
-            document.getElementById('userName').textContent = userName;
-            
-            // Actualizar formulario si hay datos guardados
-            const savedSettings = localStorage.getItem('userSettings');
-            if (savedSettings) {
-                try {
-                    const settings = JSON.parse(savedSettings);
-                    document.getElementById('fullNameInput').value = settings.fullName || userName;
-                    document.getElementById('emailInput').value = settings.email || userEmail;
-                    document.getElementById('phoneInput').value = settings.phone || '';
-                    document.getElementById('countryInput').value = settings.country || '';
-                    document.getElementById('bioInput').value = settings.bio || '';
-                } catch (error) {
-                    console.error('Error parsing saved settings:', error);
-                }
-            }
-        }
-    </script>
+    async function handleLogout() {
+      localStorage.removeItem('user');
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('rememberMe');
+      try { await fetch('/auth/logout', { method: 'POST', credentials: 'include' }); } catch(_) {}
+      window.location.href = '/html/login.html';
+    }
+  </script>
 </body>
-</html> 
+</html>

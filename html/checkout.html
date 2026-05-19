@@ -1,492 +1,373 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout - Lumina Learning</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout — Lumina Learning</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+  <link href="../styles/main.css" rel="stylesheet">
+  <style>
+    :root {
+      --bg:#09090b; --surface:#111113; --card:#18181b; --card-hover:#1c1c20;
+      --border:rgba(255,255,255,.07); --border-subtle:rgba(255,255,255,.04);
+      --accent:#6366f1; --accent-2:#818cf8;
+      --emerald:#10b981; --amber:#f59e0b; --rose:#f43f5e;
+      --text:#fafafa; --text-2:#a1a1aa; --text-3:#71717a;
+    }
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
 
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="../styles/main.css">
-    <link rel="stylesheet" href="../styles/unified-styles.css">
-    <link rel="stylesheet" href="../styles/checkout.css">
-    </head>
+    /* Navbar override */
+    .navbar { background: var(--surface) !important; border-bottom: 1px solid var(--border) !important; backdrop-filter: blur(12px); }
+    .navbar-brand { font-weight: 700; font-size: 15px; color: var(--text) !important; display: flex; align-items: center; gap: 8px; }
+    .navbar .nav-link { color: var(--text-2) !important; font-size: 13px; font-weight: 500; transition: color .15s; }
+    .navbar .nav-link:hover { color: var(--text) !important; }
+    .navbar .nav-link.active { color: var(--text) !important; }
 
+    /* Toast */
+    .toast { background: var(--card); border: 1px solid var(--border); border-radius: 12px; color: var(--text); }
+    .toast-header { background: rgba(255,255,255,.04); border-bottom: 1px solid var(--border); color: var(--text); }
+
+    /* Main content */
+    .checkout-main { padding: 100px 0 60px; min-height: 100vh; }
+
+    /* Header */
+    .checkout-header { text-align: center; margin-bottom: 40px; }
+    .checkout-title { font-size: 28px; font-weight: 800; letter-spacing: -.5px; color: var(--text); margin-bottom: 6px; }
+    .checkout-sub { font-size: 14px; color: var(--text-3); }
+
+    /* Breadcrumb */
+    .checkout-crumb { margin-bottom: 28px; }
+    .breadcrumb { background: transparent; padding: 0; margin: 0; }
+    .breadcrumb-item a { color: var(--accent-2); text-decoration: none; font-size: 13px; }
+    .breadcrumb-item.active { color: var(--text-3); font-size: 13px; }
+    .breadcrumb-item + .breadcrumb-item::before { color: var(--text-3); }
+
+    /* Progress steps */
+    .checkout-steps { display: flex; align-items: center; justify-content: center; gap: 0; margin-bottom: 40px; }
+    .step { display: flex; flex-direction: column; align-items: center; gap: 6px; position: relative; }
+    .step-circle { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; background: rgba(255,255,255,.06); border: 1px solid var(--border); color: var(--text-3); transition: all .2s; }
+    .step.active .step-circle { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .step.done .step-circle { background: var(--emerald); border-color: var(--emerald); color: #fff; }
+    .step-label { font-size: 11px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: .04em; white-space: nowrap; }
+    .step.active .step-label { color: var(--accent-2); }
+    .step-line { width: 80px; height: 1px; background: var(--border); margin: 0 8px; margin-bottom: 22px; }
+    .step-line.done { background: var(--emerald); }
+
+    /* Panel */
+    .panel { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; margin-bottom: 20px; }
+    .panel-head { padding: 18px 22px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+    .panel-icon { width: 32px; height: 32px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 13px; }
+    .pi-indigo  { background: rgba(99,102,241,.15); color: var(--accent); }
+    .pi-sky     { background: rgba(14,165,233,.15);  color: #0ea5e9; }
+    .pi-emerald { background: rgba(16,185,129,.15);  color: var(--emerald); }
+    .panel-title { font-size: 14px; font-weight: 700; color: var(--text); }
+    .panel-body { padding: 22px; }
+
+    /* Form */
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .field-group { margin-bottom: 16px; }
+    .field-label { font-size: 11.5px; font-weight: 600; color: var(--text-2); display: block; margin-bottom: 6px; text-transform: uppercase; letter-spacing: .04em; }
+    .field-input { width: 100%; padding: 10px 14px; background: rgba(255,255,255,.04); border: 1px solid var(--border); border-radius: 9px; color: var(--text); font-family: 'Inter', sans-serif; font-size: 14px; outline: none; transition: all .2s; }
+    .field-input:focus { border-color: rgba(99,102,241,.5); box-shadow: 0 0 0 3px rgba(99,102,241,.1); }
+    .field-input::placeholder { color: var(--text-3); }
+    .input-with-icon { position: relative; }
+    .input-with-icon .field-input { padding-right: 40px; }
+    .input-icon { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: var(--text-3); font-size: 13px; }
+
+    /* Card brands */
+    .card-brands { display: flex; gap: 8px; margin-bottom: 16px; }
+    .card-brand { padding: 6px 10px; background: rgba(255,255,255,.05); border: 1px solid var(--border); border-radius: 7px; font-size: 11px; font-weight: 700; color: var(--text-3); }
+
+    /* Order summary */
+    .order-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border-subtle); }
+    .order-item:last-child { border-bottom: none; }
+    .order-thumb { width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+    .order-name { font-size: 13px; font-weight: 600; color: var(--text); flex: 1; }
+    .order-price { font-size: 13px; font-weight: 700; color: var(--text); white-space: nowrap; }
+    .order-total-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; }
+    .order-total-label { font-size: 13px; color: var(--text-2); }
+    .order-total-val { font-size: 13px; font-weight: 600; color: var(--text); }
+    .order-grand { border-top: 1px solid var(--border); padding-top: 14px; margin-top: 4px; }
+    .order-grand .order-total-label { font-size: 15px; font-weight: 700; color: var(--text); }
+    .order-grand .order-total-val { font-size: 18px; font-weight: 800; color: var(--accent-2); }
+
+    /* Submit */
+    .btn-checkout { width: 100%; padding: 14px; border-radius: 12px; border: none; background: var(--accent); color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: all .2s; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 16px; }
+    .btn-checkout:hover { background: var(--accent-2); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(99,102,241,.3); }
+
+    /* Trust badges */
+    .trust-badges { display: flex; justify-content: center; gap: 20px; margin-top: 14px; flex-wrap: wrap; }
+    .trust-item { display: flex; align-items: center; gap: 5px; font-size: 11.5px; color: var(--text-3); }
+    .trust-item i { color: var(--emerald); }
+
+    /* Coupon */
+    .coupon-row { display: flex; gap: 8px; }
+    .coupon-input { flex: 1; padding: 10px 14px; background: rgba(255,255,255,.04); border: 1px solid var(--border); border-radius: 9px; color: var(--text); font-family: 'Inter', sans-serif; font-size: 14px; outline: none; }
+    .coupon-btn { padding: 10px 16px; border-radius: 9px; border: 1px solid var(--border); background: transparent; color: var(--text-2); font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all .15s; white-space: nowrap; }
+    .coupon-btn:hover { color: var(--text); border-color: rgba(255,255,255,.15); }
+
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,.08); border-radius: 3px; }
+  </style>
+</head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="../index.html">
-                <img src="../img/LuminaLogoNoTextBlanco.webp" alt="Logo" width="32" height="32" class="me-2">
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
-                <span class="navbar-toggler-icon"></span>
-            </button>
 
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="../index.html"><i class="fas fa-home me-1"></i> Inicio</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="cursos-venta.html"><i class="fas fa-book me-1"></i> Cursos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="blog.html"><i class="fas fa-blog me-1"></i> Blog</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="contact.html"><i class="fas fa-envelope me-1"></i> Contacto</a>
-                    </li>
-                    <!-- Botón Mis Cursos (solo para estudiantes) -->
-                    <li class="nav-item" id="misCursosContainer" style="display: none;">
-                        <a class="nav-link mis-cursos-btn" href="courses.html">
-                            <i class="fas fa-graduation-cap me-1"></i> Mis Cursos
-                        </a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" aria-label="Notificaciones">
-                            <i class="fas fa-bell"></i>
-                        </a>
-                    </li>
-
-                    <!-- Dropdown del Carrito -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle position-relative" href="#" id="cartDropdown" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
-                            <i class="fas fa-shopping-cart"></i>
-                            <span id="cartCount"
-                                class="position-absolute top-0 start-100 translate-middle badge bg-danger rounded-pill">0</span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end dropdown-cart" aria-labelledby="cartDropdown">
-                            <li>
-                                <h6 class="dropdown-header fw-bold">Tu carrito</h6>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider my-1">
-                            </li>
-                            <li>
-                                <div id="cartItems" class="px-2" style="max-height: 50vh; overflow-y: auto;">
-                                    <p class="text-muted text-center py-2 mb-0">Tu carrito está vacío</p>
-                                </div>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider my-1">
-                            </li>
-                            <li class="px-2">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <strong>Subtotal:</strong>
-                                    <span id="cartSubtotal" class="fw-bold">$0.00</span>
-                                </div>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider my-1">
-                            </li>
-                            <li class="px-2 mb-1">
-                                <a href="checkout.html" class="btn btn-primary w-100 py-2">
-                                    Ir a pagar
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    <!-- Dropdown del Usuario -->
-                    <li class="nav-item dropdown" id="userDropdownContainer" style="display: none;">
-                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
-                            <i id="userAvatarIcon" class="fas fa-user-circle me-1" style="font-size: 24px;"></i>
-                            <span id="userName">Usuario</span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                            <li>
-                                <div class="dropdown-header">
-                                    <div class="d-flex align-items-center">
-                                        <i id="userAvatarLargeIcon" class="fas fa-user-circle me-2" style="font-size: 32px;"></i>
-                                        <div>
-                                            <div id="userNameLarge" class="fw-bold">Usuario</div>
-                                            <small id="userEmail" class="text-muted">usuario@email.com</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="profile.html"><i class="fas fa-user me-2"></i> Mi Perfil</a></li>
-                            <li><a class="dropdown-item" href="settings.html"><i class="fas fa-cog me-2"></i> Configuración</a></li>
-                            <li><a class="dropdown-item" href="courses.html"><i class="fas fa-book me-2"></i> Mis Cursos</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item text-danger" href="#" onclick="handleLogout()"><i class="fas fa-sign-out-alt me-2"></i> Cerrar sesión</a></li>
-                        </ul>
-                    </li>
-                    
-                    <!-- Botón de Login (cuando no está autenticado) -->
-                    <li class="nav-item" id="loginButtonContainer">
-                        <a class="nav-link" href="login.html">
-                            <i class="fas fa-sign-in-alt me-1"></i> Iniciar Sesión
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Toast Container -->
-    <div class="toast-container position-fixed top-0 end-0 p-3">
-        <div id="checkoutToast" class="toast" role="alert">
-            <div class="toast-header">
-                <i class="fas fa-check-circle text-success me-2"></i>
-                <strong class="me-auto">Éxito</strong>
-                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
-            </div>
-            <div class="toast-body">
-                Pedido procesado correctamente
-            </div>
-        </div>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container-fluid px-4">
+      <a class="navbar-brand" href="../index.html">
+        <img src="../img/LuminaLogoNoTextBlanco.webp" alt="Lumina" width="28" height="28">
+        Lumina
+      </a>
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item"><a class="nav-link" href="../index.html"><i class="fas fa-home me-1"></i> Inicio</a></li>
+          <li class="nav-item"><a class="nav-link" href="cursos-venta.html"><i class="fas fa-book me-1"></i> Cursos</a></li>
+          <li class="nav-item"><a class="nav-link" href="blog.html"><i class="fas fa-blog me-1"></i> Blog</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html"><i class="fas fa-envelope me-1"></i> Contacto</a></li>
+        </ul>
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item" id="loginButtonContainer">
+            <a class="nav-link" href="login.html"><i class="fas fa-sign-in-alt me-1"></i> Iniciar Sesión</a>
+          </li>
+        </ul>
+      </div>
     </div>
+  </nav>
 
-    <!-- Main Content -->
-    <main class="checkout-main">
-        <div class="container">
-            <!-- Breadcrumb -->
-            <nav aria-label="breadcrumb" class="checkout-breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="../index.html">Inicio</a></li>
-                    <li class="breadcrumb-item"><a href="cursos-venta.html">Cursos</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Checkout</li>
-                </ol>
-            </nav>
+  <!-- Toast -->
+  <div class="toast-container position-fixed top-0 end-0 p-3">
+    <div id="checkoutToast" class="toast" role="alert">
+      <div class="toast-header">
+        <i class="fas fa-check-circle text-success me-2"></i>
+        <strong class="me-auto">Pedido procesado</strong>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+      </div>
+      <div class="toast-body">Tu inscripción ha sido confirmada. ¡Bienvenido!</div>
+    </div>
+  </div>
 
-            <!-- Checkout Header -->
-            <div class="checkout-header text-center mb-5">
-                <h1 class="display-5 fw-bold mb-3">Finalizar Compra</h1>
-                <p class="lead text-muted">Completa tu información para procesar el pedido</p>
+  <main class="checkout-main">
+    <div class="container" style="max-width:1000px;">
+
+      <!-- Breadcrumb -->
+      <nav class="checkout-crumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="../index.html">Inicio</a></li>
+          <li class="breadcrumb-item"><a href="cursos-venta.html">Cursos</a></li>
+          <li class="breadcrumb-item active">Checkout</li>
+        </ol>
+      </nav>
+
+      <!-- Header -->
+      <div class="checkout-header">
+        <div class="checkout-title">Finalizar Compra</div>
+        <div class="checkout-sub">Completa tu información para inscribirte en los cursos seleccionados</div>
+      </div>
+
+      <!-- Progress steps -->
+      <div class="checkout-steps">
+        <div class="step done"><div class="step-circle"><i class="fas fa-check"></i></div><div class="step-label">Carrito</div></div>
+        <div class="step-line done"></div>
+        <div class="step active"><div class="step-circle">2</div><div class="step-label">Pago</div></div>
+        <div class="step-line"></div>
+        <div class="step"><div class="step-circle">3</div><div class="step-label">Confirmación</div></div>
+      </div>
+
+      <div class="row g-4">
+
+        <!-- Left: forms -->
+        <div class="col-lg-7">
+
+          <!-- Personal info -->
+          <div class="panel">
+            <div class="panel-head">
+              <div class="panel-icon pi-indigo"><i class="fas fa-user"></i></div>
+              <div class="panel-title">Información Personal</div>
             </div>
-
-            <div class="row">
-                <!-- Formulario de Checkout -->
-                <div class="col-lg-8">
-                    <div class="checkout-form-container">
-                        <!-- Información Personal -->
-                        <div class="checkout-section mb-4">
-                            <div class="section-header">
-                                <h3><i class="fas fa-user me-2"></i>Información Personal</h3>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="firstName" class="form-label">Nombre *</label>
-                                    <input type="text" class="form-control" id="firstName" required>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="lastName" class="form-label">Apellido *</label>
-                                    <input type="text" class="form-control" id="lastName" required>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="email" class="form-label">Correo Electrónico *</label>
-                                <input type="email" class="form-control" id="email" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="phone" class="form-label">Teléfono</label>
-                                <input type="tel" class="form-control" id="phone">
-                            </div>
-                        </div>
-
-                        <!-- Información de Facturación -->
-                        <div class="checkout-section mb-4">
-                            <div class="section-header">
-                                <h3><i class="fas fa-credit-card me-2"></i>Información de Pago</h3>
-                            </div>
-                            <div class="mb-3">
-                                <label for="cardNumber" class="form-label">Número de Tarjeta *</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="cardNumber"
-                                        placeholder="1234 5678 9012 3456" maxlength="19" required>
-                                    <span class="input-group-text">
-                                        <i class="fas fa-credit-card"></i>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="expiryDate" class="form-label">Fecha de Vencimiento *</label>
-                                    <input type="text" class="form-control" id="expiryDate" placeholder="MM/AA"
-                                        maxlength="5" required>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="cvv" class="form-label">CVV *</label>
-                                    <input type="text" class="form-control" id="cvv" placeholder="123" maxlength="4"
-                                        required>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="cardName" class="form-label">Nombre en la Tarjeta *</label>
-                                <input type="text" class="form-control" id="cardName" required>
-                            </div>
-                        </div>
-
-                        <!-- Dirección de Facturación -->
-                        <div class="checkout-section mb-4">
-                            <div class="section-header">
-                                <h3><i class="fas fa-map-marker-alt me-2"></i>Dirección de Facturación</h3>
-                            </div>
-                            <div class="mb-3">
-                                <label for="address" class="form-label">Dirección *</label>
-                                <input type="text" class="form-control" id="address" required>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="city" class="form-label">Ciudad *</label>
-                                    <input type="text" class="form-control" id="city" required>
-                                </div>
-                                <div class="col-md-3 mb-3">
-                                    <label for="state" class="form-label">Estado *</label>
-                                    <input type="text" class="form-control" id="state" required>
-                                </div>
-                                <div class="col-md-3 mb-3">
-                                    <label for="zipCode" class="form-label">Código Postal *</label>
-                                    <input type="text" class="form-control" id="zipCode" required>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="country" class="form-label">País *</label>
-                                <select class="form-select" id="country" required>
-                                    <option value="">Seleccionar país</option>
-                                    <option value="MX">México</option>
-                                    <option value="ES">España</option>
-                                    <option value="AR">Argentina</option>
-                                    <option value="CO">Colombia</option>
-                                    <option value="PE">Perú</option>
-                                    <option value="CL">Chile</option>
-                                    <option value="US">Estados Unidos</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <!-- Términos y Condiciones -->
-                        <div class="checkout-section mb-4">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="termsCheck" required>
-                                <label class="form-check-label" for="termsCheck">
-                                    Acepto los <a href="#" class="text-primary">Términos y Condiciones</a> y la <a
-                                        href="#" class="text-primary">Política de Privacidad</a> *
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="newsletterCheck">
-                                <label class="form-check-label" for="newsletterCheck">
-                                    Suscribirme al boletín de noticias para recibir ofertas especiales
-                                </label>
-                            </div>
-                        </div>
-                    </div>
+            <div class="panel-body">
+              <div class="field-row">
+                <div class="field-group">
+                  <label class="field-label">Nombre *</label>
+                  <input type="text" class="field-input" id="firstName" placeholder="Tu nombre" required>
                 </div>
-
-                <!-- Resumen del Pedido -->
-                <div class="col-lg-4">
-                    <div class="order-summary-container">
-                        <div class="order-summary">
-                            <div class="summary-header">
-                                <h3><i class="fas fa-shopping-bag me-2"></i>Resumen del Pedido</h3>
-                            </div>
-
-                            <div id="orderItems" class="summary-items">
-                                <!-- Los items se cargarán dinámicamente -->
-                            </div>
-
-                            <div class="summary-totals">
-                                <div class="summary-row">
-                                    <span>Subtotal:</span>
-                                    <span id="summarySubtotal">$0.00</span>
-                                </div>
-                                <div class="summary-row">
-                                    <span>Impuestos:</span>
-                                    <span id="summaryTaxes">$0.00</span>
-                                </div>
-                                <div class="summary-row summary-total">
-                                    <span>Total:</span>
-                                    <span id="summaryTotal">$0.00</span>
-                                </div>
-                            </div>
-
-                            <div class="summary-actions">
-                                <button id="processOrderBtn" class="btn btn-primary btn-lg w-100 mb-3" disabled>
-                                    <i class="fas fa-lock me-2"></i>Procesar Pedido
-                                </button>
-                                <a href="cursos-venta.html" class="btn btn-outline-secondary w-100">
-                                    <i class="fas fa-arrow-left me-2"></i>Seguir Comprando
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+                <div class="field-group">
+                  <label class="field-label">Apellido *</label>
+                  <input type="text" class="field-input" id="lastName" placeholder="Tu apellido" required>
                 </div>
+              </div>
+              <div class="field-group">
+                <label class="field-label">Correo Electrónico *</label>
+                <input type="email" class="field-input" id="email" placeholder="tu@correo.com" required>
+              </div>
+              <div class="field-group">
+                <label class="field-label">Teléfono</label>
+                <input type="tel" class="field-input" id="phone" placeholder="+52 55 0000 0000">
+              </div>
             </div>
+          </div>
+
+          <!-- Payment info -->
+          <div class="panel">
+            <div class="panel-head">
+              <div class="panel-icon pi-sky"><i class="fas fa-credit-card"></i></div>
+              <div class="panel-title">Información de Pago</div>
+            </div>
+            <div class="panel-body">
+              <div class="card-brands">
+                <span class="card-brand">VISA</span>
+                <span class="card-brand">MC</span>
+                <span class="card-brand">AMEX</span>
+                <span class="card-brand">OXXO</span>
+              </div>
+              <div class="field-group">
+                <label class="field-label">Número de Tarjeta *</label>
+                <div class="input-with-icon">
+                  <input type="text" class="field-input" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" required>
+                  <span class="input-icon"><i class="fas fa-credit-card"></i></span>
+                </div>
+              </div>
+              <div class="field-row">
+                <div class="field-group">
+                  <label class="field-label">Vencimiento *</label>
+                  <input type="text" class="field-input" id="expiryDate" placeholder="MM/AA" maxlength="5" required>
+                </div>
+                <div class="field-group">
+                  <label class="field-label">CVV *</label>
+                  <div class="input-with-icon">
+                    <input type="text" class="field-input" id="cvv" placeholder="123" maxlength="4" required>
+                    <span class="input-icon"><i class="fas fa-lock"></i></span>
+                  </div>
+                </div>
+              </div>
+              <div class="field-group">
+                <label class="field-label">Nombre en la Tarjeta *</label>
+                <input type="text" class="field-input" id="cardName" placeholder="Como aparece en la tarjeta" required>
+              </div>
+            </div>
+          </div>
+
+          <!-- Billing address -->
+          <div class="panel">
+            <div class="panel-head">
+              <div class="panel-icon pi-emerald"><i class="fas fa-map-marker-alt"></i></div>
+              <div class="panel-title">Dirección de Facturación</div>
+            </div>
+            <div class="panel-body">
+              <div class="field-group">
+                <label class="field-label">Dirección *</label>
+                <input type="text" class="field-input" id="address" placeholder="Calle, número, colonia" required>
+              </div>
+              <div class="field-row">
+                <div class="field-group">
+                  <label class="field-label">Ciudad *</label>
+                  <input type="text" class="field-input" id="city" required>
+                </div>
+                <div class="field-group">
+                  <label class="field-label">Estado *</label>
+                  <input type="text" class="field-input" id="state" required>
+                </div>
+              </div>
+              <div class="field-group">
+                <label class="field-label">Código Postal *</label>
+                <input type="text" class="field-input" id="zipCode" maxlength="5" required>
+              </div>
+            </div>
+          </div>
+
         </div>
-    </main>
 
-    <!-- Footer -->
-    <footer class="bg-dark text-light py-3">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-4 mb-3">
-                    <img src="../img/LuminaLogoNoText.webp" alt="Logo" style="width: 40px; height: 40px;">
-                    <p class="mt-2 mb-2" style="font-size: 0.9rem;">Iluminando el futuro del aprendizaje en línea.</p>
-                    <div class="mt-2">
-                        <a href="#" class="text-light me-2"><i class="fab fa-facebook"></i></a>
-                        <a href="#" class="text-light me-2"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="text-light me-2"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="text-light me-2"><i class="fab fa-linkedin"></i></a>
-                        <a href="#" class="text-light"><i class="fab fa-youtube"></i></a>
-                    </div>
-                </div>
-
-                <div class="col-lg-2 col-md-6 mb-3">
-                    <h6>Enlaces</h6>
-                    <a href="../index.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-home me-1"></i> Inicio</a>
-                    <a href="cursos-venta.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-book me-1"></i> Cursos</a>
-                    <a href="blog.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-blog me-1"></i> Blog</a>
-                    <a href="contact.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-envelope me-1"></i> Contacto</a>
-                </div>
-
-                <div class="col-lg-2 col-md-6 mb-3">
-                    <h6>Mi cuenta</h6>
-                    <a href="student-courses.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-graduation-cap me-1"></i> Mis Cursos</a>
-                    <a href="calendar.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-calendar me-1"></i> Calendario</a>
-                    <a href="schedule.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-clock me-1"></i> Horario</a>
-                    <a href="#" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-user me-1"></i> Perfil</a>
-                </div>
-
-                <div class="col-lg-4 mb-3">
-                    <h6>Contacto</h6>
-                    <p class="mb-1" style="font-size: 0.85rem;"><i class="fas fa-map-marker-alt me-1"></i> 123 Calle Universidad, Ciudad</p>
-                    <p class="mb-1" style="font-size: 0.85rem;"><i class="fas fa-phone me-1"></i> +1 234 567 8900</p>
-                    <p class="mb-1" style="font-size: 0.85rem;"><i class="fas fa-envelope me-1"></i> luminalearning.mx@gmail.com</p>
-                    <a href="contact.html" class="btn btn-outline-light btn-sm mt-1">Contáctanos</a>
-                </div>
+        <!-- Right: order summary -->
+        <div class="col-lg-5">
+          <div class="panel" style="position:sticky;top:80px;">
+            <div class="panel-head">
+              <div class="panel-icon pi-indigo"><i class="fas fa-shopping-bag"></i></div>
+              <div class="panel-title">Resumen del Pedido</div>
             </div>
+            <div class="panel-body">
 
-            <div class="row">
-                <div class="col-12 text-center">
-                    <p class="mb-0" style="font-size: 0.8rem;">© <span id="currentYear"></span> Lumina Learning. Todos los derechos reservados.</p>
+              <div id="orderItems">
+                <div class="order-item">
+                  <div class="order-thumb" style="background:rgba(99,102,241,.15);color:var(--accent)"><i class="fas fa-code"></i></div>
+                  <span class="order-name">Programación Web Avanzada</span>
+                  <span class="order-price">$1,200</span>
                 </div>
+                <div class="order-item">
+                  <div class="order-thumb" style="background:rgba(16,185,129,.15);color:var(--emerald)"><i class="fas fa-palette"></i></div>
+                  <span class="order-name">Diseño UX/UI Profesional</span>
+                  <span class="order-price">$990</span>
+                </div>
+              </div>
+
+              <div class="order-total-row">
+                <span class="order-total-label">Subtotal</span>
+                <span class="order-total-val">$2,190</span>
+              </div>
+              <div class="order-total-row">
+                <span class="order-total-label">Descuento (10%)</span>
+                <span class="order-total-val" style="color:var(--emerald)">-$219</span>
+              </div>
+              <div class="order-total-row">
+                <span class="order-total-label">IVA (16%)</span>
+                <span class="order-total-val">$316</span>
+              </div>
+              <div class="order-total-row order-grand">
+                <span class="order-total-label">Total</span>
+                <span class="order-total-val">$2,287</span>
+              </div>
+
+              <!-- Coupon -->
+              <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);">
+                <div style="font-size:12px;font-weight:600;color:var(--text-2);margin-bottom:8px;text-transform:uppercase;letter-spacing:.04em;">Código de Descuento</div>
+                <div class="coupon-row">
+                  <input class="coupon-input" type="text" placeholder="LUMINA2026">
+                  <button class="coupon-btn">Aplicar</button>
+                </div>
+              </div>
+
+              <button class="btn-checkout" onclick="processCheckout()">
+                <i class="fas fa-lock"></i> Confirmar Pago — $2,287 MXN
+              </button>
+
+              <div class="trust-badges">
+                <div class="trust-item"><i class="fas fa-shield-alt"></i> Pago seguro</div>
+                <div class="trust-item"><i class="fas fa-undo"></i> 7 días garantía</div>
+                <div class="trust-item"><i class="fas fa-lock"></i> SSL 256-bit</div>
+              </div>
             </div>
+          </div>
         </div>
-    </footer>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Auth0 Scripts -->
-    <script src="../js/auth0-config.js"></script>
-    <script src="../js/auth-guard.js"></script>
-    <script src="../js/logout.js"></script>
-    <!-- Custom JS -->
-    <script src="../js/checkout.js"></script>
-    <script src="../js/footer-utils.js"></script>
-    
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Función global para logout
-            window.handleLogout = async function() {
-                try {
-                    await Auth0Service.logout();
-                } catch (error) {
-                    console.error('Error en logout:', error);
-                    // Redirigir de todas formas
-                    window.location.href = './login.html';
-                }
-            };
+      </div>
+    </div>
+  </main>
 
-            // Verificar autenticación y actualizar navbar
-            async function checkAuthAndUpdateNavbar() {
-                try {
-                    await Auth0Service.initialize();
-                    const isAuthenticated = await Auth0Service.isAuthenticated();
-                    
-                    if (isAuthenticated) {
-                        const user = await Auth0Service.getUser();
-                        updateUserNavbar(user);
-                    } else {
-                        showLoginButton();
-                    }
-                } catch (error) {
-                    console.error('Error verificando autenticación:', error);
-                    showLoginButton();
-                }
-            }
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    function processCheckout() {
+      const required = ['firstName','lastName','email','cardNumber','expiryDate','cvv','cardName','address','city','state','zipCode'];
+      const missing = required.filter(id => !document.getElementById(id)?.value.trim());
+      if (missing.length) {
+        alert('Por favor completa todos los campos obligatorios.');
+        return;
+      }
+      const toast = new bootstrap.Toast(document.getElementById('checkoutToast'));
+      toast.show();
+      setTimeout(() => { window.location.href = 'courses.html'; }, 2500);
+    }
 
-            function updateUserNavbar(user) {
-                // Ocultar botón de login
-                document.getElementById('loginButtonContainer').style.display = 'none';
-                
-                // Mostrar dropdown del usuario
-                const userContainer = document.getElementById('userDropdownContainer');
-                userContainer.style.display = 'block';
-                
-                // Actualizar información del usuario
-                const userName = user.name || user.email.split('@')[0];
-                const userEmail = user.email;
-                
-                // Determinar el rol del usuario
-                let userRole = 'student';
-                if (userEmail === 'admin@gmail.com') {
-                    userRole = 'admin';
-                } else if (userEmail === 'profesor@gmail.com') {
-                    userRole = 'teacher';
-                } else if (userEmail === 'estudiante@gmail.com') {
-                    userRole = 'student';
-                } else {
-                    userRole = user.role || 'student';
-                }
-                
-                // Avatar basado en el rol usando íconos
-                let avatarIcon = 'fa-user-circle';
-                if (userRole === 'admin') {
-                    avatarIcon = 'fa-user-shield';
-                } else if (userRole === 'teacher') {
-                    avatarIcon = 'fa-chalkboard-teacher';
-                } else {
-                    avatarIcon = 'fa-user-graduate';
-                }
-                
-                // Actualizar elementos del navbar
-                document.getElementById('userName').textContent = userName;
-                document.getElementById('userNameLarge').textContent = userName;
-                document.getElementById('userEmail').textContent = userEmail;
-                document.getElementById('userAvatarIcon').className = `fas ${avatarIcon} me-1`;
-                document.getElementById('userAvatarLargeIcon').className = `fas ${avatarIcon} me-2`;
-                
-                // Mostrar/ocultar botón "Mis Cursos" según el rol
-                const misCursosContainer = document.getElementById('misCursosContainer');
-                if (userRole === 'student' || userEmail === 'estudiante@gmail.com') {
-                    misCursosContainer.style.display = 'block';
-                    console.log('Mostrando botón Mis Cursos para estudiante:', userEmail);
-                } else {
-                    misCursosContainer.style.display = 'none';
-                    console.log('Ocultando botón Mis Cursos para rol:', userRole);
-                }
-            }
+    /* Card number formatting */
+    document.getElementById('cardNumber').addEventListener('input', function() {
+      this.value = this.value.replace(/\D/g,'').replace(/(.{4})/g,'$1 ').trim();
+    });
 
-            function showLoginButton() {
-                // Mostrar botón de login
-                document.getElementById('loginButtonContainer').style.display = 'block';
-                
-                // Ocultar dropdown del usuario
-                document.getElementById('userDropdownContainer').style.display = 'none';
-
-                // Ocultar botón "Mis Cursos"
-                document.getElementById('misCursosContainer').style.display = 'none';
-            }
-
-            // Inicializar verificación de autenticación
-            checkAuthAndUpdateNavbar();
-        });
-    </script>
+    document.getElementById('expiryDate').addEventListener('input', function() {
+      this.value = this.value.replace(/\D/g,'').replace(/^(\d{2})(\d)/,'$1/$2');
+    });
+  </script>
 </body>
-
 </html>

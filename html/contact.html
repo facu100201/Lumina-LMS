@@ -1,683 +1,559 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contacto - Lumina LMS</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
-    <link href="../styles/main.css" rel="stylesheet">
-    <link href="../styles/unified-styles.css" rel="stylesheet">
-    <link href="../styles/contact.css" rel="stylesheet">
-    </head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contacto — Lumina Learning</title>
+  <meta name="description" content="Ponte en contacto con el equipo de Lumina Learning">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+  <link href="../styles/main.css" rel="stylesheet">
+
+  <style>
+    body { background:#f8faff; }
+
+    /* ── Hero ──────────────────────────────────────────────── */
+    .contact-hero {
+      padding:8rem 0 5rem;
+      background:linear-gradient(135deg,#0f172a 0%,#1e1b4b 50%,#0c2461 100%);
+      position:relative;overflow:hidden;text-align:center;
+    }
+    .contact-hero::before {
+      content:'';position:absolute;inset:0;
+      background-image:linear-gradient(rgba(99,102,241,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(99,102,241,.06) 1px,transparent 1px);
+      background-size:40px 40px;
+    }
+    .contact-hero-badge {
+      display:inline-flex;align-items:center;gap:.5rem;
+      background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.35);
+      color:#a5b4fc;border-radius:9999px;padding:.35rem 1rem;
+      font-size:.8rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;margin-bottom:1.25rem;
+    }
+    .contact-hero-title {
+      font-size:clamp(2rem,5vw,3rem);font-weight:800;color:#fff;
+      letter-spacing:-.04em;line-height:1.1;margin-bottom:.75rem;
+    }
+    .contact-hero-title span {
+      background:linear-gradient(135deg,#818cf8,#38bdf8);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    }
+    .contact-hero-sub { font-size:1rem;color:rgba(255,255,255,.5);max-width:480px;margin:0 auto; }
+
+    /* ── Section ───────────────────────────────────────────── */
+    .contact-section { padding:3.5rem 0 5rem; }
+
+    /* ── Card ──────────────────────────────────────────────── */
+    .contact-card {
+      background:#fff;border:1px solid #e2e8f0;border-radius:20px;
+      padding:2rem;margin-bottom:1.5rem;
+    }
+    .contact-card-title {
+      font-size:1rem;font-weight:700;color:#0f172a;letter-spacing:-.02em;
+      margin-bottom:1.5rem;padding-bottom:.875rem;border-bottom:1px solid #f1f5f9;
+      display:flex;align-items:center;gap:.625rem;
+    }
+    .contact-card-title i { color:#6366f1; }
+
+    /* ── Form ──────────────────────────────────────────────── */
+    .cf-label {
+      display:block;font-size:.78rem;font-weight:600;color:#64748b;
+      text-transform:uppercase;letter-spacing:.04em;margin-bottom:.375rem;
+    }
+    .cf-input, .cf-select, .cf-textarea {
+      width:100%;padding:.7rem .875rem;border:1px solid #e2e8f0;border-radius:10px;
+      font-family:inherit;font-size:.9rem;color:#0f172a;background:#fff;
+      outline:none;transition:all .2s;
+    }
+    .cf-input:focus, .cf-select:focus, .cf-textarea:focus {
+      border-color:#6366f1;box-shadow:0 0 0 3px rgba(99,102,241,.12);
+    }
+    .cf-input::placeholder, .cf-textarea::placeholder { color:#94a3b8; }
+    .cf-textarea { resize:vertical;min-height:140px; }
+    .cf-select {
+      appearance:none;-webkit-appearance:none;cursor:pointer;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat:no-repeat;background-position:right .875rem center;
+    }
+    .cf-check-label {
+      display:flex;align-items:flex-start;gap:.625rem;
+      font-size:.85rem;color:#64748b;cursor:pointer;
+    }
+    .cf-check-label input { margin-top:.175rem;accent-color:#6366f1; }
+    .btn-send {
+      display:inline-flex;align-items:center;gap:.5rem;
+      padding:.75rem 1.75rem;border-radius:9999px;border:none;
+      background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;
+      font-family:inherit;font-size:.95rem;font-weight:600;cursor:pointer;
+      transition:all .2s;
+    }
+    .btn-send:hover { transform:translateY(-1px);box-shadow:0 6px 18px rgba(79,70,229,.4); }
+    .btn-reset {
+      display:inline-flex;align-items:center;gap:.5rem;
+      padding:.75rem 1.25rem;border-radius:9999px;
+      border:1.5px solid #e2e8f0;background:#fff;color:#64748b;
+      font-family:inherit;font-size:.875rem;font-weight:500;cursor:pointer;transition:all .2s;
+    }
+    .btn-reset:hover { border-color:#6366f1;color:#4f46e5; }
+
+    /* ── FAQ ───────────────────────────────────────────────── */
+    .faq-item { border-bottom:1px solid #f1f5f9; }
+    .faq-item:last-child { border-bottom:none; }
+    .faq-question {
+      display:flex;justify-content:space-between;align-items:center;
+      padding:.875rem 0;cursor:pointer;transition:color .2s;
+    }
+    .faq-question:hover { color:#4f46e5; }
+    .faq-question h5 { font-size:.9rem;font-weight:600;color:inherit;margin:0; }
+    .faq-question i { color:#94a3b8;font-size:.85rem;flex-shrink:0;transition:transform .25s; }
+    .faq-answer {
+      display:none;padding:0 0 .875rem;
+      font-size:.85rem;color:#64748b;line-height:1.65;
+    }
+
+    /* ── Contact info cards ─────────────────────────────────── */
+    .contact-info-item {
+      display:flex;gap:1rem;align-items:flex-start;
+      padding:1rem 0;border-bottom:1px solid #f8faff;
+    }
+    .contact-info-item:last-child { border-bottom:none; }
+    .contact-info-icon {
+      width:44px;height:44px;border-radius:12px;flex-shrink:0;
+      background:linear-gradient(135deg,#eef2ff,#e0e7ff);
+      display:flex;align-items:center;justify-content:center;
+      color:#6366f1;font-size:1rem;
+    }
+    .contact-info-label { font-size:.75rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.04em;margin-bottom:.2rem; }
+    .contact-info-value { font-size:.9rem;font-weight:600;color:#0f172a; }
+    .contact-info-note { font-size:.78rem;color:#94a3b8; }
+
+    /* ── Social quick links ─────────────────────────────────── */
+    .quick-socials { display:flex;flex-wrap:wrap;gap:.625rem; }
+    .quick-social {
+      display:flex;align-items:center;gap:.5rem;
+      padding:.5rem 1rem;border-radius:9999px;border:1px solid #e2e8f0;
+      background:#fff;color:#475569;text-decoration:none;
+      font-size:.82rem;font-weight:500;transition:all .2s;
+    }
+    .quick-social:hover { border-color:#6366f1;color:#4f46e5;background:#eef2ff; }
+
+    /* ── Success alert ──────────────────────────────────────── */
+    .form-success {
+      display:none;background:#d1fae5;border:1px solid #6ee7b7;border-radius:12px;
+      padding:1rem 1.25rem;margin-bottom:1.25rem;
+      display:flex;align-items:center;gap:.75rem;font-size:.875rem;color:#065f46;
+    }
+
+    /* ── Footer ─────────────────────────────────────────────── */
+    .page-footer { background:linear-gradient(135deg,#0f172a,#1e1b4b);color:rgba(255,255,255,.55);padding:3.5rem 0 1.5rem; }
+    .footer-name { font-size:1.05rem;font-weight:700;color:#fff;margin:.625rem 0 .25rem;letter-spacing:-.02em; }
+    .footer-tagline { font-size:.8rem;color:rgba(255,255,255,.35);margin-bottom:.875rem; }
+    .footer-socials { display:flex;gap:.5rem; }
+    .footer-social { width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.45);text-decoration:none;font-size:.8rem;transition:all .2s; }
+    .footer-social:hover { background:rgba(99,102,241,.25);border-color:rgba(99,102,241,.4);color:#a5b4fc;transform:translateY(-2px); }
+    .footer-heading { font-size:.72rem;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.875rem; }
+    .footer-link { display:block;color:rgba(255,255,255,.4);text-decoration:none;font-size:.825rem;padding:.175rem 0;transition:color .2s; }
+    .footer-link:hover { color:#a5b4fc; }
+    .footer-hr { border:none;border-top:1px solid rgba(255,255,255,.08);margin:2rem 0 1.25rem; }
+    .footer-copy { font-size:.75rem;color:rgba(255,255,255,.22);text-align:center; }
+  </style>
+</head>
 <body class="contact-page">
-    <style>
-        /* Estilos temporales para forzar aplicación */
-        body.contact-page {
-            background-color: #ffffff !important;
-            background-image: none !important;
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-        body.contact-page .main-content {
-            background-color: #ffffff !important;
-            background-image: none !important;
-            padding-top: 0 !important;
-            margin-top: 0 !important;
-        }
-        .contact-white-section {
-            background-color: #ffffff !important;
-            padding: 76px 0 0 0 !important;
-            margin: 0 !important;
-        }
-    </style>
-    <!-- Toast para notificaciones -->
-    <div class="toast-container position-fixed bottom-0 end-0 p-3">
-        <div id="addedToCartToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="toast-header bg-success text-white">
-                <strong class="me-auto">¡Añadido al carrito!</strong>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"
-                    aria-label="Close"></button>
-            </div>
-            <div class="toast-body">
-                El curso ha sido añadido a tu carrito de compras.
-            </div>
+
+  <!-- ─── Toast ────────────────────────────────────────────── -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index:9999;">
+    <div id="addedToCartToast" class="toast align-items-center border-0" role="alert">
+      <div class="d-flex">
+        <div class="toast-body d-flex align-items-center gap-2">
+          <i class="fas fa-check-circle text-success"></i>
+          <strong>¡Añadido al carrito!</strong>
         </div>
+        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast"></button>
+      </div>
     </div>
+  </div>
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="../index.html">
-                <img src="../img/LuminaLogoNoTextBlanco.webp" alt="Logo" width="32" height="32" class="me-2">
+  <!-- ─── Navbar ───────────────────────────────────────────── -->
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container-fluid px-4">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="../index.html">
+        <img src="../img/LuminaLogoNoTextBlanco.webp" alt="Lumina" width="32" height="32">
+        <span style="font-weight:700;font-size:.95rem;" class="d-none d-sm-inline">Lumina</span>
+      </a>
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMain">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navMain">
+        <ul class="navbar-nav me-auto gap-1">
+          <li class="nav-item"><a class="nav-link" href="../index.html"><i class="fas fa-home me-1"></i>Inicio</a></li>
+          <li class="nav-item"><a class="nav-link" href="cursos-venta.html"><i class="fas fa-book me-1"></i>Cursos</a></li>
+          <li class="nav-item"><a class="nav-link" href="blog.html"><i class="fas fa-blog me-1"></i>Blog</a></li>
+          <li class="nav-item"><a class="nav-link active" href="contact.html"><i class="fas fa-envelope me-1"></i>Contacto</a></li>
+          <li class="nav-item" id="misCursosContainer" style="display:none;">
+            <a class="nav-link" href="courses.html"><i class="fas fa-graduation-cap me-1"></i>Mis Cursos</a>
+          </li>
+        </ul>
+        <ul class="navbar-nav align-items-center gap-2">
+          <li class="nav-item dropdown">
+            <a class="nav-link position-relative" href="#" id="cartDropdown" role="button" data-bs-toggle="dropdown">
+              <i class="fas fa-shopping-cart"></i>
+              <span id="cartCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill" style="background:#ef4444;font-size:.6rem;">0</span>
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            <ul class="dropdown-menu dropdown-menu-end" style="width:300px;" aria-labelledby="cartDropdown">
+              <li><h6 class="dropdown-header fw-bold">Tu carrito</h6></li>
+              <li><hr class="dropdown-divider my-1"></li>
+              <li><div id="cartItems" class="px-2" style="max-height:40vh;overflow-y:auto;"><p class="text-muted text-center py-2 mb-0" style="font-size:.85rem;">Tu carrito está vacío</p></div></li>
+              <li><hr class="dropdown-divider my-1"></li>
+              <li class="px-3 py-1"><div class="d-flex justify-content-between"><span class="text-muted" style="font-size:.85rem;">Subtotal:</span><span id="cartSubtotal" class="fw-bold">$0.00</span></div></li>
+              <li><hr class="dropdown-divider my-1"></li>
+              <li class="px-2 pb-2"><a href="checkout.html" class="btn btn-primary w-100 rounded-pill">Ir a pagar</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown" id="userDropdownContainer" style="display:none;">
+            <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+              <i id="userAvatarIcon" class="fas fa-user-circle" style="font-size:1.4rem;"></i>
+              <span id="userName" style="font-size:.875rem;">Usuario</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" id="userDropdownMenu" aria-labelledby="userDropdown">
+              <!-- Populated by updateUserNavbar() -->
+            </ul>
+          </li>
+          <li class="nav-item" id="loginButtonContainer">
+            <a class="nav-link" href="login.html"><i class="fas fa-sign-in-alt me-1"></i>Iniciar Sesión</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="../index.html"><i class="fas fa-home me-1"></i> Inicio</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="cursos-venta.html"><i class="fas fa-book me-1"></i> Cursos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="blog.html"><i class="fas fa-blog me-1"></i> Blog</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="contact.html"><i class="fas fa-envelope me-1"></i> Contacto</a>
-                    </li>
-                    <!-- Botón Mis Cursos (solo para estudiantes) -->
-                    <li class="nav-item" id="misCursosContainer" style="display: none;">
-                        <a class="nav-link mis-cursos-btn" href="courses.html">
-                            <i class="fas fa-graduation-cap me-1"></i> Mis Cursos
-                        </a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" aria-label="Notificaciones">
-                            <i class="fas fa-bell"></i>
-                        </a>
-                    </li>
+  <!-- ─── Hero ─────────────────────────────────────────────── -->
+  <section class="contact-hero">
+    <div class="container position-relative" style="z-index:1;">
+      <div class="contact-hero-badge"><i class="fas fa-envelope"></i>Contacto</div>
+      <h1 class="contact-hero-title">Estamos aquí para <span>ayudarte</span></h1>
+      <p class="contact-hero-sub">
+        Envíanos un mensaje y te responderemos en menos de 24 horas.
+      </p>
+    </div>
+  </section>
 
-                    <!-- Dropdown del Carrito -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle position-relative" href="#" id="cartDropdown" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
-                            <i class="fas fa-shopping-cart"></i>
-                            <span id="cartCount"
-                                class="position-absolute top-0 start-100 translate-middle badge bg-danger rounded-pill">0</span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end dropdown-cart" aria-labelledby="cartDropdown">
-                            <li>
-                                <h6 class="dropdown-header fw-bold">Tu carrito</h6>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider my-1">
-                            </li>
-                            <li>
-                                <div id="cartItems" class="px-2" style="max-height: 50vh; overflow-y: auto;">
-                                    <p class="text-muted text-center py-2 mb-0">Tu carrito está vacío</p>
-                                </div>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider my-1">
-                            </li>
-                            <li class="px-2">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <strong>Subtotal:</strong>
-                                    <span id="cartSubtotal" class="fw-bold">$0.00</span>
-                                </div>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider my-1">
-                            </li>
-                            <li class="px-2 mb-1">
-                                <a href="checkout.html" class="btn btn-primary w-100 py-2">
-                                    Ir a pagar
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
+  <!-- ─── Content ───────────────────────────────────────────── -->
+  <section class="contact-section">
+    <div class="container">
+      <div class="row g-4">
 
-                    <!-- Dropdown del Usuario -->
-                    <li class="nav-item dropdown" id="userDropdownContainer" style="display: none;">
-                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
-                            <i id="userAvatarIcon" class="fas fa-user-circle me-1" style="font-size: 24px;"></i>
-                            <span id="userName">Usuario</span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                            <li>
-                                <div class="dropdown-header">
-                                    <div class="d-flex align-items-center">
-                                        <i id="userAvatarLargeIcon" class="fas fa-user-circle me-2" style="font-size: 32px;"></i>
-                                        <div>
-                                            <div id="userNameLarge" class="fw-bold">Usuario</div>
-                                            <small id="userEmail" class="text-muted">usuario@email.com</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="profile.html"><i class="fas fa-user me-2"></i> Mi Perfil</a></li>
-                            <li><a class="dropdown-item" href="settings.html"><i class="fas fa-cog me-2"></i> Configuración</a></li>
-                            <li><a class="dropdown-item" href="courses.html"><i class="fas fa-book me-2"></i> Mis Cursos</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item text-danger" href="#" onclick="handleLogout()"><i class="fas fa-sign-out-alt me-2"></i> Cerrar sesión</a></li>
-                        </ul>
-                    </li>
-                    
-                    <!-- Botón de Login (cuando no está autenticado) -->
-                    <li class="nav-item" id="loginButtonContainer">
-                        <a class="nav-link" href="login.html">
-                            <i class="fas fa-sign-in-alt me-1"></i> Iniciar Sesión
-                        </a>
-                    </li>
-                </ul>
+        <!-- Form column -->
+        <div class="col-lg-7">
+
+          <!-- Contact form -->
+          <div class="contact-card">
+            <h3 class="contact-card-title"><i class="fas fa-paper-plane"></i>Enviar mensaje</h3>
+
+            <div id="formSuccess" style="display:none;background:#d1fae5;border:1px solid #6ee7b7;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.25rem;font-size:.875rem;color:#065f46;">
+              <i class="fas fa-check-circle me-2"></i>¡Mensaje enviado con éxito! Te responderemos pronto.
             </div>
+
+            <form id="contactForm">
+              <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                  <label class="cf-label" for="fullName">Nombre completo *</label>
+                  <input type="text" class="cf-input" id="fullName" required placeholder="Tu nombre completo">
+                </div>
+                <div class="col-md-6">
+                  <label class="cf-label" for="email">Correo electrónico *</label>
+                  <input type="email" class="cf-input" id="email" required placeholder="tu@email.com">
+                </div>
+              </div>
+              <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                  <label class="cf-label" for="phone">Teléfono</label>
+                  <input type="tel" class="cf-input" id="phone" placeholder="+52 55 1234 5678">
+                </div>
+                <div class="col-md-6">
+                  <label class="cf-label" for="subject">Asunto *</label>
+                  <select class="cf-select" id="subject" required>
+                    <option value="">Seleccionar asunto</option>
+                    <option value="general">Consulta General</option>
+                    <option value="technical">Soporte Técnico</option>
+                    <option value="courses">Información de Cursos</option>
+                    <option value="billing">Facturación</option>
+                    <option value="partnership">Alianzas Comerciales</option>
+                    <option value="other">Otro</option>
+                  </select>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label class="cf-label" for="message">Mensaje *</label>
+                <textarea class="cf-textarea" id="message" required placeholder="Cuéntanos en qué podemos ayudarte..."></textarea>
+              </div>
+              <div class="mb-4">
+                <label class="cf-check-label">
+                  <input type="checkbox" id="newsletter" checked>
+                  <span>Suscribirme al newsletter para recibir noticias y actualizaciones</span>
+                </label>
+              </div>
+              <div class="d-flex gap-3 flex-wrap">
+                <button type="submit" class="btn-send">
+                  <i class="fas fa-paper-plane"></i>Enviar mensaje
+                </button>
+                <button type="button" class="btn-reset" onclick="resetForm()">
+                  <i class="fas fa-undo"></i>Limpiar
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- FAQ -->
+          <div class="contact-card">
+            <h3 class="contact-card-title"><i class="fas fa-question-circle"></i>Preguntas frecuentes</h3>
+            <div class="faq-item">
+              <div class="faq-question" onclick="toggleFAQ(this)">
+                <h5>¿Cómo puedo acceder a mis cursos?</h5>
+                <i class="fas fa-chevron-down"></i>
+              </div>
+              <div class="faq-answer">Una vez que completes tu compra, recibirás las credenciales de acceso por email. También puedes acceder desde "Mis Cursos" en tu perfil.</div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-question" onclick="toggleFAQ(this)">
+                <h5>¿Qué métodos de pago aceptan?</h5>
+                <i class="fas fa-chevron-down"></i>
+              </div>
+              <div class="faq-answer">Aceptamos tarjetas de crédito/débito, PayPal y transferencias bancarias.</div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-question" onclick="toggleFAQ(this)">
+                <h5>¿Ofrecen certificados al completar los cursos?</h5>
+                <i class="fas fa-chevron-down"></i>
+              </div>
+              <div class="faq-answer">Sí, todos nuestros cursos incluyen un certificado de finalización descargable desde tu perfil.</div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-question" onclick="toggleFAQ(this)">
+                <h5>¿Puedo solicitar un reembolso?</h5>
+                <i class="fas fa-chevron-down"></i>
+              </div>
+              <div class="faq-answer">Ofrecemos reembolsos completos dentro de los primeros 30 días, siempre que no hayas completado más del 25% del curso.</div>
+            </div>
+          </div>
+
         </div>
-    </nav>
-    
-    <!-- Main Content -->
-    <main class="main-content">
-        <div class="contact-white-section">
-            <div class="container py-5">
-                <!-- Breadcrumb -->
-                <nav aria-label="breadcrumb" class="mb-4">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="../index.html">Inicio</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Contacto</li>
-                    </ol>
-                </nav>
 
-                <!-- Contact Header -->
-                <div class="contact-header mb-5">
-                    <h1 class="contact-title">
-                        <i class="fas fa-envelope me-2"></i> Contáctanos
-                    </h1>
-                    <p class="contact-subtitle">Estamos aquí para ayudarte. Envíanos un mensaje y te responderemos lo antes posible.</p>
-                </div>
+        <!-- Info column -->
+        <div class="col-lg-5">
 
-                <div class="row">
-                    <!-- Contact Form -->
-                    <div class="col-lg-7 mb-4">
-                        <div class="contact-card">
-                            <h3 class="section-title">
-                                <i class="fas fa-paper-plane me-2"></i> Enviar Mensaje
-                            </h3>
-                            <form id="contactForm" class="contact-form">
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Nombre Completo *</label>
-                                        <input type="text" class="form-control" id="fullName" required placeholder="Tu nombre completo">
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Email *</label>
-                                        <input type="email" class="form-control" id="email" required placeholder="tu@email.com">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Teléfono</label>
-                                        <input type="tel" class="form-control" id="phone" placeholder="+52 55 1234 5678">
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Asunto *</label>
-                                        <select class="form-select" id="subject" required>
-                                            <option value="">Seleccionar asunto</option>
-                                            <option value="general">Consulta General</option>
-                                            <option value="technical">Soporte Técnico</option>
-                                            <option value="courses">Información de Cursos</option>
-                                            <option value="billing">Facturación</option>
-                                            <option value="partnership">Alianzas Comerciales</option>
-                                            <option value="other">Otro</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Mensaje *</label>
-                                    <textarea class="form-control" id="message" rows="6" required placeholder="Cuéntanos en qué podemos ayudarte..."></textarea>
-                                </div>
-                                <div class="form-check mb-3">
-                                    <input class="form-check-input" type="checkbox" id="newsletter" checked>
-                                    <label class="form-check-label" for="newsletter">
-                                        Suscribirme al newsletter para recibir noticias y actualizaciones
-                                    </label>
-                                </div>
-                                <div class="contact-actions">
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="fas fa-paper-plane me-1"></i> Enviar Mensaje
-                                    </button>
-                                    <button type="button" class="btn btn-outline-secondary" onclick="resetForm()">
-                                        <i class="fas fa-undo me-1"></i> Limpiar Formulario
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-
-                        <!-- FAQ Section -->
-                        <div class="contact-card">
-                            <h3 class="section-title">
-                                <i class="fas fa-question-circle me-2"></i> Preguntas Frecuentes
-                            </h3>
-                            
-                            <div class="faq-section">
-                                <div class="faq-item">
-                                    <div class="faq-question" onclick="toggleFAQ(this)">
-                                        <h5>¿Cómo puedo acceder a mis cursos?</h5>
-                                        <i class="fas fa-chevron-down"></i>
-                                    </div>
-                                    <div class="faq-answer">
-                                        <p>Una vez que hayas completado tu compra, recibirás un email con las credenciales de acceso. También puedes acceder desde "Mis Cursos" en tu perfil.</p>
-                                    </div>
-                                </div>
-                                <div class="faq-item">
-                                    <div class="faq-question" onclick="toggleFAQ(this)">
-                                        <h5>¿Qué métodos de pago aceptan?</h5>
-                                        <i class="fas fa-chevron-down"></i>
-                                    </div>
-                                    <div class="faq-answer">
-                                        <p>Aceptamos tarjetas de crédito/débito, PayPal, transferencias bancarias y pagos en efectivo en nuestras oficinas.</p>
-                                    </div>
-                                </div>
-                                <div class="faq-item">
-                                    <div class="faq-question" onclick="toggleFAQ(this)">
-                                        <h5>¿Ofrecen certificados al completar los cursos?</h5>
-                                        <i class="fas fa-chevron-down"></i>
-                                    </div>
-                                    <div class="faq-answer">
-                                        <p>Sí, todos nuestros cursos incluyen un certificado de finalización que puedes descargar desde tu perfil una vez completado el curso.</p>
-                                    </div>
-                                </div>
-                                <div class="faq-item">
-                                    <div class="faq-question" onclick="toggleFAQ(this)">
-                                        <h5>¿Puedo solicitar un reembolso?</h5>
-                                        <i class="fas fa-chevron-down"></i>
-                                    </div>
-                                    <div class="faq-answer">
-                                        <p>Ofrecemos reembolsos completos dentro de los primeros 30 días de la compra, siempre que no hayas completado más del 25% del curso.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- FAQ Visual Element -->
-                            <div class="faq-visual-element">
-                                <div class="faq-animation-container">
-                                    <div class="question-mark" data-speed="1">?</div>
-                                </div>
-                            </div>
-                            
-                            <!-- FAQ Bottom Decoration -->
-                            <div class="faq-bottom-decoration">
-                                <div class="contact-info-preview">
-                                    <i class="fas fa-headset"></i>
-                                    <span>Soporte 24/7</span>
-                                </div>
-                                <div class="contact-info-preview">
-                                    <i class="fas fa-clock"></i>
-                                    <span>Respuesta rápida</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Contact Information -->
-                    <div class="col-lg-5">
-                        <!-- Contact Info -->
-                        <div class="contact-card mb-4">
-                            <h3 class="section-title">
-                                <i class="fas fa-info-circle me-2"></i> Información de Contacto
-                            </h3>
-                            <div class="contact-info">
-                                <div class="contact-item">
-                                    <div class="contact-icon">
-                                        <i class="fas fa-phone"></i>
-                                    </div>
-                                    <div class="contact-details">
-                                        <h5>Teléfono</h5>
-                                        <p>+52 55 1234 5678</p>
-                                        <small>Lun - Vie: 9:00 AM - 6:00 PM</small>
-                                    </div>
-                                </div>
-                                <div class="contact-item">
-                                    <div class="contact-icon">
-                                        <i class="fas fa-envelope"></i>
-                                    </div>
-                                    <div class="contact-details">
-                                        <h5>Email</h5>
-                                        <p>luminalearning.mx@gmail.com</p>
-                                        <small>Respuesta en 24 horas</small>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-
-                        <!-- Quick Contact and Social Media Row -->
-                        <div class="row">
-                            <div class="col-12 mb-3">
-                                <div class="contact-card">
-                                    <h3 class="section-title">
-                                        <i class="fas fa-bolt me-2"></i> Contacto Rápido
-                                    </h3>
-                                    <div class="quick-contact">
-                                        <a href="mailto:luminalearning.mx@gmail.com" class="quick-contact-item">
-                                            <i class="fas fa-headset me-2"></i>
-                                            <div>
-                                                <strong>Soporte Técnico</strong>
-                                                <small>luminalearning.mx@gmail.com</small>
-                                            </div>
-                                        </a>
-                                        <a href="mailto:luminalearning.mx@gmail.com" class="quick-contact-item">
-                                            <i class="fas fa-shopping-cart me-2"></i>
-                                            <div>
-                                                <strong>Ventas</strong>
-                                                <small>luminalearning.mx@gmail.com</small>
-                                            </div>
-                                        </a>
-                                        <a href="mailto:luminalearning.mx@gmail.com" class="quick-contact-item">
-                                            <i class="fas fa-handshake me-2"></i>
-                                            <div>
-                                                <strong>Alianzas</strong>
-                                                <small>luminalearning.mx@gmail.com</small>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="col-12">
-                                <div class="contact-card">
-                                    <h3 class="section-title">
-                                        <i class="fas fa-share-alt me-2"></i> Síguenos
-                                    </h3>
-                                    <div class="social-links">
-                                        <a href="#" class="social-link facebook">
-                                            <i class="fab fa-facebook-f"></i>
-                                            <span>Facebook</span>
-                                        </a>
-                                        <a href="#" class="social-link twitter">
-                                            <i class="fab fa-twitter"></i>
-                                            <span>Twitter</span>
-                                        </a>
-                                        <a href="#" class="social-link linkedin">
-                                            <i class="fab fa-linkedin-in"></i>
-                                            <span>LinkedIn</span>
-                                        </a>
-                                        <a href="https://www.instagram.com/lumina_learningmx?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" class="social-link instagram" target="_blank" rel="noopener noreferrer">
-                                            <i class="fab fa-instagram"></i>
-                                            <span>Instagram</span>
-                                        </a>
-                                        <a href="#" class="social-link youtube">
-                                            <i class="fab fa-youtube"></i>
-                                            <span>YouTube</span>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+          <!-- Contact info -->
+          <div class="contact-card">
+            <h3 class="contact-card-title"><i class="fas fa-info-circle"></i>Información de contacto</h3>
+            <div class="contact-info-item">
+              <div class="contact-info-icon"><i class="fas fa-phone"></i></div>
+              <div>
+                <div class="contact-info-label">Teléfono</div>
+                <div class="contact-info-value">+52 55 1234 5678</div>
+                <div class="contact-info-note">Lun – Vie: 9:00 AM – 6:00 PM</div>
+              </div>
             </div>
+            <div class="contact-info-item">
+              <div class="contact-info-icon"><i class="fas fa-envelope"></i></div>
+              <div>
+                <div class="contact-info-label">Email</div>
+                <div class="contact-info-value">luminalearning.mx@gmail.com</div>
+                <div class="contact-info-note">Respuesta en 24 horas</div>
+              </div>
+            </div>
+            <div class="contact-info-item">
+              <div class="contact-info-icon"><i class="fas fa-map-marker-alt"></i></div>
+              <div>
+                <div class="contact-info-label">Dirección</div>
+                <div class="contact-info-value">123 Calle Universidad, Ciudad</div>
+                <div class="contact-info-note">México</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick contact & support -->
+          <div class="contact-card">
+            <h3 class="contact-card-title"><i class="fas fa-bolt"></i>Contacto rápido</h3>
+            <div class="quick-socials">
+              <a href="#" class="quick-social"><i class="fab fa-whatsapp" style="color:#25d366;"></i>WhatsApp</a>
+              <a href="#" class="quick-social"><i class="fab fa-twitter" style="color:#1da1f2;"></i>Twitter</a>
+              <a href="#" class="quick-social"><i class="fab fa-instagram" style="color:#e1306c;"></i>Instagram</a>
+              <a href="#" class="quick-social"><i class="fab fa-linkedin-in" style="color:#0a66c2;"></i>LinkedIn</a>
+            </div>
+          </div>
+
+          <!-- Support hours -->
+          <div class="contact-card" style="background:linear-gradient(135deg,#eef2ff,#e0e7ff);border-color:#c7d2fe;">
+            <h3 class="contact-card-title" style="color:#3730a3;border-color:#c7d2fe;"><i class="fas fa-headset"></i>Soporte 24/7</h3>
+            <p style="font-size:.875rem;color:#4338ca;margin-bottom:1rem;">
+              Nuestro equipo de soporte está disponible para ayudarte en cualquier momento del día.
+            </p>
+            <div class="d-flex gap-3">
+              <div style="text-align:center;">
+                <div style="font-size:1.5rem;font-weight:800;color:#4f46e5;">&lt;2h</div>
+                <div style="font-size:.75rem;color:#6366f1;font-weight:600;">Tiempo de respuesta</div>
+              </div>
+              <div style="text-align:center;">
+                <div style="font-size:1.5rem;font-weight:800;color:#4f46e5;">98%</div>
+                <div style="font-size:.75rem;color:#6366f1;font-weight:600;">Satisfacción</div>
+              </div>
+            </div>
+          </div>
+
         </div>
-    </main>
-    
+      </div>
+    </div>
+  </section>
 
-
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../js/footer-utils.js"></script>
-    <script src="../js/auth0-config.js"></script>
-    <script>
-        // Objeto del carrito
-        const cart = {
-            items: [],
-            total: 0,
-
-            addItem: function (item) {
-                const existingItem = this.items.find(cartItem => cartItem.id === item.id);
-                if (existingItem) {
-                    existingItem.quantity += 1;
-                } else {
-                    this.items.push({ ...item, quantity: 1 });
-                }
-                this.calculateTotal();
-                this.updateUI();
-                this.saveToLocalStorage();
-
-                // Mostrar toast
-                const toast = new bootstrap.Toast(document.getElementById('addedToCartToast'));
-                toast.show();
-            },
-
-            removeItem: function (id) {
-                // Convertir id a string para comparación consistente
-                const itemId = String(id);
-                this.items = this.items.filter(item => String(item.id) !== itemId);
-                this.calculateTotal();
-                this.updateUI();
-                this.saveToLocalStorage();
-            },
-
-            calculateTotal: function () {
-                this.total = this.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            },
-
-            updateUI: function () {
-                // Actualizar contador
-                const totalItems = this.items.reduce((sum, item) => sum + item.quantity, 0);
-                document.getElementById('cartCount').textContent = totalItems;
-
-                // Actualizar lista de items
-                const cartItemsContainer = document.getElementById('cartItems');
-                cartItemsContainer.innerHTML = '';
-
-                if (this.items.length === 0) {
-                    cartItemsContainer.innerHTML = '<p class="text-muted text-center py-2">Tu carrito está vacío</p>';
-                } else {
-                    this.items.forEach(item => {
-                        const itemElement = document.createElement('div');
-                        itemElement.className = 'cart-item d-flex justify-content-between align-items-center py-2';
-                        itemElement.innerHTML = `
-                            <img src="${item.image}" class="cart-item-img rounded" width="40" height="40" alt="${item.title}">
-                            <div class="flex-grow-1 mx-3">
-                                <div class="cart-item-title">${item.title}</div>
-                                <small class="text-muted">${item.quantity} x $${item.price.toFixed(2)}</small>
-                            </div>
-                            <span class="cart-item-price fw-bold">$${(item.price * item.quantity).toFixed(2)}</span>
-                            <button class="btn btn-sm btn-outline-danger remove-item ms-2" data-id="${item.id}" aria-label="Eliminar">
-                                &times;
-                            </button>
-                        `;
-                        cartItemsContainer.appendChild(itemElement);
-                    });
-                }
-
-                // Actualizar subtotal
-                document.getElementById('cartSubtotal').textContent = `$${this.total.toFixed(2)}`;
-            },
-
-            saveToLocalStorage: function () {
-                localStorage.setItem('shoppingCart', JSON.stringify(this.items));
-            },
-
-            loadFromLocalStorage: function () {
-                const savedCart = localStorage.getItem('shoppingCart');
-                if (savedCart) {
-                    this.items = JSON.parse(savedCart);
-                    this.calculateTotal();
-                    this.updateUI();
-                }
-            },
-
-            init: function () {
-                this.loadFromLocalStorage();
-
-                // Delegación de eventos para los botones de eliminar
-                document.addEventListener('click', (e) => {
-                    if (e.target.classList.contains('remove-item')) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        const itemId = e.target.getAttribute('data-id');
-                        if (itemId) {
-                            this.removeItem(itemId);
-                        }
-                    }
-                });
-            }
-        };
-
-        // Inicializar el carrito
-        cart.init();
-
-        // Verificar autenticación y actualizar navbar
-        async function checkAuthAndUpdateNavbar() {
-            try {
-                await Auth0Service.initialize();
-                const isAuthenticated = await Auth0Service.isAuthenticated();
-                
-                if (isAuthenticated) {
-                    const user = await Auth0Service.getUser();
-                    updateUserNavbar(user);
-                } else {
-                    showLoginButton();
-                }
-            } catch (error) {
-                console.error('Error verificando autenticación:', error);
-                showLoginButton();
-            }
-        }
-
-        function updateUserNavbar(user) {
-            // Ocultar botón de login
-            document.getElementById('loginButtonContainer').style.display = 'none';
-            
-            // Mostrar dropdown del usuario
-            const userContainer = document.getElementById('userDropdownContainer');
-            userContainer.style.display = 'block';
-            
-            // Actualizar información del usuario
-            const userName = user.name || user.email.split('@')[0];
-            const userEmail = user.email;
-            
-            // Determinar el rol del usuario
-            let userRole = 'student';
-            if (userEmail === 'admin@gmail.com') {
-                userRole = 'admin';
-            } else if (userEmail === 'profesor@gmail.com') {
-                userRole = 'teacher';
-            } else if (userEmail === 'estudiante@gmail.com') {
-                userRole = 'student';
-            } else {
-                userRole = user.role || 'student';
-            }
-            
-            // Avatar basado en el rol usando íconos
-            let avatarIcon = 'fa-user-circle';
-            if (userRole === 'admin') {
-                avatarIcon = 'fa-user-shield';
-            } else if (userRole === 'teacher') {
-                avatarIcon = 'fa-chalkboard-teacher';
-            } else {
-                avatarIcon = 'fa-user-graduate';
-            }
-            
-            // Actualizar elementos del navbar
-            document.getElementById('userName').textContent = userName;
-            document.getElementById('userNameLarge').textContent = userName;
-            document.getElementById('userEmail').textContent = userEmail;
-            document.getElementById('userAvatarIcon').className = `fas ${avatarIcon} me-1`;
-            document.getElementById('userAvatarLargeIcon').className = `fas ${avatarIcon} me-2`;
-            
-            // Mostrar/ocultar botón "Mis Cursos" según el rol
-            const misCursosContainer = document.getElementById('misCursosContainer');
-            if (userRole === 'student' || userEmail === 'estudiante@gmail.com') {
-                misCursosContainer.style.display = 'block';
-                console.log('Mostrando botón Mis Cursos para estudiante:', userEmail);
-            } else {
-                misCursosContainer.style.display = 'none';
-                console.log('Ocultando botón Mis Cursos para rol:', userRole);
-            }
-            
-            // Inicializar carrito para usuarios autenticados
-            if (window.cart && typeof window.cart.init === 'function') {
-                window.cart.init();
-            }
-        }
-
-        function showLoginButton() {
-            // Mostrar botón de login
-            document.getElementById('loginButtonContainer').style.display = 'block';
-            
-            // Ocultar dropdown del usuario
-            document.getElementById('userDropdownContainer').style.display = 'none';
-
-            // Ocultar botón "Mis Cursos"
-            document.getElementById('misCursosContainer').style.display = 'none';
-        }
-
-        // Función para manejar el logout
-        function handleLogout() {
-            Auth0Service.logout();
-            showLoginButton();
-            window.location.href = '../index.html';
-        }
-
-        // Inicializar verificación de autenticación
-        document.addEventListener('DOMContentLoaded', function() {
-            checkAuthAndUpdateNavbar();
-        });
-
-        // Funciones para el FAQ
-        function toggleFAQ(element) {
-            const answer = element.nextElementSibling;
-            const icon = element.querySelector('i');
-            
-            if (answer.style.display === 'block') {
-                answer.style.display = 'none';
-                icon.className = 'fas fa-chevron-down';
-            } else {
-                answer.style.display = 'block';
-                icon.className = 'fas fa-chevron-up';
-            }
-        }
-
-        function resetForm() {
-            document.getElementById('contactForm').reset();
-        }
-    </script>
-
-    <!-- Footer -->
-    <footer class="bg-dark text-light py-3 mt-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-4 mb-3">
-                    <img src="../img/LuminaLogoNoText.webp" alt="Logo" style="width: 40px; height: 40px;">
-                    <p class="mt-2 mb-2" style="font-size: 0.9rem;">Iluminando el futuro del aprendizaje en línea.</p>
-                    <div class="mt-2">
-                        <a href="#" class="text-light me-2"><i class="fab fa-facebook"></i></a>
-                        <a href="#" class="text-light me-2"><i class="fab fa-twitter"></i></a>
-                        <a href="https://www.instagram.com/lumina_learningmx?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" class="text-light me-2" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="text-light me-2"><i class="fab fa-linkedin"></i></a>
-                        <a href="#" class="text-light"><i class="fab fa-youtube"></i></a>
-                    </div>
-                </div>
-
-                <div class="col-lg-2 col-md-6 mb-3">
-                    <h6>Enlaces</h6>
-                    <a href="../index.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-home me-1"></i> Inicio</a>
-                    <a href="cursos-venta.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-book me-1"></i> Cursos</a>
-                    <a href="blog.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-blog me-1"></i> Blog</a>
-                    <a href="contact.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-envelope me-1"></i> Contacto</a>
-                </div>
-
-                <div class="col-lg-2 col-md-6 mb-3">
-                    <h6>Mi cuenta</h6>
-                    <a href="courses.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-graduation-cap me-1"></i> Mis Cursos</a>
-                    <a href="calendar.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-calendar me-1"></i> Calendario</a>
-                    <a href="schedule.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-clock me-1"></i> Horario</a>
-                    <a href="profile.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-user me-1"></i> Perfil</a>
-                </div>
-
-                <div class="col-lg-4 mb-3">
-                    <h6>Contacto</h6>
-                    <p class="mb-1" style="font-size: 0.85rem;"><i class="fas fa-phone me-1"></i> +1 234 567 8900</p>
-                    <p class="mb-1" style="font-size: 0.85rem;"><i class="fas fa-envelope me-1"></i> info@lumina.edu</p>
-                    <a href="contact.html" class="btn btn-outline-light btn-sm mt-1">Contáctanos</a>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-12 text-center">
-                    <p class="mb-0" style="font-size: 0.8rem;">© <span id="currentYear"></span> Lumina Learning. Todos los derechos reservados.</p>
-                </div>
-            </div>
+  <!-- ─── Footer ────────────────────────────────────────────── -->
+  <footer class="page-footer">
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-lg-4">
+          <img src="../img/LuminaLogoNoText.webp" alt="Lumina" width="40" height="40" style="border-radius:10px;">
+          <div class="footer-name">Lumina Learning</div>
+          <p class="footer-tagline">Iluminando el futuro del aprendizaje en línea.</p>
+          <div class="footer-socials">
+            <a href="#" class="footer-social"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="footer-social"><i class="fab fa-twitter"></i></a>
+            <a href="https://www.instagram.com/lumina_learningmx" target="_blank" rel="noopener" class="footer-social"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="footer-social"><i class="fab fa-linkedin-in"></i></a>
+          </div>
         </div>
-    </footer>
+        <div class="col-lg-2 col-md-4 col-6">
+          <p class="footer-heading">Plataforma</p>
+          <a href="../index.html" class="footer-link">Inicio</a>
+          <a href="cursos-venta.html" class="footer-link">Cursos</a>
+          <a href="blog.html" class="footer-link">Blog</a>
+          <a href="contact.html" class="footer-link">Contacto</a>
+        </div>
+        <div class="col-lg-2 col-md-4 col-6">
+          <p class="footer-heading">Mi Cuenta</p>
+          <a href="courses.html" class="footer-link">Mis Cursos</a>
+          <a href="calendar.html" class="footer-link">Calendario</a>
+          <a href="profile.html" class="footer-link">Perfil</a>
+        </div>
+        <div class="col-lg-4 col-md-4">
+          <p class="footer-heading">Contacto directo</p>
+          <p class="footer-link"><i class="fas fa-phone me-2"></i>+52 55 1234 5678</p>
+          <p class="footer-link"><i class="fas fa-envelope me-2"></i>luminalearning.mx@gmail.com</p>
+        </div>
+      </div>
+      <hr class="footer-hr">
+      <p class="footer-copy">© <span id="currentYear"></span> Lumina Learning. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../js/footer-utils.js"></script>
+  <script src="../js/auth0-config.js"></script>
+  <script>
+    // Cart
+    const cart = {
+      items:[], total:0,
+      addItem(item) {
+        const e = this.items.find(i => i.id === item.id);
+        e ? e.quantity++ : this.items.push({...item, quantity:1});
+        this.calculateTotal(); this.updateUI(); this.saveToLocalStorage();
+        new bootstrap.Toast(document.getElementById('addedToCartToast')).show();
+      },
+      removeItem(id) { this.items = this.items.filter(i => String(i.id) !== String(id)); this.calculateTotal(); this.updateUI(); this.saveToLocalStorage(); },
+      calculateTotal() { this.total = this.items.reduce((s,i) => s + i.price * i.quantity, 0); },
+      updateUI() {
+        document.getElementById('cartCount').textContent = this.items.reduce((s,i) => s + i.quantity, 0);
+        const c = document.getElementById('cartItems');
+        c.innerHTML = this.items.length ? this.items.map(i => `<div class="d-flex align-items-center py-2 gap-2"><img src="${i.image}" width="40" height="40" class="rounded"><div class="flex-grow-1"><div style="font-size:.8rem;font-weight:600;">${i.title}</div><small class="text-muted">${i.quantity}x $${i.price}</small></div><button class="btn btn-sm btn-outline-danger remove-item" data-id="${i.id}">&times;</button></div>`).join('') : '<p class="text-muted text-center py-2 mb-0" style="font-size:.85rem;">Tu carrito está vacío</p>';
+        document.getElementById('cartSubtotal').textContent = `$${this.total.toFixed(2)}`;
+      },
+      saveToLocalStorage() { localStorage.setItem('shoppingCart', JSON.stringify(this.items)); },
+      loadFromLocalStorage() { const s = localStorage.getItem('shoppingCart'); if (s) { this.items = JSON.parse(s); this.calculateTotal(); this.updateUI(); } },
+      init() {
+        this.loadFromLocalStorage();
+        document.addEventListener('click', e => { if (e.target.classList.contains('remove-item')) { e.preventDefault(); this.removeItem(e.target.dataset.id); } });
+      }
+    };
+    cart.init();
+
+    // Contact form
+    document.getElementById('contactForm').addEventListener('submit', e => {
+      e.preventDefault();
+      document.getElementById('formSuccess').style.display = 'flex';
+      document.getElementById('formSuccess').style.alignItems = 'center';
+      document.getElementById('formSuccess').style.gap = '.75rem';
+      e.target.reset();
+      setTimeout(() => document.getElementById('formSuccess').style.display = 'none', 5000);
+    });
+
+    function resetForm() { document.getElementById('contactForm').reset(); }
+
+    function toggleFAQ(el) {
+      const ans = el.nextElementSibling;
+      const icon = el.querySelector('i');
+      if (ans.style.display === 'block') {
+        ans.style.display = 'none';
+        icon.style.transform = '';
+      } else {
+        ans.style.display = 'block';
+        icon.style.transform = 'rotate(180deg)';
+      }
+    }
+
+    // Auth
+    async function checkAuthAndUpdateNavbar() {
+      try {
+        await Auth0Service.initialize();
+        const ok = await Auth0Service.isAuthenticated();
+        ok ? updateUserNavbar(await Auth0Service.getUser()) : showLoginButton();
+      } catch(e) { showLoginButton(); }
+    }
+    function updateUserNavbar(user) {
+      document.getElementById('loginButtonContainer').style.display = 'none';
+      document.getElementById('userDropdownContainer').style.display = 'block';
+      const name = user.name || user.email.split('@')[0];
+      document.getElementById('userName').textContent = name;
+      const role = user.role || (user.email === 'admin@gmail.com' ? 'admin' : user.email === 'profesor@gmail.com' ? 'teacher' : 'student');
+      const icon = role === 'admin' ? 'fa-user-shield' : role === 'teacher' ? 'fa-chalkboard-teacher' : 'fa-user-graduate';
+      document.getElementById('userAvatarIcon').className = `fas ${icon}`;
+      const mc = document.getElementById('misCursosContainer');
+      if (mc) mc.style.display = role === 'student' ? 'block' : 'none';
+      let items = '';
+      if (role === 'admin') {
+        items = `<li><a class="dropdown-item" href="/html/monitoreo.html"><i class="fas fa-chart-line me-2" style="color:#6366f1"></i>Panel de Monitoreo</a></li>
+                 <li><a class="dropdown-item" href="/html/admin.html"><i class="fas fa-users-cog me-2" style="color:#6366f1"></i>Gestión del Sistema</a></li>
+                 <li><a class="dropdown-item" href="profile.html"><i class="fas fa-user me-2"></i>Mi Perfil</a></li>
+                 <li><a class="dropdown-item" href="settings.html"><i class="fas fa-cog me-2"></i>Configuración</a></li>`;
+      } else if (role === 'teacher') {
+        items = `<li><a class="dropdown-item" href="/html/docente.html"><i class="fas fa-chalkboard-teacher me-2" style="color:#6366f1"></i>Panel Docente</a></li>
+                 <li><a class="dropdown-item" href="profile.html"><i class="fas fa-user me-2"></i>Mi Perfil</a></li>
+                 <li><a class="dropdown-item" href="settings.html"><i class="fas fa-cog me-2"></i>Configuración</a></li>`;
+      } else {
+        items = `<li><a class="dropdown-item" href="profile.html"><i class="fas fa-user me-2"></i>Mi Perfil</a></li>
+                 <li><a class="dropdown-item" href="settings.html"><i class="fas fa-cog me-2"></i>Configuración</a></li>
+                 <li><a class="dropdown-item" href="courses.html"><i class="fas fa-graduation-cap me-2"></i>Mis Cursos</a></li>`;
+      }
+      document.getElementById('userDropdownMenu').innerHTML = `
+        <li><div class="dropdown-header d-flex align-items-center gap-2">
+          <i class="fas ${icon}" style="font-size:2rem;color:#6366f1;"></i>
+          <div><div class="fw-bold" style="font-size:.9rem;">${name}</div><small class="text-muted">${user.email}</small></div>
+        </div></li>
+        <li><hr class="dropdown-divider"></li>
+        ${items}
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item text-danger" href="#" onclick="handleLogout()"><i class="fas fa-sign-out-alt me-2"></i>Cerrar sesión</a></li>`;
+    }
+    function showLoginButton() {
+      document.getElementById('loginButtonContainer').style.display = 'block';
+      document.getElementById('userDropdownContainer').style.display = 'none';
+      document.getElementById('misCursosContainer').style.display = 'none';
+    }
+    function handleLogout() { Auth0Service.logout(); showLoginButton(); window.location.href = '../index.html'; }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      checkAuthAndUpdateNavbar();
+      document.getElementById('currentYear').textContent = new Date().getFullYear();
+    });
+  </script>
 </body>
 </html>
-

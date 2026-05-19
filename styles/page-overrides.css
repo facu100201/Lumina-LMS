@@ -1,0 +1,538 @@
+/* ==========================================================
+   LUMINA LMS — INTERNAL PAGE DESIGN SYSTEM OVERRIDES
+   Applies to: profile, courses, docente, monitoreo, admin,
+               calendar, schedule, settings, student-courses, checkout
+   ========================================================== */
+
+/* ----------------------------------------------------------
+   BASE
+   ---------------------------------------------------------- */
+body {
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif !important;
+  background: #f8faff !important;
+  background-image: none !important;
+  color: #0f172a;
+}
+
+/* ----------------------------------------------------------
+   PAGE WRAPPER — remove old override hacks
+   ---------------------------------------------------------- */
+.profile-white-section,
+.courses-white-section,
+.settings-white-section,
+.calendar-white-section,
+.schedule-white-section,
+.monitoreo-white-section,
+.admin-white-section,
+.docente-white-section {
+  background: transparent !important;
+  padding-top: 86px !important;
+  margin: 0 !important;
+}
+
+.main-content {
+  background: transparent !important;
+  min-height: calc(100vh - 76px);
+}
+
+/* ----------------------------------------------------------
+   SECTION CARDS
+   ---------------------------------------------------------- */
+.profile-section,
+.section-card,
+.contact-card,
+.dashboard-card,
+.settings-section,
+.analytics-card,
+.schedule-card,
+.monitoreo-card {
+  background: #fff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 16px !important;
+  padding: 1.75rem !important;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(15,23,42,.04);
+}
+
+/* ----------------------------------------------------------
+   SECTION TITLES
+   ---------------------------------------------------------- */
+.section-title,
+.profile-section h3,
+.profile-section .section-title {
+  font-size: .9rem !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+  text-transform: uppercase !important;
+  letter-spacing: .06em !important;
+  margin-bottom: 1.25rem !important;
+  padding-bottom: .875rem !important;
+  border-bottom: 1px solid #f1f5f9 !important;
+}
+
+.section-title i,
+.profile-section .section-title i { color: #6366f1 !important; }
+
+/* ----------------------------------------------------------
+   METRIC / STAT CARDS
+   ---------------------------------------------------------- */
+.metric-card,
+.stat-card,
+.dashboard-stat {
+  background: #fff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 16px !important;
+  padding: 1.5rem !important;
+  position: relative;
+  overflow: hidden;
+  transition: all .25s ease;
+  box-shadow: 0 1px 3px rgba(15,23,42,.04);
+}
+
+.metric-card:hover,
+.stat-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(15,23,42,.08) !important; }
+
+.metric-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #4f46e5, #6366f1);
+  border-radius: 16px 16px 0 0;
+}
+
+.metric-icon,
+.stat-icon {
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 12px !important;
+  background: linear-gradient(135deg, #eef2ff, #e0e7ff) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #6366f1 !important;
+  font-size: 1.1rem !important;
+  margin-bottom: .75rem;
+}
+
+.metric-value,
+.stat-value {
+  font-size: 1.75rem !important;
+  font-weight: 800 !important;
+  color: #0f172a !important;
+  letter-spacing: -.04em !important;
+  line-height: 1.1;
+  margin-bottom: .2rem;
+}
+
+.metric-label,
+.stat-label {
+  font-size: .78rem !important;
+  font-weight: 500 !important;
+  color: #94a3b8 !important;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+/* ----------------------------------------------------------
+   PROFILE HEADER
+   ---------------------------------------------------------- */
+.profile-header {
+  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 60%, #1e3a8a 100%) !important;
+  border-radius: 20px !important;
+  padding: 2.5rem !important;
+  color: #fff !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(99,102,241,.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(99,102,241,.06) 1px, transparent 1px);
+  background-size: 32px 32px;
+  pointer-events: none;
+}
+
+.profile-avatar-icon {
+  font-size: 6rem !important;
+  color: #818cf8 !important;
+  filter: drop-shadow(0 0 20px rgba(99,102,241,.4));
+}
+
+.profile-name {
+  font-size: 1.75rem !important;
+  font-weight: 800 !important;
+  color: #fff !important;
+  letter-spacing: -.04em !important;
+  margin-bottom: .25rem;
+}
+
+.profile-email { color: rgba(255,255,255,.55) !important; font-size: .9rem; }
+
+.profile-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: .375rem !important;
+  background: rgba(99,102,241,.2) !important;
+  border: 1px solid rgba(99,102,241,.35) !important;
+  color: #a5b4fc !important;
+  border-radius: 9999px !important;
+  padding: .25rem .875rem !important;
+  font-size: .78rem !important;
+  font-weight: 600 !important;
+  margin-top: .5rem !important;
+}
+
+/* Profile action buttons */
+.profile-actions .btn-primary {
+  border-radius: 9999px !important;
+  font-size: .875rem !important;
+  padding: .5rem 1.25rem !important;
+}
+
+.profile-actions .btn-outline-secondary {
+  border-radius: 9999px !important;
+  font-size: .875rem !important;
+  padding: .5rem 1.25rem !important;
+  border-color: rgba(255,255,255,.3) !important;
+  color: rgba(255,255,255,.7) !important;
+  background: transparent !important;
+}
+
+.profile-actions .btn-outline-secondary:hover {
+  background: rgba(255,255,255,.1) !important;
+  color: #fff !important;
+}
+
+/* ----------------------------------------------------------
+   ACTIVITY ITEMS
+   ---------------------------------------------------------- */
+.activity-item {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: .875rem !important;
+  padding: .875rem 0 !important;
+  border-bottom: 1px solid #f8faff !important;
+}
+
+.activity-item:last-child { border-bottom: none !important; }
+
+.activity-icon {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 10px !important;
+  background: linear-gradient(135deg, #eef2ff, #e0e7ff) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #6366f1 !important;
+  font-size: .875rem !important;
+  flex-shrink: 0;
+}
+
+.activity-text {
+  font-size: .875rem !important;
+  color: #0f172a !important;
+  margin-bottom: .125rem !important;
+}
+
+.activity-time {
+  font-size: .75rem !important;
+  color: #94a3b8 !important;
+}
+
+/* ----------------------------------------------------------
+   QUICK ACTIONS
+   ---------------------------------------------------------- */
+.quick-action-item,
+.quick-actions a {
+  display: flex !important;
+  align-items: center !important;
+  gap: .625rem !important;
+  padding: .75rem 1rem !important;
+  border-radius: 10px !important;
+  background: #f8faff !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #475569 !important;
+  text-decoration: none !important;
+  font-size: .875rem !important;
+  font-weight: 500 !important;
+  margin-bottom: .5rem !important;
+  transition: all .2s ease !important;
+}
+
+.quick-action-item:hover,
+.quick-actions a:hover {
+  background: #eef2ff !important;
+  border-color: #c7d2fe !important;
+  color: #4f46e5 !important;
+  transform: translateX(4px) !important;
+}
+
+/* ----------------------------------------------------------
+   PROGRESS BARS
+   ---------------------------------------------------------- */
+.progress {
+  height: 6px !important;
+  border-radius: 9999px !important;
+  background: #e2e8f0 !important;
+}
+
+.progress-bar {
+  background: linear-gradient(90deg, #4f46e5, #6366f1) !important;
+  border-radius: 9999px !important;
+}
+
+/* ----------------------------------------------------------
+   COURSE CARDS (Mis Cursos page)
+   ---------------------------------------------------------- */
+.course-card-enrolled,
+.my-course-card,
+.enrolled-course {
+  background: #fff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 16px !important;
+  overflow: hidden !important;
+  transition: all .3s ease !important;
+  margin-bottom: 1.25rem;
+}
+
+.course-card-enrolled:hover,
+.my-course-card:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 16px 32px rgba(15,23,42,.1) !important;
+  border-color: #c7d2fe !important;
+}
+
+/* ----------------------------------------------------------
+   TABLES
+   ---------------------------------------------------------- */
+.table {
+  font-size: .875rem !important;
+  color: #0f172a !important;
+}
+
+.table thead th {
+  background: #f8faff !important;
+  border-bottom: 2px solid #e2e8f0 !important;
+  font-size: .75rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: .05em !important;
+  color: #64748b !important;
+  padding: .875rem 1rem !important;
+}
+
+.table tbody td {
+  padding: .875rem 1rem !important;
+  border-bottom: 1px solid #f1f5f9 !important;
+  vertical-align: middle !important;
+}
+
+.table tbody tr:last-child td { border-bottom: none !important; }
+.table tbody tr:hover { background: #f8faff !important; }
+
+/* ----------------------------------------------------------
+   BADGES
+   ---------------------------------------------------------- */
+.badge {
+  font-size: .72rem !important;
+  font-weight: 600 !important;
+  padding: .3rem .625rem !important;
+  border-radius: 9999px !important;
+}
+
+.badge.bg-success { background: #d1fae5 !important; color: #065f46 !important; }
+.badge.bg-primary { background: #ede9fe !important; color: #4c1d95 !important; }
+.badge.bg-warning { background: #fef3c7 !important; color: #78350f !important; }
+.badge.bg-danger  { background: #fee2e2 !important; color: #7f1d1d !important; }
+.badge.bg-info    { background: #e0f2fe !important; color: #0c4a6e !important; }
+
+/* ----------------------------------------------------------
+   FORMS (internal pages)
+   ---------------------------------------------------------- */
+.form-control, .form-select {
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  font-family: 'Inter', sans-serif !important;
+  font-size: .9rem !important;
+  color: #0f172a !important;
+  transition: all .2s !important;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: #6366f1 !important;
+  box-shadow: 0 0 0 3px rgba(99,102,241,.12) !important;
+}
+
+.form-label {
+  font-size: .78rem !important;
+  font-weight: 600 !important;
+  color: #64748b !important;
+  text-transform: uppercase !important;
+  letter-spacing: .04em !important;
+  margin-bottom: .375rem !important;
+}
+
+/* ----------------------------------------------------------
+   BUTTONS
+   ---------------------------------------------------------- */
+.btn-primary {
+  background: linear-gradient(135deg, #4f46e5, #6366f1) !important;
+  border: none !important;
+  border-radius: 9999px !important;
+  font-weight: 600 !important;
+  font-family: 'Inter', sans-serif !important;
+  transition: all .2s !important;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 16px rgba(79,70,229,.4) !important;
+}
+
+.btn-outline-primary {
+  border-color: #6366f1 !important;
+  color: #4f46e5 !important;
+  border-radius: 9999px !important;
+  font-weight: 600 !important;
+  font-family: 'Inter', sans-serif !important;
+}
+
+.btn-outline-primary:hover {
+  background: #4f46e5 !important;
+  border-color: #4f46e5 !important;
+  color: #fff !important;
+}
+
+/* ----------------------------------------------------------
+   TABS (Bootstrap nav-tabs)
+   ---------------------------------------------------------- */
+.nav-tabs {
+  border-bottom: 2px solid #e2e8f0 !important;
+  gap: .25rem;
+  margin-bottom: 1.5rem;
+}
+
+.nav-tabs .nav-link {
+  border: none !important;
+  border-bottom: 2px solid transparent !important;
+  border-radius: 0 !important;
+  color: #64748b !important;
+  font-size: .875rem !important;
+  font-weight: 500 !important;
+  padding: .625rem 1rem !important;
+  margin-bottom: -2px !important;
+  transition: all .2s !important;
+}
+
+.nav-tabs .nav-link:hover { color: #4f46e5 !important; border-bottom-color: #c7d2fe !important; }
+
+.nav-tabs .nav-link.active {
+  background: transparent !important;
+  color: #4f46e5 !important;
+  border-bottom: 2px solid #4f46e5 !important;
+  font-weight: 600 !important;
+}
+
+/* ----------------------------------------------------------
+   BREADCRUMBS
+   ---------------------------------------------------------- */
+.breadcrumb { font-size: .825rem !important; }
+.breadcrumb-item a { color: #6366f1 !important; text-decoration: none !important; }
+.breadcrumb-item.active { color: #94a3b8 !important; }
+
+/* ----------------------------------------------------------
+   PAGE FOOTER (shared dark)
+   ---------------------------------------------------------- */
+footer.bg-dark,
+footer.page-footer {
+  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%) !important;
+  border-top: 1px solid rgba(255,255,255,.06) !important;
+}
+
+footer.bg-dark h6 {
+  font-size: .75rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: .08em !important;
+  color: rgba(255,255,255,.6) !important;
+}
+
+footer.bg-dark a.text-light {
+  font-size: .825rem !important;
+  color: rgba(255,255,255,.4) !important;
+  text-decoration: none !important;
+  transition: color .2s !important;
+}
+
+footer.bg-dark a.text-light:hover { color: #a5b4fc !important; }
+
+/* ----------------------------------------------------------
+   TOAST override for old markup
+   ---------------------------------------------------------- */
+.toast .toast-header.bg-success {
+  background: #d1fae5 !important;
+  color: #065f46 !important;
+  border-bottom: 1px solid #6ee7b7 !important;
+}
+
+.toast { border-radius: 12px !important; border: 1px solid #e2e8f0 !important; }
+
+/* ----------------------------------------------------------
+   SCROLLBAR
+   ---------------------------------------------------------- */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 3px; }
+::-webkit-scrollbar-thumb { background: #c7d2fe; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #6366f1; }
+
+/* ----------------------------------------------------------
+   SETTINGS PAGE
+   ---------------------------------------------------------- */
+.settings-group,
+.setting-item {
+  background: #fff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 16px !important;
+  padding: 1.5rem !important;
+  margin-bottom: 1.25rem !important;
+}
+
+.setting-label {
+  font-size: .78rem !important;
+  font-weight: 600 !important;
+  color: #64748b !important;
+  text-transform: uppercase !important;
+  letter-spacing: .04em !important;
+}
+
+/* ----------------------------------------------------------
+   CALENDAR / SCHEDULE SPECIFIC
+   ---------------------------------------------------------- */
+.calendar-container,
+.schedule-container {
+  background: #fff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 16px !important;
+  padding: 1.5rem !important;
+}
+
+.fc-button-primary {
+  background: linear-gradient(135deg, #4f46e5, #6366f1) !important;
+  border-color: transparent !important;
+  border-radius: 8px !important;
+}
+
+/* ----------------------------------------------------------
+   RESPONSIVE
+   ---------------------------------------------------------- */
+@media (max-width: 768px) {
+  .profile-header { padding: 1.5rem !important; }
+  .profile-avatar-icon { font-size: 4rem !important; }
+  .profile-name { font-size: 1.35rem !important; }
+  .metric-value { font-size: 1.35rem !important; }
+}

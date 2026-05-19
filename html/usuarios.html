@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Usuarios — Lumina LMS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+  <script src="https://cdn.auth0.com/js/auth0-spa-js/2.1/auth0-spa-js.production.js"></script>
+  <script src="../js/auth0-config.js"></script>
+  <script src="../js/auth-guard.js"></script>
+  <style>
+    :root {
+      --bg: #09090b;
+      --surface: #111113;
+      --card: #18181b;
+      --card-hover: #1c1c20;
+      --border: rgba(255,255,255,.07);
+      --border-subtle: rgba(255,255,255,.04);
+      --accent: #6366f1;
+      --accent-2: #818cf8;
+      --accent-emerald: #10b981;
+      --accent-amber: #f59e0b;
+      --accent-rose: #f43f5e;
+      --accent-sky: #0ea5e9;
+      --text: #fafafa;
+      --text-2: #a1a1aa;
+      --text-3: #71717a;
+      --sidebar-w: 240px;
+      --top-h: 56px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      min-height: 100vh;
+      font-size: 14px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      position: fixed;
+      top: 0; left: 0;
+      width: var(--sidebar-w);
+      height: 100vh;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+    }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 20px 20px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo-mark {
+      width: 32px; height: 32px;
+      background: var(--accent-rose);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 700; color: #fff;
+      flex-shrink: 0;
+    }
+
+    .logo-text { font-size: 15px; font-weight: 700; letter-spacing: -.3px; color: var(--text); }
+    .logo-sub  { font-size: 11px; color: var(--text-3); font-weight: 400; }
+
+    .sidebar-nav { flex: 1; padding: 12px 0; overflow-y: auto; }
+
+    .nav-section-label {
+      font-size: 10px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 1px;
+      color: var(--text-3);
+      padding: 12px 20px 6px;
+    }
+
+    .nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 20px;
+      color: var(--text-2);
+      text-decoration: none;
+      font-size: 13.5px; font-weight: 500;
+      position: relative;
+      transition: color .15s, background .15s;
+    }
+    .nav-item:hover { color: var(--text); background: rgba(255,255,255,.04); }
+    .nav-item.active { color: var(--text); background: rgba(244,63,94,.1); }
+    .nav-item.active .nav-icon { color: var(--accent-rose); }
+    .nav-item.active::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 50%; transform: translateY(-50%);
+      width: 3px; height: 20px;
+      background: var(--accent-rose);
+      border-radius: 0 2px 2px 0;
+    }
+
+    .nav-icon { width: 16px; text-align: center; font-size: 13px; color: var(--text-3); transition: color .15s; }
+
+    .sidebar-footer {
+      padding: 16px 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .user-chip { display: flex; align-items: center; gap: 10px; }
+
+    .user-avatar {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-rose), #fb7185);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; color: #fff;
+      flex-shrink: 0;
+    }
+
+    .user-info { min-width: 0; }
+    .user-name { font-size: 13px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .user-role { font-size: 11px; color: var(--text-3); }
+
+    /* ── Topbar ── */
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: var(--sidebar-w);
+      right: 0;
+      height: var(--top-h);
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      z-index: 90;
+    }
+
+    .topbar-left { display: flex; align-items: center; gap: 12px; }
+    .topbar-title { font-size: 15px; font-weight: 600; color: var(--text); }
+
+    .topbar-right { display: flex; align-items: center; gap: 8px; }
+
+    .tb-btn {
+      display: flex; align-items: center; gap: 6px;
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 13px; font-weight: 500;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-2);
+      cursor: pointer;
+      text-decoration: none;
+      transition: all .15s;
+    }
+    .tb-btn:hover { color: var(--text); border-color: rgba(255,255,255,.15); background: rgba(255,255,255,.04); }
+    .tb-btn-rose { border-color: rgba(244,63,94,.25); color: var(--accent-rose); background: rgba(244,63,94,.08); }
+    .tb-btn-rose:hover { background: rgba(244,63,94,.14); border-color: rgba(244,63,94,.4); color: var(--accent-rose); }
+    .tb-btn-danger { border-color: rgba(244,63,94,.2); color: var(--accent-rose); }
+    .tb-btn-danger:hover { background: rgba(244,63,94,.08); border-color: rgba(244,63,94,.35); }
+
+    /* ── Main ── */
+    .main {
+      margin-left: var(--sidebar-w);
+      margin-top: var(--top-h);
+      flex: 1;
+      padding: 28px;
+    }
+
+    .page-header {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      margin-bottom: 28px;
+    }
+    .page-header-left {}
+    .page-title { font-size: 22px; font-weight: 700; letter-spacing: -.4px; margin-bottom: 4px; }
+    .page-sub   { font-size: 13px; color: var(--text-3); }
+
+    /* ── KPI ── */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .kpi-cell {
+      background: var(--card);
+      padding: 22px 20px;
+      display: flex; flex-direction: column; gap: 8px;
+      transition: background .2s;
+    }
+    .kpi-cell:hover { background: var(--card-hover); }
+
+    .kpi-icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px;
+    }
+    .kpi-icon.rose    { background: rgba(244,63,94,.15);  color: var(--accent-rose); }
+    .kpi-icon.indigo  { background: rgba(99,102,241,.15); color: var(--accent); }
+    .kpi-icon.emerald { background: rgba(16,185,129,.15); color: var(--accent-emerald); }
+    .kpi-icon.amber   { background: rgba(245,158,11,.15); color: var(--accent-amber); }
+
+    .kpi-value { font-size: 26px; font-weight: 800; letter-spacing: -1px; }
+    .kpi-label { font-size: 12px; color: var(--text-3); font-weight: 500; }
+    .kpi-delta { font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 3px; margin-top: auto; }
+    .kpi-delta.up   { color: var(--accent-emerald); }
+    .kpi-delta.down { color: var(--accent-rose); }
+    .kpi-delta.warm { color: var(--accent-amber); }
+
+    /* ── Toolbar ── */
+    .toolbar {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .search-wrap {
+      position: relative;
+      flex: 1;
+      min-width: 220px;
+    }
+    .search-wrap i {
+      position: absolute;
+      left: 12px; top: 50%; transform: translateY(-50%);
+      color: var(--text-3); font-size: 13px;
+      pointer-events: none;
+    }
+    .search-input {
+      width: 100%;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 8px 12px 8px 34px;
+      color: var(--text);
+      font-size: 13px;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      transition: border-color .15s;
+    }
+    .search-input::placeholder { color: var(--text-3); }
+    .search-input:focus { border-color: rgba(244,63,94,.4); }
+
+    .filter-btn {
+      display: flex; align-items: center; gap: 6px;
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 12.5px; font-weight: 500;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text-2);
+      cursor: pointer;
+      transition: all .15s;
+    }
+    .filter-btn:hover { color: var(--text); border-color: rgba(255,255,255,.12); }
+    .filter-btn.active { background: rgba(244,63,94,.1); border-color: rgba(244,63,94,.3); color: var(--accent-rose); }
+
+    /* ── Table panel ── */
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .panel-head {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .panel-title {
+      font-size: 14px; font-weight: 600; color: var(--text);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .panel-title i { color: var(--text-3); font-size: 12px; }
+
+    .panel-count {
+      font-size: 11px; font-weight: 600;
+      padding: 3px 9px; border-radius: 20px;
+      background: rgba(244,63,94,.12); color: var(--accent-rose);
+    }
+
+    /* ── User table ── */
+    .user-table { width: 100%; border-collapse: collapse; }
+
+    .user-table thead tr {
+      border-bottom: 1px solid var(--border);
+    }
+    .user-table thead th {
+      padding: 11px 20px;
+      font-size: 11px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: .6px;
+      color: var(--text-3);
+      text-align: left;
+    }
+
+    .user-table tbody tr {
+      border-bottom: 1px solid var(--border-subtle);
+      transition: background .12s;
+    }
+    .user-table tbody tr:last-child { border-bottom: none; }
+    .user-table tbody tr:hover { background: rgba(255,255,255,.025); }
+
+    .user-table td {
+      padding: 12px 20px;
+      font-size: 13px;
+      vertical-align: middle;
+    }
+
+    .u-cell {
+      display: flex; align-items: center; gap: 11px;
+    }
+    .u-avatar {
+      width: 34px; height: 34px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; color: #fff;
+      flex-shrink: 0;
+    }
+    .av-rose    { background: linear-gradient(135deg, var(--accent-rose), #fb7185); }
+    .av-indigo  { background: linear-gradient(135deg, var(--accent), var(--accent-2)); }
+    .av-emerald { background: linear-gradient(135deg, var(--accent-emerald), #34d399); }
+    .av-amber   { background: linear-gradient(135deg, var(--accent-amber), #fcd34d); }
+    .av-sky     { background: linear-gradient(135deg, var(--accent-sky), #38bdf8); }
+
+    .u-name  { font-size: 13.5px; font-weight: 600; color: var(--text); }
+    .u-email { font-size: 11.5px; color: var(--text-3); margin-top: 1px; }
+
+    .badge {
+      font-size: 10.5px; font-weight: 600;
+      padding: 3px 9px; border-radius: 20px;
+      white-space: nowrap; display: inline-block;
+    }
+    .badge-admin   { background: rgba(244,63,94,.12);  color: var(--accent-rose); }
+    .badge-teacher { background: rgba(99,102,241,.12);  color: var(--accent-2); }
+    .badge-student { background: rgba(16,185,129,.12);  color: var(--accent-emerald); }
+
+    .status-pill {
+      font-size: 10.5px; font-weight: 600;
+      padding: 3px 9px; border-radius: 20px;
+      display: inline-flex; align-items: center; gap: 5px;
+    }
+    .status-pill::before {
+      content: '';
+      width: 5px; height: 5px; border-radius: 50%;
+    }
+    .sp-active  { background: rgba(16,185,129,.1); color: var(--accent-emerald); }
+    .sp-active::before { background: var(--accent-emerald); }
+    .sp-inactive { background: rgba(113,113,122,.1); color: var(--text-3); }
+    .sp-inactive::before { background: var(--text-3); }
+
+    .action-btns { display: flex; align-items: center; gap: 6px; }
+
+    .action-btn {
+      width: 30px; height: 30px;
+      border-radius: 7px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-3);
+      font-size: 12px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .15s;
+    }
+    .action-btn:hover { color: var(--text); border-color: rgba(255,255,255,.15); background: rgba(255,255,255,.05); }
+    .action-btn.edit:hover  { color: var(--accent-2); border-color: rgba(129,140,248,.3); }
+    .action-btn.del:hover   { color: var(--accent-rose); border-color: rgba(244,63,94,.3); }
+
+    /* ── Modal ── */
+    .modal-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.6);
+      z-index: 200;
+      align-items: center; justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 480px;
+      padding: 28px;
+    }
+
+    .modal-title {
+      font-size: 16px; font-weight: 700; margin-bottom: 20px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .modal-title i { color: var(--accent-rose); }
+
+    .form-group { margin-bottom: 16px; }
+    .form-label { font-size: 12px; font-weight: 600; color: var(--text-2); margin-bottom: 6px; display: block; }
+    .form-input {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 9px 12px;
+      color: var(--text);
+      font-size: 13px;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      transition: border-color .15s;
+    }
+    .form-input:focus { border-color: rgba(244,63,94,.4); }
+    .form-select {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 9px 12px;
+      color: var(--text);
+      font-size: 13px;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      cursor: pointer;
+    }
+    .form-select option { background: var(--surface); }
+
+    .modal-actions {
+      display: flex; gap: 10px; justify-content: flex-end;
+      margin-top: 24px;
+    }
+
+    .btn-cancel {
+      padding: 8px 18px;
+      border-radius: 8px;
+      font-size: 13px; font-weight: 500;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-2);
+      cursor: pointer;
+      transition: all .15s;
+    }
+    .btn-cancel:hover { color: var(--text); border-color: rgba(255,255,255,.15); }
+
+    .btn-confirm {
+      padding: 8px 18px;
+      border-radius: 8px;
+      font-size: 13px; font-weight: 600;
+      border: none;
+      background: var(--accent-rose);
+      color: #fff;
+      cursor: pointer;
+      transition: opacity .15s;
+    }
+    .btn-confirm:hover { opacity: .88; }
+
+    /* ── Empty state ── */
+    .empty-state {
+      padding: 60px 20px;
+      text-align: center;
+      color: var(--text-3);
+    }
+    .empty-state i { font-size: 32px; margin-bottom: 12px; opacity: .4; }
+    .empty-state p { font-size: 13.5px; }
+
+    /* ── Pagination ── */
+    .pagination {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 20px;
+      border-top: 1px solid var(--border);
+    }
+    .page-info { font-size: 12px; color: var(--text-3); }
+
+    .page-btns { display: flex; gap: 4px; }
+    .page-btn {
+      width: 32px; height: 32px;
+      border-radius: 7px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-2);
+      font-size: 12px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .15s;
+    }
+    .page-btn:hover { color: var(--text); border-color: rgba(255,255,255,.15); }
+    .page-btn.active { background: rgba(244,63,94,.12); border-color: rgba(244,63,94,.3); color: var(--accent-rose); }
+    .page-btn:disabled { opacity: .3; cursor: default; }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,.08); border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark"><i class="fas fa-shield-alt" style="font-size:13px"></i></div>
+      <div>
+        <div class="logo-text">Lumina LMS</div>
+        <div class="logo-sub">Administración</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Gestión</div>
+      <a class="nav-item" href="admin.html">
+        <span class="nav-icon"><i class="fas fa-th-large"></i></span> Dashboard Admin
+      </a>
+      <a class="nav-item active" href="usuarios.html">
+        <span class="nav-icon"><i class="fas fa-users"></i></span> Usuarios
+      </a>
+      <a class="nav-item" href="courses.html">
+        <span class="nav-icon"><i class="fas fa-book"></i></span> Cursos
+      </a>
+      <a class="nav-item" href="reportes.html">
+        <span class="nav-icon"><i class="fas fa-chart-bar"></i></span> Reportes
+      </a>
+
+      <div class="nav-section-label">Sistema</div>
+      <a class="nav-item" href="monitoreo.html">
+        <span class="nav-icon"><i class="fas fa-heartbeat"></i></span> Monitoreo
+      </a>
+      <a class="nav-item" href="settings.html">
+        <span class="nav-icon"><i class="fas fa-sliders-h"></i></span> Configuración
+      </a>
+      <a class="nav-item" href="calendar.html">
+        <span class="nav-icon"><i class="fas fa-calendar-alt"></i></span> Calendario
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="user-avatar"><i class="fas fa-shield-alt" style="font-size:11px"></i></div>
+        <div class="user-info">
+          <div class="user-name" id="sidebarUserName">Administrador</div>
+          <div class="user-role">Acceso Total</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <span class="topbar-title">Gestión de Usuarios</span>
+    </div>
+    <div class="topbar-right">
+      <a href="../index.html" class="tb-btn">
+        <i class="fas fa-globe"></i> Sitio Web
+      </a>
+      <a href="admin.html" class="tb-btn">
+        <i class="fas fa-th-large"></i> Dashboard
+      </a>
+      <button class="tb-btn tb-btn-rose" onclick="openNewUserModal()">
+        <i class="fas fa-user-plus"></i> Nuevo Usuario
+      </button>
+      <button class="tb-btn tb-btn-danger" onclick="handleLogout()">
+        <i class="fas fa-sign-out-alt"></i> Salir
+      </button>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="main">
+
+    <div class="page-header">
+      <div class="page-header-left">
+        <div class="page-title">Gestión de Usuarios</div>
+        <div class="page-sub">Administra cuentas, roles y accesos de la plataforma</div>
+      </div>
+    </div>
+
+    <!-- KPI strip -->
+    <div class="kpi-grid">
+      <div class="kpi-cell">
+        <div class="kpi-icon rose"><i class="fas fa-users"></i></div>
+        <div class="kpi-value">1,284</div>
+        <div class="kpi-label">Total Usuarios</div>
+        <div class="kpi-delta up"><i class="fas fa-arrow-up"></i> +34 esta semana</div>
+      </div>
+      <div class="kpi-cell">
+        <div class="kpi-icon emerald"><i class="fas fa-user-graduate"></i></div>
+        <div class="kpi-value">1,104</div>
+        <div class="kpi-label">Estudiantes</div>
+        <div class="kpi-delta up"><i class="fas fa-arrow-up"></i> +29 esta semana</div>
+      </div>
+      <div class="kpi-cell">
+        <div class="kpi-icon indigo"><i class="fas fa-chalkboard-teacher"></i></div>
+        <div class="kpi-value">167</div>
+        <div class="kpi-label">Docentes</div>
+        <div class="kpi-delta up"><i class="fas fa-arrow-up"></i> +5 este mes</div>
+      </div>
+      <div class="kpi-cell">
+        <div class="kpi-icon amber"><i class="fas fa-shield-alt"></i></div>
+        <div class="kpi-value">13</div>
+        <div class="kpi-label">Administradores</div>
+        <div class="kpi-delta warm"><i class="fas fa-minus"></i> Sin cambios</div>
+      </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <div class="search-wrap">
+        <i class="fas fa-search"></i>
+        <input type="text" class="search-input" id="userSearch" placeholder="Buscar por nombre, email o rol..." oninput="filterUsers()">
+      </div>
+      <button class="filter-btn active" data-role="all" onclick="setRoleFilter(this,'all')">
+        <i class="fas fa-users"></i> Todos
+      </button>
+      <button class="filter-btn" data-role="admin" onclick="setRoleFilter(this,'admin')">
+        <i class="fas fa-shield-alt"></i> Admins
+      </button>
+      <button class="filter-btn" data-role="teacher" onclick="setRoleFilter(this,'teacher')">
+        <i class="fas fa-chalkboard-teacher"></i> Docentes
+      </button>
+      <button class="filter-btn" data-role="student" onclick="setRoleFilter(this,'student')">
+        <i class="fas fa-user-graduate"></i> Estudiantes
+      </button>
+    </div>
+
+    <!-- Users table -->
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title"><i class="fas fa-users"></i> Listado de Usuarios</div>
+        <span class="panel-count" id="tableCount">12 usuarios</span>
+      </div>
+      <table class="user-table">
+        <thead>
+          <tr>
+            <th>Usuario</th>
+            <th>Rol</th>
+            <th>Fecha registro</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="usersTableBody"></tbody>
+      </table>
+      <div class="empty-state" id="emptyState" style="display:none">
+        <i class="fas fa-user-slash"></i>
+        <p>No se encontraron usuarios con ese criterio.</p>
+      </div>
+      <div class="pagination">
+        <span class="page-info" id="pageInfo">Mostrando 1–12 de 12 usuarios</span>
+        <div class="page-btns">
+          <button class="page-btn" disabled><i class="fas fa-chevron-left"></i></button>
+          <button class="page-btn active">1</button>
+          <button class="page-btn" disabled><i class="fas fa-chevron-right"></i></button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- New User Modal -->
+  <div class="modal-overlay" id="newUserModal">
+    <div class="modal">
+      <div class="modal-title"><i class="fas fa-user-plus"></i> Nuevo Usuario</div>
+      <div class="form-group">
+        <label class="form-label">Nombre completo</label>
+        <input type="text" class="form-input" id="newUserName" placeholder="Ej. María García López">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Correo electrónico</label>
+        <input type="email" class="form-input" id="newUserEmail" placeholder="correo@ejemplo.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Rol</label>
+        <select class="form-select" id="newUserRole">
+          <option value="student">Estudiante</option>
+          <option value="teacher">Docente</option>
+          <option value="admin">Administrador</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Contraseña temporal</label>
+        <input type="password" class="form-input" id="newUserPass" placeholder="Mínimo 8 caracteres">
+      </div>
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeNewUserModal()">Cancelar</button>
+        <button class="btn-confirm" onclick="createUser()"><i class="fas fa-check"></i> Crear Usuario</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit User Modal -->
+  <div class="modal-overlay" id="editUserModal">
+    <div class="modal">
+      <div class="modal-title"><i class="fas fa-user-edit"></i> Editar Usuario</div>
+      <input type="hidden" id="editUserId">
+      <div class="form-group">
+        <label class="form-label">Nombre completo</label>
+        <input type="text" class="form-input" id="editUserName">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Correo electrónico</label>
+        <input type="email" class="form-input" id="editUserEmail">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Rol</label>
+        <select class="form-select" id="editUserRole">
+          <option value="student">Estudiante</option>
+          <option value="teacher">Docente</option>
+          <option value="admin">Administrador</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Estado</label>
+        <select class="form-select" id="editUserStatus">
+          <option value="active">Activo</option>
+          <option value="inactive">Inactivo</option>
+        </select>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeEditModal()">Cancelar</button>
+        <button class="btn-confirm" onclick="saveEdit()"><i class="fas fa-save"></i> Guardar cambios</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ── Sample data ── */
+    let users = [
+      { id:1, name:'Fernando Acuña',     email:'admin@gmail.com',      role:'admin',   status:'active',   date:'2024-08-01' },
+      { id:2, name:'Carlos Mendoza',     email:'profesor@gmail.com',    role:'teacher', status:'active',   date:'2024-08-03' },
+      { id:3, name:'Ana Torres',         email:'estudiante@gmail.com',  role:'student', status:'active',   date:'2024-09-10' },
+      { id:4, name:'Sofía Ramírez',      email:'sofia.ramirez@usb.edu', role:'student', status:'active',   date:'2024-09-12' },
+      { id:5, name:'Miguel Ángel López', email:'miguel.lopez@usb.edu',  role:'teacher', status:'active',   date:'2024-08-15' },
+      { id:6, name:'Valentina Cruz',     email:'val.cruz@usb.edu',      role:'student', status:'active',   date:'2024-10-01' },
+      { id:7, name:'Luis Fernández',     email:'luis.fern@usb.edu',     role:'student', status:'inactive', date:'2024-10-05' },
+      { id:8, name:'Daniela Ríos',       email:'d.rios@usb.edu',        role:'teacher', status:'active',   date:'2024-08-20' },
+      { id:9, name:'Andrés Castillo',    email:'andres.c@usb.edu',      role:'student', status:'active',   date:'2024-11-03' },
+      { id:10,name:'Isabel Moreno',      email:'i.moreno@usb.edu',      role:'student', status:'active',   date:'2024-11-08' },
+      { id:11,name:'Pablo Gutiérrez',    email:'pablo.g@usb.edu',       role:'admin',   status:'active',   date:'2024-08-01' },
+      { id:12,name:'Laura Sánchez',      email:'laura.s@usb.edu',       role:'student', status:'inactive', date:'2024-12-01' },
+    ];
+
+    let roleFilter = 'all';
+    let nextId = 13;
+
+    const avatarClasses = ['av-rose','av-indigo','av-emerald','av-amber','av-sky'];
+
+    function getAvatarClass(id) {
+      return avatarClasses[id % avatarClasses.length];
+    }
+
+    function getInitials(name) {
+      return name.split(' ').slice(0,2).map(w => w[0]).join('').toUpperCase();
+    }
+
+    function roleBadge(role) {
+      if (role === 'admin')   return '<span class="badge badge-admin">Administrador</span>';
+      if (role === 'teacher') return '<span class="badge badge-teacher">Docente</span>';
+      return '<span class="badge badge-student">Estudiante</span>';
+    }
+
+    function statusPill(status) {
+      if (status === 'active') return '<span class="status-pill sp-active">Activo</span>';
+      return '<span class="status-pill sp-inactive">Inactivo</span>';
+    }
+
+    function formatDate(d) {
+      const [y,m,day] = d.split('-');
+      const months = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+      return `${parseInt(day)} ${months[parseInt(m)-1]} ${y}`;
+    }
+
+    function renderTable() {
+      const q = (document.getElementById('userSearch').value || '').toLowerCase();
+      const filtered = users.filter(u => {
+        const matchRole = roleFilter === 'all' || u.role === roleFilter;
+        const matchQ = !q || u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q);
+        return matchRole && matchQ;
+      });
+
+      const tbody = document.getElementById('usersTableBody');
+      const empty = document.getElementById('emptyState');
+      const count = document.getElementById('tableCount');
+      const info  = document.getElementById('pageInfo');
+
+      count.textContent = `${filtered.length} usuario${filtered.length !== 1 ? 's' : ''}`;
+      info.textContent  = `Mostrando 1–${filtered.length} de ${filtered.length} usuario${filtered.length !== 1 ? 's' : ''}`;
+
+      if (!filtered.length) {
+        tbody.innerHTML = '';
+        empty.style.display = '';
+        return;
+      }
+      empty.style.display = 'none';
+
+      tbody.innerHTML = filtered.map(u => `
+        <tr>
+          <td>
+            <div class="u-cell">
+              <div class="u-avatar ${getAvatarClass(u.id)}">${getInitials(u.name)}</div>
+              <div>
+                <div class="u-name">${u.name}</div>
+                <div class="u-email">${u.email}</div>
+              </div>
+            </div>
+          </td>
+          <td>${roleBadge(u.role)}</td>
+          <td style="color:var(--text-3);font-size:12.5px">${formatDate(u.date)}</td>
+          <td>${statusPill(u.status)}</td>
+          <td>
+            <div class="action-btns">
+              <button class="action-btn edit" title="Editar" onclick="openEditModal(${u.id})"><i class="fas fa-pen"></i></button>
+              <button class="action-btn" title="${u.status === 'active' ? 'Desactivar' : 'Activar'}" onclick="toggleStatus(${u.id})">
+                <i class="fas fa-${u.status === 'active' ? 'ban' : 'check'}"></i>
+              </button>
+              <button class="action-btn del" title="Eliminar" onclick="deleteUser(${u.id})"><i class="fas fa-trash"></i></button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function filterUsers() { renderTable(); }
+
+    function setRoleFilter(btn, role) {
+      roleFilter = role;
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderTable();
+    }
+
+    function toggleStatus(id) {
+      const u = users.find(x => x.id === id);
+      if (u) { u.status = u.status === 'active' ? 'inactive' : 'active'; renderTable(); }
+    }
+
+    function deleteUser(id) {
+      if (confirm('¿Eliminar este usuario? Esta acción no se puede deshacer.')) {
+        users = users.filter(u => u.id !== id);
+        renderTable();
+      }
+    }
+
+    function openNewUserModal() { document.getElementById('newUserModal').classList.add('open'); }
+    function closeNewUserModal() { document.getElementById('newUserModal').classList.remove('open'); }
+
+    function createUser() {
+      const name  = document.getElementById('newUserName').value.trim();
+      const email = document.getElementById('newUserEmail').value.trim();
+      const role  = document.getElementById('newUserRole').value;
+      if (!name || !email) { alert('Nombre y correo son requeridos.'); return; }
+      const today = new Date().toISOString().slice(0,10);
+      users.unshift({ id: nextId++, name, email, role, status: 'active', date: today });
+      closeNewUserModal();
+      document.getElementById('newUserName').value = '';
+      document.getElementById('newUserEmail').value = '';
+      renderTable();
+    }
+
+    function openEditModal(id) {
+      const u = users.find(x => x.id === id);
+      if (!u) return;
+      document.getElementById('editUserId').value    = u.id;
+      document.getElementById('editUserName').value  = u.name;
+      document.getElementById('editUserEmail').value = u.email;
+      document.getElementById('editUserRole').value  = u.role;
+      document.getElementById('editUserStatus').value = u.status;
+      document.getElementById('editUserModal').classList.add('open');
+    }
+    function closeEditModal() { document.getElementById('editUserModal').classList.remove('open'); }
+
+    function saveEdit() {
+      const id = parseInt(document.getElementById('editUserId').value);
+      const u  = users.find(x => x.id === id);
+      if (!u) return;
+      u.name   = document.getElementById('editUserName').value.trim() || u.name;
+      u.email  = document.getElementById('editUserEmail').value.trim() || u.email;
+      u.role   = document.getElementById('editUserRole').value;
+      u.status = document.getElementById('editUserStatus').value;
+      closeEditModal();
+      renderTable();
+    }
+
+    /* close modals clicking overlay */
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+      overlay.addEventListener('click', e => { if (e.target === overlay) overlay.classList.remove('open'); });
+    });
+
+    async function handleLogout() {
+      localStorage.removeItem('user');
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('rememberMe');
+      try { await fetch('/auth/logout', { method: 'POST', credentials: 'include' }); } catch(_) {}
+      window.location.href = '/html/login.html';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const raw = localStorage.getItem('user');
+      if (raw) {
+        try {
+          const u = JSON.parse(raw);
+          const el = document.getElementById('sidebarUserName');
+          if (el && u.name) el.textContent = u.name;
+        } catch(_) {}
+      }
+      renderTable();
+    });
+  </script>
+</body>
+</html>

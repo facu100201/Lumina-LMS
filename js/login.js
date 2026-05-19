@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Elements
     const loginForm = document.getElementById('loginForm');
     const loginBtn = document.getElementById('loginBtn');
-    const buttonText = document.querySelector('.button-text');
     const buttonLoader = document.getElementById('buttonLoader');
     const errorAlert = document.getElementById('errorAlert');
     const errorMessage = document.getElementById('errorMessage');
@@ -14,8 +13,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const passwordInput = document.getElementById('password');
     const usernameInput = document.getElementById('username');
     const rememberMeCheckbox = document.getElementById('rememberMe');
-    const glassCard = document.querySelector('.glass-card');
-    const inputs = document.querySelectorAll('.glass-input');
+    const loginCard = document.querySelector('.login-card');
+    const inputs = document.querySelectorAll('.field-input');
     const googleLoginBtn = document.getElementById('googleLogin');
     const githubLoginBtn = document.getElementById('githubLogin');
     const signupLink = document.getElementById('signupLink');
@@ -52,17 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // ==================== //
 
     function initAnimations() {
-        // Add entrance animations
-        setTimeout(() => {
-            glassCard.style.opacity = '1';
-            glassCard.style.transform = 'translateY(0) scale(1)';
-        }, 100);
-
-        // Add floating effect to particles
         animateParticles();
-        
-        // Add wave animations
-        animateWaves();
     }
 
     function initEventListeners() {
@@ -85,11 +74,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Social login buttons
         if (googleLoginBtn) {
-            googleLoginBtn.addEventListener('click', () => handleSocialLogin('google-oauth2'));
+            googleLoginBtn.addEventListener('click', (e) => handleSocialLogin(e, 'google-oauth2'));
         }
-        
+
         if (githubLoginBtn) {
-            githubLoginBtn.addEventListener('click', () => handleSocialLogin('github'));
+            githubLoginBtn.addEventListener('click', (e) => handleSocialLogin(e, 'github'));
         }
 
         // Remember me checkbox
@@ -108,54 +97,16 @@ document.addEventListener('DOMContentLoaded', function() {
     // ==================== //
 
     function animateParticles() {
-        const particles = document.querySelectorAll('.particle');
+        const particles = document.querySelectorAll('.login-particle');
         particles.forEach((particle, index) => {
             particle.style.animationDelay = `${index * -2}s`;
-            particle.style.animationDuration = `${15 + Math.random() * 10}s`;
+            particle.style.animationDuration = `${12 + Math.random() * 8}s`;
         });
     }
 
-    function animateWaves() {
-        const waves = document.querySelectorAll('.wave');
-        waves.forEach((wave, index) => {
-            wave.style.animationDelay = `${index * -5}s`;
-        });
-    }
-
-    function handleInputFocus(e) {
-        const input = e.target;
-        const container = input.closest('.input-container');
-        
-        // Add focus animation
-        container.style.transform = 'scale(1.02)';
-        input.style.transform = 'translateY(-2px)';
-        
-        // Add glow effect
-        container.style.boxShadow = '0 0 20px rgba(59, 130, 246, 0.3)';
-    }
-
-    function handleInputBlur(e) {
-        const input = e.target;
-        const container = input.closest('.input-container');
-        
-        // Remove focus animation
-        container.style.transform = 'scale(1)';
-        input.style.transform = 'translateY(0)';
-        
-        // Remove glow effect
-        container.style.boxShadow = 'none';
-    }
-
-    function handleInputChange(e) {
-        const input = e.target;
-        const container = input.closest('.input-container');
-        
-        if (input.value.length > 0) {
-            container.classList.add('has-content');
-        } else {
-            container.classList.remove('has-content');
-        }
-    }
+    function handleInputFocus() {}
+    function handleInputBlur() {}
+    function handleInputChange() {}
 
     // ==================== //
     // PASSWORD TOGGLE
@@ -245,30 +196,21 @@ document.addEventListener('DOMContentLoaded', function() {
     // SOCIAL LOGIN
     // ==================== //
 
-    async function handleSocialLogin(connection) {
+    async function handleSocialLogin(e, connection) {
+        const btn = e.currentTarget;
+        const originalHTML = btn.innerHTML;
+
+        btn.style.transform = 'scale(0.95)';
+        setTimeout(() => { btn.style.transform = 'scale(1)'; }, 150);
+
         try {
-            // Add button animation
-            const btn = event.currentTarget;
-            btn.style.transform = 'scale(0.95)';
-            setTimeout(() => {
-                btn.style.transform = 'scale(1)';
-            }, 150);
-            
-            // Show loading state
-            const originalText = btn.innerHTML;
             btn.innerHTML = '<div class="spinner"></div>';
             btn.disabled = true;
-            
-            // Use Auth0 service
             await Auth0Service.loginWithSocial(connection);
-            
         } catch (error) {
-            console.error('Social login error:', error);
-            showError('Error en el login social');
-            
-            // Restore button
-            const btn = event.currentTarget;
-            btn.innerHTML = originalText;
+            // En modo demo local el login social no está disponible — mostrar aviso amigable
+            showError('Login social no disponible en modo demo. Usa email + contraseña.');
+            btn.innerHTML = originalHTML;
             btn.disabled = false;
         }
     }
@@ -279,13 +221,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function handleSignup(e) {
         e.preventDefault();
-
         try {
-            // Use Auth0 service
             await Auth0Service.signup();
         } catch (error) {
-            console.error('Signup error:', error);
-            showError('Error en el registro');
+            showError('Registro externo no disponible en modo demo. Usa las credenciales de prueba.');
         }
     }
 
@@ -317,29 +256,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function setLoading(loading) {
         if (loading) {
-            loginBtn.classList.add('loading');
             loginBtn.disabled = true;
-            buttonText.style.opacity = '0';
-            buttonLoader.style.opacity = '1';
+            if (buttonLoader) buttonLoader.classList.add('show');
         } else {
-            loginBtn.classList.remove('loading');
             loginBtn.disabled = false;
-            buttonText.style.opacity = '1';
-            buttonLoader.style.opacity = '0';
+            if (buttonLoader) buttonLoader.classList.remove('show');
         }
     }
 
     function showError(message) {
         errorMessage.textContent = message;
         errorAlert.classList.add('show');
-        
-        // Add shake animation
-        shakeElement(glassCard);
-        
-        // Auto hide after 5 seconds
-        setTimeout(() => {
-            hideError();
-        }, 5000);
+        shakeElement(loginCard);
+        setTimeout(() => { hideError(); }, 5000);
     }
 
     function showSuccess() {

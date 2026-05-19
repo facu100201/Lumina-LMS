@@ -1,1150 +1,654 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Mis Cursos - Lumina Learning</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
-    <link href="../styles/main.css" rel="stylesheet">
-    <link rel="stylesheet" href="../styles/courses.css" />
-    <link rel="stylesheet" href="../styles/analytics-modal.css?v=3" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Estilos para números luminosos -->
-    <style>
-        .glowing-number {
-            position: relative;
-            font-weight: bold;
-            font-size: 2.5rem;
-            color: #4FC3F7;
-            text-shadow: 
-                0 0 10px rgba(79, 195, 247, 0.8),
-                0 0 20px rgba(79, 195, 247, 0.6),
-                0 0 30px rgba(79, 195, 247, 0.4);
-            animation: numberGlow 3s ease-in-out infinite alternate;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        
-        .glowing-number:hover {
-            transform: scale(1.1);
-            text-shadow: 
-                0 0 15px rgba(79, 195, 247, 1),
-                0 0 25px rgba(79, 195, 247, 0.8),
-                0 0 35px rgba(79, 195, 247, 0.6),
-                0 0 45px rgba(79, 195, 247, 0.4);
-        }
-        
-        @keyframes numberGlow {
-            0% {
-                text-shadow: 
-                    0 0 10px rgba(79, 195, 247, 0.8),
-                    0 0 20px rgba(79, 195, 247, 0.6),
-                    0 0 30px rgba(79, 195, 247, 0.4);
-                color: #4FC3F7;
-            }
-            50% {
-                text-shadow: 
-                    0 0 15px rgba(79, 195, 247, 1),
-                    0 0 25px rgba(79, 195, 247, 0.8),
-                    0 0 35px rgba(79, 195, 247, 0.6);
-                color: #29B6F6;
-            }
-            100% {
-                text-shadow: 
-                    0 0 20px rgba(79, 195, 247, 1),
-                    0 0 30px rgba(79, 195, 247, 0.8),
-                    0 0 40px rgba(79, 195, 247, 0.6),
-                    0 0 50px rgba(79, 195, 247, 0.4);
-                color: #03A9F4;
-            }
-        }
-        
-        .glowing-number::before {
-            content: '';
-            position: absolute;
-            top: -10px;
-            left: -10px;
-            right: -10px;
-            bottom: -10px;
-            background: radial-gradient(circle, rgba(79, 195, 247, 0.1) 0%, transparent 70%);
-            border-radius: 50%;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
-        }
-        
-        .glowing-number:hover::before {
-            opacity: 1;
-        }
-        
-        .glowing-number.pulse {
-            animation: numberPulse 0.6s ease-in-out;
-        }
-        
-        @keyframes numberPulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mis Cursos — Lumina LMS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../styles/courses.css" />
+  <link rel="stylesheet" href="../styles/analytics-modal.css?v=3" />
+  <script src="https://cdn.auth0.com/js/auth0-spa-js/2.1/auth0-spa-js.production.js"></script>
+  <script src="../js/auth0-config.js"></script>
+  <style>
+    /* ── Design tokens ── */
+    :root {
+      --bg:#09090b; --surface:#111113; --card:#18181b; --card-hover:#1c1c20;
+      --border:rgba(255,255,255,.07); --border-s:rgba(255,255,255,.04);
+      --accent:#6366f1; --accent-2:#818cf8;
+      --emerald:#10b981; --amber:#f59e0b; --rose:#f43f5e; --sky:#0ea5e9;
+      --text:#fafafa; --text-2:#a1a1aa; --text-3:#71717a;
+      --sidebar-w:240px; --top-h:56px;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;font-size:14px;-webkit-font-smoothing:antialiased;}
+
+    /* ── Sidebar ── */
+    .sidebar{position:fixed;top:0;left:0;width:var(--sidebar-w);height:100vh;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100;}
+    .sidebar-logo{display:flex;align-items:center;gap:10px;padding:20px 20px 16px;border-bottom:1px solid var(--border);}
+    .logo-mark{width:32px;height:32px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0;}
+    .logo-text{font-size:15px;font-weight:700;letter-spacing:-.3px;}
+    .logo-sub{font-size:11px;color:var(--text-3);}
+    .sidebar-nav{flex:1;padding:12px 0;overflow-y:auto;}
+    .nav-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-3);padding:12px 20px 6px;}
+    .nav-item{display:flex;align-items:center;gap:10px;padding:9px 20px;color:var(--text-2);text-decoration:none;font-size:13.5px;font-weight:500;position:relative;transition:color .15s,background .15s;}
+    .nav-item:hover{color:var(--text);background:rgba(255,255,255,.04);}
+    .nav-item.active{color:var(--text);background:rgba(99,102,241,.12);}
+    .nav-item.active .nv-icon{color:var(--accent);}
+    .nav-item.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:20px;background:var(--accent);border-radius:0 2px 2px 0;}
+    .nv-icon{width:16px;text-align:center;font-size:13px;color:var(--text-3);}
+    .sidebar-footer{padding:16px 20px;border-top:1px solid var(--border);}
+    .user-chip{display:flex;align-items:center;gap:10px;}
+    .u-av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;}
+    .u-name{font-size:13px;font-weight:600;}
+    .u-role{font-size:11px;color:var(--text-3);}
+
+    /* ── Topbar ── */
+    .topbar{position:fixed;top:0;left:var(--sidebar-w);right:0;height:var(--top-h);background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:90;}
+    .tb-title{font-size:15px;font-weight:600;}
+    .tb-right{display:flex;align-items:center;gap:6px;}
+    .tb-btn{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;font-size:13px;font-weight:500;border:1px solid var(--border);background:transparent;color:var(--text-2);cursor:pointer;text-decoration:none;transition:all .15s;position:relative;}
+    .tb-btn:hover{color:var(--text);border-color:rgba(255,255,255,.15);background:rgba(255,255,255,.04);}
+    .tb-btn-danger{border-color:rgba(244,63,94,.2);color:var(--rose);}
+    .tb-btn-danger:hover{background:rgba(244,63,94,.08);border-color:rgba(244,63,94,.35);}
+
+    /* Cart badge */
+    .cart-badge{position:absolute;top:3px;right:3px;min-width:16px;height:16px;background:var(--rose);border-radius:8px;font-size:10px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;padding:0 3px;}
+
+    /* Bootstrap dropdown dark overrides */
+    .dropdown-menu{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:8px;box-shadow:0 16px 40px rgba(0,0,0,.5);}
+    .dropdown-item{color:var(--text-2);border-radius:8px;font-size:13px;padding:8px 12px;}
+    .dropdown-item:hover,.dropdown-item:focus{background:rgba(255,255,255,.06);color:var(--text);}
+    .dropdown-item.text-danger{color:var(--rose)!important;}
+    .dropdown-item.text-danger:hover{background:rgba(244,63,94,.08);}
+    .dropdown-divider{border-color:var(--border);}
+    .dropdown-header{color:var(--text-2);font-size:13px;padding:8px 12px;}
+    .dropdown-header .fw-bold{color:var(--text);font-size:13.5px;}
+    .dropdown-header .text-muted{color:var(--text-3)!important;font-size:11px;}
+
+    /* Cart dropdown */
+    .cart-dropdown-menu{min-width:300px;padding:12px;}
+    .cart-dropdown-menu .dropdown-header{font-weight:600;color:var(--text);font-size:13.5px;}
+    #cartItems .cart-item{border-bottom:1px solid var(--border-s);padding:8px 0;}
+    #cartItems .cart-item:last-child{border-bottom:none;}
+    .cart-item-title{font-size:12.5px;font-weight:500;color:var(--text);}
+    .cart-checkout-btn{background:var(--accent);border-color:var(--accent);border-radius:8px;font-size:13px;font-weight:600;}
+    .cart-checkout-btn:hover{background:var(--accent-2);border-color:var(--accent-2);}
+    #cartSubtotal{color:var(--text);font-weight:700;}
+
+    /* ── Main layout ── */
+    .main{margin-left:var(--sidebar-w);margin-top:var(--top-h);flex:1;padding:28px;min-height:calc(100vh - var(--top-h));}
+    .page-header{margin-bottom:24px;}
+    .page-title{font-size:22px;font-weight:700;letter-spacing:-.4px;margin-bottom:4px;}
+    .page-sub{font-size:13px;color:var(--text-3);}
+
+    /* ── KPI strip ── */
+    .kpi-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border-radius:14px;overflow:hidden;margin-bottom:24px;}
+    .kpi-cell{background:var(--card);padding:20px 24px;}
+    .kpi-val{font-size:28px;font-weight:800;letter-spacing:-.04em;color:var(--text);line-height:1;}
+    .kpi-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text-3);margin-top:4px;}
+
+    /* ── Search + filter bar ── */
+    .filter-bar{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap;}
+    .search-wrap{position:relative;flex:1;min-width:200px;}
+    .search-wrap .fa-search{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text-3);font-size:12px;}
+    .search-wrap input{width:100%;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:9px 12px 9px 34px;color:var(--text);font-size:13px;font-family:'Inter',sans-serif;outline:none;transition:border-color .15s;}
+    .search-wrap input::placeholder{color:var(--text-3);}
+    .search-wrap input:focus{border-color:var(--accent);}
+    .filter-pills{display:flex;gap:6px;flex-wrap:wrap;}
+    .filter-btn{background:transparent;border:1px solid var(--border);border-radius:8px;color:var(--text-2);font-size:12.5px;font-weight:500;padding:7px 14px;cursor:pointer;transition:all .15s;font-family:'Inter',sans-serif;}
+    .filter-btn:hover{border-color:rgba(255,255,255,.15);color:var(--text);}
+    .filter-btn.active{background:rgba(99,102,241,.15);border-color:rgba(99,102,241,.4);color:var(--accent-2);}
+    .view-wrap{display:flex;gap:4px;}
+    .view-btn{background:transparent;border:1px solid var(--border);border-radius:8px;color:var(--text-2);font-size:12px;padding:7px 10px;cursor:pointer;transition:all .15s;font-family:'Inter',sans-serif;}
+    .view-btn:hover{border-color:rgba(255,255,255,.15);color:var(--text);}
+    .view-btn.active{background:rgba(99,102,241,.15);border-color:rgba(99,102,241,.4);color:var(--accent-2);}
+    .analytics-btn{background:transparent;border:1px solid var(--border);border-radius:8px;color:var(--text-2);font-size:12.5px;font-weight:500;padding:7px 14px;cursor:pointer;transition:all .15s;white-space:nowrap;font-family:'Inter',sans-serif;}
+    .analytics-btn:hover{border-color:rgba(99,102,241,.4);color:var(--accent-2);background:rgba(99,102,241,.08);}
+
+    /* ── Course cards dark override ── */
+    /* courses.js creates .course-card elements; apply dark theme on top */
+    #coursesContainer .course-card{background:var(--card)!important;border:1px solid var(--border)!important;border-radius:14px!important;color:var(--text)!important;transition:border-color .2s,transform .2s!important;}
+    #coursesContainer .course-card:hover{border-color:rgba(99,102,241,.3)!important;transform:translateY(-2px)!important;}
+    #coursesContainer .course-title{color:var(--text)!important;font-size:14px!important;font-weight:600!important;}
+    #coursesContainer .course-description{color:var(--text-2)!important;font-size:12.5px!important;}
+    #coursesContainer .course-instructor{color:var(--text-3)!important;font-size:12px!important;}
+    #coursesContainer .progress-bar-container,
+    #coursesContainer .course-progress-bar{background:rgba(255,255,255,.06)!important;}
+    #coursesContainer .progress-fill{border-radius:4px!important;}
+    #coursesContainer .course-footer,#coursesContainer .card-footer{background:rgba(255,255,255,.02)!important;border-top:1px solid var(--border)!important;}
+    #coursesContainer .btn-primary{background:var(--accent)!important;border-color:var(--accent)!important;border-radius:8px!important;font-size:12.5px!important;}
+    #coursesContainer .course-meta span,#coursesContainer .meta-item{color:var(--text-3)!important;font-size:11.5px!important;}
+    #coursesContainer .badge-completed,#coursesContainer .completed-badge{background:rgba(16,185,129,.15)!important;color:var(--emerald)!important;}
+    #coursesContainer .badge-progress{background:rgba(99,102,241,.15)!important;color:var(--accent-2)!important;}
+
+    /* ── Empty state ── */
+    #emptyState{text-align:center;padding:60px 20px;}
+    #emptyState .empty-icon{font-size:48px;color:var(--text-3);margin-bottom:16px;}
+    #emptyState h3{font-size:18px;font-weight:600;color:var(--text);margin-bottom:8px;}
+    #emptyState p{color:var(--text-3);font-size:13px;margin-bottom:20px;}
+    #emptyState .btn{background:var(--accent);border:none;border-radius:8px;font-size:13px;padding:9px 20px;font-family:'Inter',sans-serif;}
+
+    /* ── Course details modal dark ── */
+    .course-details-modal{background:rgba(0,0,0,.7);backdrop-filter:blur(4px);}
+    .course-details-modal .modal-content{background:var(--card)!important;border:1px solid var(--border)!important;border-radius:16px!important;color:var(--text)!important;}
+    .course-details-modal .modal-header{background:var(--surface)!important;border-bottom:1px solid var(--border)!important;}
+    .course-details-modal h2,.course-details-modal h4,.course-details-modal h5{color:var(--text)!important;}
+    .course-details-modal p,.course-details-modal .course-meta,.course-details-modal .meta-item{color:var(--text-2)!important;}
+    .course-details-modal .tab-btn{background:transparent!important;border:1px solid var(--border)!important;color:var(--text-2)!important;border-radius:8px!important;font-size:12.5px!important;}
+    .course-details-modal .tab-btn.active{background:rgba(99,102,241,.15)!important;border-color:rgba(99,102,241,.4)!important;color:var(--accent-2)!important;}
+    .course-details-modal .close-modal{background:transparent!important;border:1px solid var(--border)!important;color:var(--text-2)!important;border-radius:8px!important;}
+    .course-details-modal .close-modal:hover{background:rgba(244,63,94,.08)!important;color:var(--rose)!important;}
+    .course-details-modal .progress-item,.course-details-modal .lesson-card{background:var(--surface)!important;border:1px solid var(--border)!important;border-radius:10px!important;}
+    .course-details-modal .progress-label{color:var(--text-3)!important;font-size:12px!important;}
+    .course-details-modal .progress-value{color:var(--text)!important;font-weight:600!important;}
+    .course-details-modal .btn-primary{background:var(--accent)!important;border-color:var(--accent)!important;border-radius:8px!important;}
+    .course-details-modal .stat-card{background:var(--surface)!important;border:1px solid var(--border)!important;border-radius:10px!important;}
+    .course-details-modal .stat-number{color:var(--text)!important;font-weight:700!important;}
+    .course-details-modal .stat-label{color:var(--text-3)!important;font-size:11px!important;}
+    .course-details-modal .continue-btn{background:var(--accent)!important;border:none!important;border-radius:8px!important;}
+
+    /* ── Analytics modal dark ── */
+    .analytics-modal{background:rgba(0,0,0,.7);backdrop-filter:blur(4px);}
+    .analytics-modal .modal-content,.analytics-modal .analytics-modal-content{background:var(--card)!important;border:1px solid var(--border)!important;border-radius:16px!important;color:var(--text)!important;}
+    .analytics-modal .modal-header{background:var(--surface)!important;border-bottom:1px solid var(--border)!important;}
+    .analytics-modal h3,.analytics-modal h4,.analytics-modal h5{color:var(--text)!important;}
+    .analytics-modal .header-subtitle,.analytics-modal .section-description{color:var(--text-3)!important;font-size:12px!important;}
+    .analytics-modal .stat-card{background:var(--surface)!important;border:1px solid var(--border)!important;border-radius:10px!important;}
+    .analytics-modal .stat-number{color:var(--text)!important;font-weight:700!important;font-size:20px!important;}
+    .analytics-modal .stat-label{color:var(--text-3)!important;font-size:11px!important;}
+    .analytics-modal .performance-card{background:var(--surface)!important;border:1px solid var(--border)!important;border-radius:10px!important;}
+    .analytics-modal .performance-label{color:var(--text-2)!important;}
+    .analytics-modal .performance-value{color:var(--accent-2)!important;font-weight:700!important;}
+    .analytics-modal .time-chart-card{background:var(--surface)!important;border:1px solid var(--border)!important;border-radius:10px!important;}
+    .analytics-modal .activity-item{background:var(--surface)!important;border:1px solid var(--border-s)!important;border-radius:8px!important;}
+    .analytics-modal .activity-title{color:var(--text)!important;font-size:13px!important;}
+    .analytics-modal .activity-time{color:var(--text-3)!important;font-size:11px!important;}
+    .analytics-modal .close-modal{background:transparent!important;border:1px solid var(--border)!important;color:var(--text-2)!important;border-radius:8px!important;}
+    .analytics-modal .close-modal:hover{background:rgba(244,63,94,.08)!important;color:var(--rose)!important;}
+    .analytics-modal canvas{filter:invert(0);} /* Chart.js renders on canvas — dark bg via JS config */
+
+    /* ── Hidden hero (required by courses.js animation call) ── */
+    .hero-content{display:none;}
+
+    ::-webkit-scrollbar{width:5px;}
+    ::-webkit-scrollbar-track{background:transparent;}
+    ::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:3px;}
+  </style>
 </head>
+<body>
 
-<body class="courses-page">
-    <!-- Toast para notificaciones -->
-    <div class="toast-container position-fixed bottom-0 end-0 p-3">
-        <div id="addedToCartToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="toast-header bg-success text-white">
-                <strong class="me-auto">¡Añadido al carrito!</strong>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"
-                    aria-label="Close"></button>
-            </div>
-            <div class="toast-body">
-                El curso ha sido añadido a tu carrito de compras.
-            </div>
-        </div>
+<!-- Toast -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index:9999;">
+  <div id="addedToCartToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header" style="background:var(--emerald);color:#fff;">
+      <strong class="me-auto"><i class="fas fa-check-circle me-2"></i>Añadido al carrito</strong>
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+    </div>
+    <div class="toast-body" style="background:var(--card);color:var(--text-2);font-size:13px;">El curso fue añadido a tu carrito.</div>
+  </div>
+</div>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">L</div>
+    <div>
+      <div class="logo-text">Lumina LMS</div>
+      <div class="logo-sub">Mis Cursos</div>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-label">Navegación</div>
+    <a class="nav-item" href="../index.html"><span class="nv-icon"><i class="fas fa-home"></i></span> Inicio</a>
+    <a class="nav-item active" href="courses.html"><span class="nv-icon"><i class="fas fa-book-open"></i></span> Mis Cursos</a>
+    <a class="nav-item" href="cursos-venta.html"><span class="nv-icon"><i class="fas fa-store"></i></span> Tienda</a>
+    <a class="nav-item" href="student-courses.html"><span class="nv-icon"><i class="fas fa-graduation-cap"></i></span> Cursos Activos</a>
+    <a class="nav-item" href="calendar.html"><span class="nv-icon"><i class="fas fa-calendar-alt"></i></span> Calendario</a>
+    <a class="nav-item" href="schedule.html"><span class="nv-icon"><i class="fas fa-clock"></i></span> Horario</a>
+    <div class="nav-label">Cuenta</div>
+    <a class="nav-item" href="profile.html"><span class="nv-icon"><i class="fas fa-user"></i></span> Mi Perfil</a>
+    <a class="nav-item" href="settings.html"><span class="nv-icon"><i class="fas fa-sliders-h"></i></span> Configuración</a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="user-chip">
+      <div class="u-av" id="sidebarAvatar">E</div>
+      <div>
+        <div class="u-name" id="sidebarName">Estudiante</div>
+        <div class="u-role" id="sidebarRole">Alumno</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- Topbar -->
+<header class="topbar">
+  <span class="tb-title">Mis Cursos</span>
+  <div class="tb-right">
+
+    <!-- Cart dropdown -->
+    <div class="dropdown">
+      <button class="tb-btn dropdown-toggle" id="cartDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="position:relative;">
+        <i class="fas fa-shopping-cart"></i>
+        <span id="cartCount" class="cart-badge">0</span>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end cart-dropdown-menu" aria-labelledby="cartDropdown" style="min-width:300px;">
+        <li><h6 class="dropdown-header fw-bold"><i class="fas fa-shopping-cart me-2" style="color:var(--accent)"></i>Tu carrito</h6></li>
+        <li><hr class="dropdown-divider"></li>
+        <li>
+          <div id="cartItems" class="px-2" style="max-height:40vh;overflow-y:auto;">
+            <p class="text-center py-2 mb-0" style="color:var(--text-3);font-size:12.5px;">Tu carrito está vacío</p>
+          </div>
+        </li>
+        <li><hr class="dropdown-divider"></li>
+        <li class="px-2">
+          <div class="d-flex justify-content-between align-items-center py-1">
+            <span style="font-size:13px;color:var(--text-2);">Subtotal:</span>
+            <span id="cartSubtotal" class="fw-bold">$0.00</span>
+          </div>
+        </li>
+        <li><hr class="dropdown-divider"></li>
+        <li class="px-2 pb-1">
+          <a href="checkout.html" class="btn cart-checkout-btn w-100">Ir a pagar</a>
+        </li>
+      </ul>
     </div>
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="../index.html">
-                <img src="../img/LuminaLogoNoTextBlanco.webp" alt="Logo" width="32" height="32" class="me-2">
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="../index.html"><i class="fas fa-home me-1"></i> Inicio</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="cursos-venta.html"><i class="fas fa-book me-1"></i> Cursos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="blog.html"><i class="fas fa-blog me-1"></i> Blog</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="contact.html"><i class="fas fa-envelope me-1"></i> Contacto</a>
-                    </li>
-                    <!-- Botón Mis Cursos (solo para estudiantes) -->
-                    <li class="nav-item" id="misCursosContainer" style="display: none;">
-                        <a class="nav-link mis-cursos-btn" href="courses.html">
-                            <i class="fas fa-graduation-cap me-1"></i> Mis Cursos
-                        </a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" aria-label="Notificaciones">
-                            <i class="fas fa-bell"></i>
-                        </a>
-                    </li>
-
-                    <!-- Dropdown del Carrito -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle position-relative" href="#" id="cartDropdown" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
-                            <i class="fas fa-shopping-cart"></i>
-                            <span id="cartCount"
-                                class="position-absolute top-0 start-100 translate-middle badge bg-danger rounded-pill">0</span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end dropdown-cart" aria-labelledby="cartDropdown">
-                            <li>
-                                <h6 class="dropdown-header fw-bold">Tu carrito</h6>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider my-1">
-                            </li>
-                            <li>
-                                <div id="cartItems" class="px-2" style="max-height: 50vh; overflow-y: auto;">
-                                    <p class="text-muted text-center py-2 mb-0">Tu carrito está vacío</p>
-                                </div>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider my-1">
-                            </li>
-                            <li class="px-2">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <strong>Subtotal:</strong>
-                                    <span id="cartSubtotal" class="fw-bold">$0.00</span>
-                                </div>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider my-1">
-                            </li>
-                            <li class="px-2 mb-1">
-                                <a href="checkout.html" class="btn btn-primary w-100 py-2">
-                                    Ir a pagar
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    <!-- Dropdown del Usuario -->
-                    <li class="nav-item dropdown" id="userDropdownContainer" style="display: none;">
-                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
-                            <i id="userAvatarIcon" class="fas fa-user-circle me-1" style="font-size: 24px;"></i>
-                            <span id="userName">Usuario</span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                            <li>
-                                <div class="dropdown-header">
-                                    <div class="d-flex align-items-center">
-                                        <i id="userAvatarLargeIcon" class="fas fa-user-circle me-2" style="font-size: 32px;"></i>
-                                        <div>
-                                            <div id="userNameLarge" class="fw-bold">Usuario</div>
-                                            <small id="userEmail" class="text-muted">usuario@email.com</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="profile.html"><i class="fas fa-user me-2"></i> Mi Perfil</a></li>
-                            <li><a class="dropdown-item" href="settings.html"><i class="fas fa-cog me-2"></i> Configuración</a></li>
-                            <li><a class="dropdown-item" href="courses.html"><i class="fas fa-book me-2"></i> Mis Cursos</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item text-danger" href="#" onclick="handleLogout()"><i class="fas fa-sign-out-alt me-2"></i> Cerrar sesión</a></li>
-                        </ul>
-                    </li>
-                    
-                    <!-- Botón de Login (cuando no está autenticado) -->
-                    <li class="nav-item" id="loginButtonContainer">
-                        <a class="nav-link" href="login.html">
-                            <i class="fas fa-sign-in-alt me-1"></i> Iniciar Sesión
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Hero Section Rediseñado -->
-    <section class="courses-hero">
-        <div class="hero-overlay"></div>
-        <div class="container">
-            <div class="hero-content">
-                <h1 class="hero-title">Mis Cursos</h1>
-                <p class="hero-subtitle">Continúa tu viaje de aprendizaje con nuestros cursos premium</p>
-                <div class="hero-stats">
-                    <div class="stat-item">
-                        <div class="stat-number glowing-number" id="totalCourses">6</div>
-                        <div class="stat-label">Cursos Inscritos</div>
-                    </div>
-
-                    <div class="stat-item">
-                        <div class="stat-number glowing-number" id="totalHours">120h</div>
-                        <div class="stat-label">Horas de Contenido</div>
-                    </div>
-                </div>
-                <div class="hero-actions">
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Dashboard Section -->
-    <section class="dashboard-section">
-        <div class="container">
-            <!-- Filtros y Búsqueda -->
-            <div class="dashboard-header">
-                <div class="search-filters">
-                    <div class="search-box">
-                        <i class="fas fa-search search-icon"></i>
-                        <input type="text" id="courseSearch" placeholder="Buscar en mis cursos..." class="search-input">
-                    </div>
-                    <div class="filter-buttons">
-                        <button class="filter-btn active" data-filter="all">
-                            <i class="fas fa-th-large me-1"></i>Todos
-                        </button>
-                        <button class="filter-btn" data-filter="in-progress">
-                            <i class="fas fa-play me-1"></i>En Progreso
-                        </button>
-                        <button class="filter-btn" data-filter="completed">
-                            <i class="fas fa-check me-1"></i>Completados
-                        </button>
-                        <button class="filter-btn" data-filter="favorites">
-                            <i class="fas fa-heart me-1"></i>Favoritos
-                        </button>
-                    </div>
-                </div>
-                <div class="view-controls">
-                    <div class="view-toggle">
-                        <button class="view-btn active" data-view="grid" onclick="setView('grid')">
-                            <i class="fas fa-th"></i>
-                        </button>
-                        <button class="view-btn" data-view="list" onclick="setView('list')">
-                            <i class="fas fa-list"></i>
-                        </button>
-                    </div>
-                    <button class="btn btn-outline-primary" onclick="showCourseAnalytics()">
-                        <i class="fas fa-chart-line me-1"></i>Analytics
-                    </button>
-                </div>
-            </div>
-
-
-
-            <!-- Courses Grid -->
-            <div class="courses-grid" id="coursesContainer">
-                <!-- Cursos renderizados dinámicamente -->
-            </div>
-
-            <!-- Empty State -->
-            <div class="empty-state" id="emptyState" style="display: none;">
-                <div class="empty-icon">
-                    <i class="fas fa-book-open"></i>
-                </div>
-                <h3>No hay cursos encontrados</h3>
-                <p>No se encontraron cursos que coincidan con tu búsqueda.</p>
-                <button class="btn btn-primary" onclick="clearFilters()">
-                    <i class="fas fa-times me-1"></i>Limpiar Filtros
-                </button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Course Details Modal -->
-    <div class="course-details-modal" id="courseDetailsModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="course-info-header">
-                    <div class="course-thumbnail">
-                        <img id="modalCourseImage" src="" alt="Course Thumbnail">
-                        <div class="course-overlay">
-                            <button class="continue-btn" onclick="startCourse()">
-                                Continuar
-                            </button>
-                        </div>
-                    </div>
-                    <div class="course-info">
-                        <h2 id="modalCourseTitle">Título del Curso</h2>
-                        <p id="modalCourseDescription">Descripción del curso</p>
-                        <div class="course-meta">
-                            <span class="meta-item">
-                                <i class="fas fa-clock"></i>
-                                <span id="modalCourseDuration">8 horas</span>
-                            </span>
-                            <span class="meta-item">
-                                <i class="fas fa-signal"></i>
-                                <span id="modalCourseDifficulty">Intermedio</span>
-                            </span>
-                            <span class="meta-item">
-                                <i class="fas fa-user-tie"></i>
-                                <span id="modalCourseInstructor">Instructor</span>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <button class="close-modal" onclick="closeCourseModal()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="course-tabs">
-                    <button class="tab-btn active" data-tab="overview">
-                        <i class="fas fa-info-circle me-1"></i>Visión General
-                    </button>
-                    <button class="tab-btn" data-tab="content">
-                        <i class="fas fa-list me-1"></i>Contenido
-                    </button>
-                    <button class="tab-btn" data-tab="progress">
-                        <i class="fas fa-chart-line me-1"></i>Progreso
-                    </button>
-                    <button class="tab-btn" data-tab="notes">
-                        <i class="fas fa-sticky-note me-1"></i>Notas
-                    </button>
-                </div>
-                <div class="tab-content">
-                    <div class="tab-pane active" id="overview">
-                        <div class="overview-content">
-                            <div class="progress-section">
-                                <h4>Tu Progreso</h4>
-                                <div class="progress-details">
-                                    <div class="progress-item">
-                                        <span class="progress-label">Lecciones Completadas</span>
-                                        <span class="progress-value" id="completedLessons">12/24</span>
-                                    </div>
-                                    <div class="progress-item">
-                                        <span class="progress-label">Tiempo Dedicado</span>
-                                        <span class="progress-value" id="timeSpent">4h 30m</span>
-                                    </div>
-                                    <div class="progress-item">
-                                        <span class="progress-label">Última Actividad</span>
-                                        <span class="progress-value" id="lastActivity">Hace 2 días</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="next-lesson">
-                                <h4>Próxima Lección</h4>
-                                <div class="lesson-card">
-                                    <div class="lesson-info">
-                                        <h5 id="nextLessonTitle">Introducción a JavaScript</h5>
-                                        <p id="nextLessonDescription">Aprende los fundamentos básicos de JavaScript</p>
-                                    </div>
-                                    <button class="btn btn-primary" onclick="continueCourse()">
-                                        <i class="fas fa-play me-1"></i>Continuar
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tab-pane" id="content">
-                        <div class="content-list" id="modalContentList">
-                            <!-- Contenido renderizado dinámicamente -->
-                        </div>
-                    </div>
-                    <div class="tab-pane" id="progress">
-                        <div class="progress-analytics">
-                            <div class="analytics-chart" id="progressChart">
-                                <!-- Gráfico de progreso -->
-                            </div>
-                            <div class="analytics-stats">
-                                <div class="stat-card">
-                                    <div class="stat-icon">
-                                        <i class="fas fa-trophy"></i>
-                                    </div>
-                                    <div class="stat-info">
-                                        <div class="stat-number" id="achievementsCount">8</div>
-                                        <div class="stat-label">Logros Desbloqueados</div>
-                                    </div>
-                                </div>
-                                <div class="stat-card">
-                                    <div class="stat-icon">
-                                        <i class="fas fa-clock"></i>
-                                    </div>
-                                    <div class="stat-info">
-                                        <div class="stat-number" id="avgTimePerSession">45m</div>
-                                        <div class="stat-label">Tiempo Promedio por Sesión</div>
-                                    </div>
-                                </div>
-                                <div class="stat-card">
-                                    <div class="stat-icon">
-                                        <i class="fas fa-calendar"></i>
-                                    </div>
-                                    <div class="stat-info">
-                                        <div class="stat-number" id="streakDays">7</div>
-                                        <div class="stat-label">Días Consecutivos</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tab-pane" id="notes">
-                        <div class="notes-section">
-                            <div class="notes-header">
-                                <h4>Mis Notas</h4>
-                                <button class="btn btn-primary btn-sm" onclick="addNote()">
-                                    <i class="fas fa-plus me-1"></i>Agregar Nota
-                                </button>
-                            </div>
-                            <div class="notes-list" id="notesList">
-                                <!-- Notas renderizadas dinámicamente -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <!-- User dropdown (populated by updateUserNavbar) -->
+    <div class="dropdown" id="userDropdownContainer" style="display:none;">
+      <button class="tb-btn dropdown-toggle" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+        <i id="userAvatarIcon" class="fas fa-user-graduate" style="font-size:15px;"></i>
+        <span id="userName">Usuario</span>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end" id="userDropdownMenu" aria-labelledby="userDropdown" style="min-width:220px;">
+        <!-- Populated by updateUserNavbar() -->
+      </ul>
     </div>
 
-    <!-- Modal de Analytics Simple -->
-    <div class="analytics-modal" id="analyticsModal">
-        <div class="modal-content analytics-modal-content">
-            <div class="modal-header">
-                <div class="header-content">
-                    <h3><i class="fas fa-chart-line me-2"></i>Analytics del Curso</h3>
-                    <p class="header-subtitle">Resumen completo de tu progreso académico</p>
-                </div>
-                <button class="close-modal" onclick="closeAnalyticsModal()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="analytics-content-wrapper">
-                    <!-- Vista General -->
-                    <div class="analytics-section">
-                        <div class="section-header">
-                            <h4><i class="fas fa-chart-pie me-2"></i>Vista General</h4>
-                            <p class="section-description">Métricas principales de tu rendimiento</p>
-                        </div>
-                        <div class="stats-grid">
-                            <div class="stat-card">
-                                <div class="stat-icon">
-                                    <i class="fas fa-graduation-cap"></i>
-                                </div>
-                                <div class="stat-info">
-                                    <span class="stat-number" id="overallProgressNumber">45%</span>
-                                    <span class="stat-label">Progreso General</span>
-                                </div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-icon">
-                                    <i class="fas fa-book"></i>
-                                </div>
-                                <div class="stat-info">
-                                    <span class="stat-number" id="activeCoursesNumber">4</span>
-                                    <span class="stat-label">Cursos Activos</span>
-                                </div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-icon">
-                                    <i class="fas fa-clock"></i>
-                                </div>
-                                <div class="stat-info">
-                                    <span class="stat-number" id="totalHours">120h</span>
-                                    <span class="stat-label">Tiempo Total</span>
-                                </div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-icon">
-                                    <i class="fas fa-star"></i>
-                                </div>
-                                <div class="stat-info">
-                                    <span class="stat-number" id="averageGrade">4.5</span>
-                                    <span class="stat-label">Calificación</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Gráfico de Progreso General -->
-                        <div class="chart-container mt-4">
-                            <h5 class="text-center mb-3">Progreso General</h5>
-                            <div class="d-flex justify-content-center">
-                                <canvas id="overallProgressChart" width="200" height="200"></canvas>
-                            </div>
-                        </div>
-                    </div>
+    <!-- Login button (when not authenticated) -->
+    <a href="login.html" class="tb-btn" id="loginButtonContainer">
+      <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+    </a>
 
-                    <!-- Progreso por Curso -->
-                    <div class="analytics-section">
-                        <div class="section-header">
-                            <h4><i class="fas fa-tasks me-2"></i>Progreso por Curso</h4>
-                            <p class="section-description">Estado actual de cada uno de tus cursos</p>
-                        </div>
-                        
-                        <!-- Gráfico de Progreso por Curso -->
-                        <div class="chart-container mb-4">
-                            <h5 class="text-center mb-3">Progreso por Curso</h5>
-                            <div class="d-flex justify-content-center">
-                                <canvas id="courseProgressChart" width="400" height="300"></canvas>
-                            </div>
-                        </div>
-                        
-                        <div class="progress-list" id="courseProgressList">
-                            <!-- Se llena dinámicamente -->
-                        </div>
-                    </div>
+    <!-- Hidden: misCursosContainer kept for JS compat -->
+    <span id="misCursosContainer" style="display:none;"></span>
 
-                    <!-- Rendimiento -->
-                    <div class="analytics-section">
-                        <div class="section-header">
-                            <h4><i class="fas fa-trophy me-2"></i>Rendimiento</h4>
-                            <p class="section-description">Métricas de tu capacidad de aprendizaje</p>
-                        </div>
-                        <div class="performance-grid">
-                            <div class="performance-card">
-                                <div class="performance-icon">
-                                    <i class="fas fa-rocket"></i>
-                                </div>
-                                <div class="performance-content">
-                                    <span class="performance-label">Velocidad de Aprendizaje</span>
-                                    <span class="performance-value">85%</span>
-                                </div>
-                                <div class="performance-chart">
-                                    <canvas id="learningSpeedChart" width="150" height="100"></canvas>
-                                </div>
-                            </div>
-                            <div class="performance-card">
-                                <div class="performance-icon">
-                                    <i class="fas fa-brain"></i>
-                                </div>
-                                <div class="performance-content">
-                                    <span class="performance-label">Retención</span>
-                                    <span class="performance-value">92%</span>
-                                </div>
-                                <div class="performance-chart">
-                                    <canvas id="retentionChart" width="150" height="100"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+    <button class="tb-btn tb-btn-danger" onclick="handleLogout()">
+      <i class="fas fa-sign-out-alt"></i> Salir
+    </button>
+  </div>
+</header>
 
-                    <!-- Gráficos de Tiempo -->
-                    <div class="analytics-section">
-                        <div class="section-header">
-                            <h4><i class="fas fa-clock me-2"></i>Análisis de Tiempo</h4>
-                            <p class="section-description">Distribución de tu tiempo de estudio</p>
-                        </div>
-                        <div class="time-charts-grid">
-                            <div class="time-chart-card">
-                                <h5 class="text-center mb-3">Actividad Semanal</h5>
-                                <canvas id="weeklyActivityChart" width="300" height="200"></canvas>
-                            </div>
-                            <div class="time-chart-card">
-                                <h5 class="text-center mb-3">Distribución del Tiempo</h5>
-                                <canvas id="timeBreakdownChart" width="200" height="200"></canvas>
-                            </div>
-                        </div>
-                    </div>
+<!-- Main -->
+<main class="main">
+  <div class="page-header">
+    <div class="page-title">Mis Cursos</div>
+    <div class="page-sub">Continúa tu aprendizaje y revisa tu progreso</div>
+  </div>
 
-                    <!-- Actividad Reciente -->
-                    <div class="analytics-section">
-                        <div class="section-header">
-                            <h4><i class="fas fa-calendar-alt me-2"></i>Actividad Reciente</h4>
-                            <p class="section-description">Últimas actividades y logros</p>
-                        </div>
-                        <div class="activity-list">
-                            <div class="activity-item">
-                                <div class="activity-icon success">
-                                    <i class="fas fa-check"></i>
-                                </div>
-                                <div class="activity-content">
-                                    <span class="activity-title">Completaste JavaScript Básico</span>
-                                    <span class="activity-time">Hace 2 horas</span>
-                                </div>
-                            </div>
-                            <div class="activity-item">
-                                <div class="activity-icon info">
-                                    <i class="fas fa-play"></i>
-                                </div>
-                                <div class="activity-content">
-                                    <span class="activity-title">Iniciaste React Fundamentals</span>
-                                    <span class="activity-time">Hace 1 día</span>
-                                </div>
-                            </div>
-                            <div class="activity-item">
-                                <div class="activity-icon warning">
-                                    <i class="fas fa-clock"></i>
-                                </div>
-                                <div class="activity-content">
-                                    <span class="activity-title">Tarea pendiente: Proyecto Final</span>
-                                    <span class="activity-time">Vence en 3 días</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <!-- KPI strip -->
+  <div class="kpi-strip">
+    <div class="kpi-cell">
+      <div class="kpi-val" id="totalCourses">8</div>
+      <div class="kpi-label">Cursos Inscritos</div>
     </div>
+    <div class="kpi-cell">
+      <div class="kpi-val" id="totalHoursKpi">136h</div>
+      <div class="kpi-label">Horas de Contenido</div>
+    </div>
+    <div class="kpi-cell">
+      <div class="kpi-val" id="overallProgressKpi">55%</div>
+      <div class="kpi-label">Progreso General</div>
+    </div>
+  </div>
 
-    <!-- Footer -->
-    <footer class="bg-dark text-light py-3 mt-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-4 mb-3">
-                    <img src="../img/LuminaLogoNoText.webp" alt="Logo" style="width: 40px; height: 40px;">
-                    <p class="mt-2 mb-2" style="font-size: 0.9rem;">Iluminando el futuro del aprendizaje en línea.</p>
-                    <div class="mt-2">
-                        <a href="#" class="text-light me-2"><i class="fab fa-facebook"></i></a>
-                        <a href="#" class="text-light me-2"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="text-light me-2"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="text-light me-2"><i class="fab fa-linkedin"></i></a>
-                        <a href="#" class="text-light"><i class="fab fa-youtube"></i></a>
-                    </div>
-                </div>
+  <!-- Filter bar -->
+  <div class="filter-bar">
+    <div class="search-wrap">
+      <i class="fas fa-search"></i>
+      <input type="text" id="courseSearch" placeholder="Buscar en mis cursos...">
+    </div>
+    <div class="filter-pills">
+      <button class="filter-btn active" data-filter="all"><i class="fas fa-th-large me-1"></i>Todos</button>
+      <button class="filter-btn" data-filter="in-progress"><i class="fas fa-play me-1"></i>En Progreso</button>
+      <button class="filter-btn" data-filter="completed"><i class="fas fa-check me-1"></i>Completados</button>
+      <button class="filter-btn" data-filter="favorites"><i class="fas fa-heart me-1"></i>Favoritos</button>
+    </div>
+    <div class="view-wrap">
+      <button class="view-btn active" data-view="grid" onclick="setView('grid')"><i class="fas fa-th"></i></button>
+      <button class="view-btn" data-view="list" onclick="setView('list')"><i class="fas fa-list"></i></button>
+    </div>
+    <button class="analytics-btn" onclick="showCourseAnalytics()">
+      <i class="fas fa-chart-line me-1"></i>Analytics
+    </button>
+  </div>
 
-                <div class="col-lg-2 col-md-6 mb-3">
-                    <h6>Enlaces</h6>
-                    <a href="../index.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-home me-1"></i> Inicio</a>
-                    <a href="cursos-venta.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-book me-1"></i> Cursos</a>
-                    <a href="blog.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-blog me-1"></i> Blog</a>
-                    <a href="contact.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-envelope me-1"></i> Contacto</a>
-                </div>
+  <!-- Courses grid (populated by courses.js) -->
+  <div class="courses-grid" id="coursesContainer"></div>
 
-                <div class="col-lg-2 col-md-6 mb-3">
-                    <h6>Mi cuenta</h6>
-                    <a href="courses.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-graduation-cap me-1"></i> Mis Cursos</a>
-                    <a href="calendar.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-calendar me-1"></i> Calendario</a>
-                    <a href="schedule.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-clock me-1"></i> Horario</a>
-                    <a href="profile.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-user me-1"></i> Perfil</a>
-                </div>
+  <!-- Empty state -->
+  <div class="empty-state" id="emptyState" style="display:none;">
+    <div class="empty-icon"><i class="fas fa-book-open"></i></div>
+    <h3>No hay cursos encontrados</h3>
+    <p>No se encontraron cursos que coincidan con tu búsqueda.</p>
+    <button class="btn" onclick="clearFilters()"><i class="fas fa-times me-1"></i>Limpiar filtros</button>
+  </div>
+</main>
 
-                <div class="col-lg-4 mb-3">
-                    <h6>Contacto</h6>
-                    <p class="mb-1" style="font-size: 0.85rem;"><i class="fas fa-phone me-1"></i> +1 234 567 8900</p>
-                    <p class="mb-1" style="font-size: 0.85rem;"><i class="fas fa-envelope me-1"></i> luminalearning.mx@gmail.com</p>
-                    <a href="contact.html" class="btn btn-outline-light btn-sm mt-1">Contáctanos</a>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-12 text-center">
-                    <p class="mb-0" style="font-size: 0.8rem;">© <span id="currentYear"></span> Lumina Learning. Todos los derechos reservados.</p>
-                </div>
-            </div>
+<!-- ═══════════════════════════════════════════
+     COURSE DETAILS MODAL (keep — JS depends on all IDs)
+═══════════════════════════════════════════ -->
+<div class="course-details-modal" id="courseDetailsModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="course-info-header">
+        <div class="course-thumbnail">
+          <img id="modalCourseImage" src="" alt="Course Thumbnail">
+          <div class="course-overlay">
+            <button class="continue-btn" onclick="startCourse()">Continuar</button>
+          </div>
         </div>
-    </footer>
+        <div class="course-info">
+          <h2 id="modalCourseTitle">Título del Curso</h2>
+          <p id="modalCourseDescription">Descripción del curso</p>
+          <div class="course-meta">
+            <span class="meta-item"><i class="fas fa-clock"></i><span id="modalCourseDuration">8 horas</span></span>
+            <span class="meta-item"><i class="fas fa-signal"></i><span id="modalCourseDifficulty">Intermedio</span></span>
+            <span class="meta-item"><i class="fas fa-user-tie"></i><span id="modalCourseInstructor">Instructor</span></span>
+          </div>
+        </div>
+      </div>
+      <button class="close-modal" onclick="closeCourseModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="course-tabs">
+        <button class="tab-btn active" data-tab="overview"><i class="fas fa-info-circle me-1"></i>Visión General</button>
+        <button class="tab-btn" data-tab="content"><i class="fas fa-list me-1"></i>Contenido</button>
+        <button class="tab-btn" data-tab="progress"><i class="fas fa-chart-line me-1"></i>Progreso</button>
+        <button class="tab-btn" data-tab="notes"><i class="fas fa-sticky-note me-1"></i>Notas</button>
+      </div>
+      <div class="tab-content">
+        <div class="tab-pane active" id="overview">
+          <div class="overview-content">
+            <div class="progress-section">
+              <h4>Tu Progreso</h4>
+              <div class="progress-details">
+                <div class="progress-item"><span class="progress-label">Lecciones Completadas</span><span class="progress-value" id="completedLessons">12/24</span></div>
+                <div class="progress-item"><span class="progress-label">Tiempo Dedicado</span><span class="progress-value" id="timeSpent">4h 30m</span></div>
+                <div class="progress-item"><span class="progress-label">Última Actividad</span><span class="progress-value" id="lastActivity">Hace 2 días</span></div>
+              </div>
+            </div>
+            <div class="next-lesson">
+              <h4>Próxima Lección</h4>
+              <div class="lesson-card">
+                <div class="lesson-info">
+                  <h5 id="nextLessonTitle">Introducción a JavaScript</h5>
+                  <p id="nextLessonDescription">Aprende los fundamentos básicos de JavaScript</p>
+                </div>
+                <button class="btn btn-primary" onclick="continueCourse()"><i class="fas fa-play me-1"></i>Continuar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane" id="content">
+          <div class="content-list" id="modalContentList"></div>
+        </div>
+        <div class="tab-pane" id="progress">
+          <div class="progress-analytics">
+            <div class="analytics-chart" id="progressChart"></div>
+            <div class="analytics-stats">
+              <div class="stat-card"><div class="stat-icon"><i class="fas fa-trophy"></i></div><div class="stat-info"><div class="stat-number" id="achievementsCount">8</div><div class="stat-label">Logros Desbloqueados</div></div></div>
+              <div class="stat-card"><div class="stat-icon"><i class="fas fa-clock"></i></div><div class="stat-info"><div class="stat-number" id="avgTimePerSession">45m</div><div class="stat-label">Tiempo Promedio</div></div></div>
+              <div class="stat-card"><div class="stat-icon"><i class="fas fa-calendar"></i></div><div class="stat-info"><div class="stat-number" id="streakDays">7</div><div class="stat-label">Días Consecutivos</div></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane" id="notes">
+          <div class="notes-section">
+            <div class="notes-header">
+              <h4>Mis Notas</h4>
+              <button class="btn btn-primary btn-sm" onclick="addNote()"><i class="fas fa-plus me-1"></i>Agregar Nota</button>
+            </div>
+            <div class="notes-list" id="notesList"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="../js/auth0-config.js"></script>
-    <script src="../js/courses.js"></script>
-    <script>
-        // Verificar que todos los scripts estén cargados
-        console.log('=== VERIFICACIÓN DE SCRIPTS ===');
-        console.log('Bootstrap disponible:', typeof bootstrap !== 'undefined');
-        console.log('Chart.js disponible:', typeof Chart !== 'undefined');
-        console.log('Auth0Service disponible:', typeof Auth0Service !== 'undefined');
-        console.log('courses.js disponible:', typeof courses !== 'undefined');
-        
-        // Log básico para verificar que este script se ejecuta
-        console.log('=== SCRIPT DE AUTENTICACIÓN CARGADO ===');
-    </script>
-    <script>
-        console.log('=== INICIO DEL SCRIPT PRINCIPAL ===');
-        
-        // Objeto del carrito de compras
-        const cart = {
-            items: [],
-            
-            addItem: function(item) {
-                const existingItem = this.items.find(i => i.id === item.id);
-                if (existingItem) {
-                    existingItem.quantity += 1;
-                } else {
-                    this.items.push({...item, quantity: 1});
-                }
-                this.calculateTotal();
-                this.updateUI();
-                this.saveToLocalStorage();
+<!-- ═══════════════════════════════════════════
+     ANALYTICS MODAL (keep — JS depends on all IDs)
+═══════════════════════════════════════════ -->
+<div class="analytics-modal" id="analyticsModal">
+  <div class="modal-content analytics-modal-content">
+    <div class="modal-header">
+      <div class="header-content">
+        <h3><i class="fas fa-chart-line me-2"></i>Analytics del Curso</h3>
+        <p class="header-subtitle">Resumen completo de tu progreso académico</p>
+      </div>
+      <button class="close-modal" onclick="closeAnalyticsModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="analytics-content-wrapper">
+        <div class="analytics-section">
+          <div class="section-header">
+            <h4><i class="fas fa-chart-pie me-2"></i>Vista General</h4>
+            <p class="section-description">Métricas principales de tu rendimiento</p>
+          </div>
+          <div class="stats-grid">
+            <div class="stat-card"><div class="stat-icon"><i class="fas fa-graduation-cap"></i></div><div class="stat-info"><span class="stat-number" id="overallProgressNumber">45%</span><span class="stat-label">Progreso General</span></div></div>
+            <div class="stat-card"><div class="stat-icon"><i class="fas fa-book"></i></div><div class="stat-info"><span class="stat-number" id="activeCoursesNumber">4</span><span class="stat-label">Cursos Activos</span></div></div>
+            <div class="stat-card"><div class="stat-icon"><i class="fas fa-clock"></i></div><div class="stat-info"><span class="stat-number" id="totalHours">120h</span><span class="stat-label">Tiempo Total</span></div></div>
+            <div class="stat-card"><div class="stat-icon"><i class="fas fa-star"></i></div><div class="stat-info"><span class="stat-number" id="averageGrade">4.5</span><span class="stat-label">Calificación</span></div></div>
+          </div>
+          <div class="chart-container mt-4">
+            <h5 class="text-center mb-3">Progreso General</h5>
+            <div class="d-flex justify-content-center">
+              <canvas id="overallProgressChart" width="200" height="200"></canvas>
+            </div>
+          </div>
+        </div>
 
-                // Mostrar toast
-                const toast = new bootstrap.Toast(document.getElementById('addedToCartToast'));
-                toast.show();
-            },
-            
-            removeItem: function(id) {
-                // Convertir id a string para comparación consistente
-                const itemId = String(id);
-                this.items = this.items.filter(item => String(item.id) !== itemId);
-                this.calculateTotal();
-                this.updateUI();
-                this.saveToLocalStorage();
-            },
-            
-            calculateTotal: function() {
-                this.total = this.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-                this.itemCount = this.items.reduce((sum, item) => sum + item.quantity, 0);
-            },
-            
-            updateUI: function() {
-                // Actualizar contador
-                const totalItems = this.items.reduce((sum, item) => sum + item.quantity, 0);
-                document.getElementById('cartCount').textContent = totalItems;
+        <div class="analytics-section">
+          <div class="section-header">
+            <h4><i class="fas fa-tasks me-2"></i>Progreso por Curso</h4>
+            <p class="section-description">Estado actual de cada uno de tus cursos</p>
+          </div>
+          <div class="chart-container mb-4">
+            <h5 class="text-center mb-3">Progreso por Curso</h5>
+            <div class="d-flex justify-content-center">
+              <canvas id="courseProgressChart" width="400" height="300"></canvas>
+            </div>
+          </div>
+          <div class="progress-list" id="courseProgressList"></div>
+        </div>
 
-                // Actualizar lista de items
-                const cartItemsContainer = document.getElementById('cartItems');
-                cartItemsContainer.innerHTML = '';
+        <div class="analytics-section">
+          <div class="section-header">
+            <h4><i class="fas fa-trophy me-2"></i>Rendimiento</h4>
+            <p class="section-description">Métricas de tu capacidad de aprendizaje</p>
+          </div>
+          <div class="performance-grid">
+            <div class="performance-card">
+              <div class="performance-icon"><i class="fas fa-rocket"></i></div>
+              <div class="performance-content"><span class="performance-label">Velocidad de Aprendizaje</span><span class="performance-value">85%</span></div>
+              <div class="performance-chart"><canvas id="learningSpeedChart" width="150" height="100"></canvas></div>
+            </div>
+            <div class="performance-card">
+              <div class="performance-icon"><i class="fas fa-brain"></i></div>
+              <div class="performance-content"><span class="performance-label">Retención</span><span class="performance-value">92%</span></div>
+              <div class="performance-chart"><canvas id="retentionChart" width="150" height="100"></canvas></div>
+            </div>
+          </div>
+        </div>
 
-                if (this.items.length === 0) {
-                    cartItemsContainer.innerHTML = '<p class="text-muted text-center py-2">Tu carrito está vacío</p>';
-                } else {
-                    this.items.forEach(item => {
-                        const itemElement = document.createElement('div');
-                        itemElement.className = 'cart-item d-flex justify-content-between align-items-center py-2';
-                        itemElement.innerHTML = `
-                            <img src="${item.image}" class="cart-item-img rounded" width="40" height="40" alt="${item.title}">
-                            <div class="flex-grow-1 mx-3">
-                                <div class="cart-item-title">${item.title}</div>
-                                <small class="text-muted">${item.quantity} x $${item.price.toFixed(2)}</small>
-                            </div>
-                            <span class="cart-item-price fw-bold">$${(item.price * item.quantity).toFixed(2)}</span>
-                            <button class="btn btn-sm btn-outline-danger remove-item ms-2" data-id="${item.id}" aria-label="Eliminar">
-                                &times;
-                            </button>
-                        `;
-                        cartItemsContainer.appendChild(itemElement);
-                    });
-                }
+        <div class="analytics-section">
+          <div class="section-header">
+            <h4><i class="fas fa-clock me-2"></i>Análisis de Tiempo</h4>
+            <p class="section-description">Distribución de tu tiempo de estudio</p>
+          </div>
+          <div class="time-charts-grid">
+            <div class="time-chart-card"><h5 class="text-center mb-3">Actividad Semanal</h5><canvas id="weeklyActivityChart" width="300" height="200"></canvas></div>
+            <div class="time-chart-card"><h5 class="text-center mb-3">Distribución del Tiempo</h5><canvas id="timeBreakdownChart" width="200" height="200"></canvas></div>
+          </div>
+        </div>
 
-                // Actualizar subtotal
-                document.getElementById('cartSubtotal').textContent = `$${this.total.toFixed(2)}`;
-            },
-            
-            saveToLocalStorage: function() {
-                localStorage.setItem('shoppingCart', JSON.stringify(this.items));
-            },
-            
-            loadFromLocalStorage: function() {
-                const savedCart = localStorage.getItem('shoppingCart');
-                if (savedCart) {
-                    this.items = JSON.parse(savedCart);
-                    this.calculateTotal();
-                }
-            },
-            
-            init: function() {
-                this.loadFromLocalStorage();
-                this.updateUI();
+        <div class="analytics-section">
+          <div class="section-header">
+            <h4><i class="fas fa-calendar-alt me-2"></i>Actividad Reciente</h4>
+            <p class="section-description">Últimas actividades y logros</p>
+          </div>
+          <div class="activity-list">
+            <div class="activity-item"><div class="activity-icon success"><i class="fas fa-check"></i></div><div class="activity-content"><span class="activity-title">Completaste JavaScript Básico</span><span class="activity-time">Hace 2 horas</span></div></div>
+            <div class="activity-item"><div class="activity-icon info"><i class="fas fa-play"></i></div><div class="activity-content"><span class="activity-title">Iniciaste React Fundamentals</span><span class="activity-time">Hace 1 día</span></div></div>
+            <div class="activity-item"><div class="activity-icon warning"><i class="fas fa-clock"></i></div><div class="activity-content"><span class="activity-title">Tarea pendiente: Proyecto Final</span><span class="activity-time">Vence en 3 días</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-                // Delegación de eventos para los botones de eliminar
-                document.addEventListener('click', (e) => {
-                    if (e.target.classList.contains('remove-item')) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        const itemId = e.target.getAttribute('data-id');
-                        if (itemId) {
-                            this.removeItem(itemId);
-                        }
-                    }
-                });
-            }
-        };
-        
-        // Inicializar el carrito
-        cart.init();
-        
-        // Verificar autenticación y actualizar navbar
-        async function checkAuthAndUpdateNavbar() {
-            try {
-                console.log('=== INICIO VERIFICACIÓN DE AUTENTICACIÓN ===');
-                
-                // Verificar localStorage directamente primero
-                const storedUser = localStorage.getItem('user');
-                const storedToken = localStorage.getItem('authToken');
-                console.log('localStorage - user:', storedUser);
-                console.log('localStorage - token:', storedToken);
-                
-                if (storedUser && storedToken) {
-                    console.log('Hay datos en localStorage, usando directamente');
-                    const user = JSON.parse(storedUser);
-                    console.log('Usuario parseado:', user);
-                    updateUserNavbar(user);
-                    return;
-                }
-                
-                console.log('No hay datos en localStorage, verificando Auth0Service...');
-                await Auth0Service.initialize();
-                const isAuthenticated = await Auth0Service.isAuthenticated();
-                console.log('Auth0Service.isAuthenticated():', isAuthenticated);
-                
-                if (isAuthenticated) {
-                    const user = await Auth0Service.getUser();
-                    console.log('Usuario de Auth0Service:', user);
-                    updateUserNavbar(user);
-                } else {
-                    console.log('No autenticado, mostrando botón de login');
-                    showLoginButton();
-                }
-            } catch (error) {
-                console.error('Error verificando autenticación:', error);
-                console.log('Verificando localStorage como fallback...');
-                
-                const storedUser = localStorage.getItem('user');
-                const storedToken = localStorage.getItem('authToken');
-                
-                if (storedUser && storedToken) {
-                    console.log('Usando localStorage como fallback');
-                    const user = JSON.parse(storedUser);
-                    updateUserNavbar(user);
-                } else {
-                    console.log('No hay datos de autenticación disponibles');
-                    showLoginButton();
-                }
-            }
+<!-- Hidden hero stub (courses.js calls animateHeroSection which looks for .hero-content) -->
+<div class="hero-content"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="../js/courses.js"></script>
+
+<script>
+  // ── Cart ──
+  const cart = {
+    items: [],
+    addItem(item) {
+      const ex = this.items.find(i => i.id === item.id);
+      if (ex) { ex.quantity += 1; } else { this.items.push({...item, quantity:1}); }
+      this.calculateTotal(); this.updateUI(); this.saveToLocalStorage();
+      new bootstrap.Toast(document.getElementById('addedToCartToast')).show();
+    },
+    removeItem(id) {
+      this.items = this.items.filter(i => String(i.id) !== String(id));
+      this.calculateTotal(); this.updateUI(); this.saveToLocalStorage();
+    },
+    calculateTotal() {
+      this.total = this.items.reduce((s,i) => s + i.price * i.quantity, 0);
+    },
+    updateUI() {
+      const count = this.items.reduce((s,i) => s + i.quantity, 0);
+      document.getElementById('cartCount').textContent = count;
+      const box = document.getElementById('cartItems');
+      if (this.items.length === 0) {
+        box.innerHTML = '<p class="text-center py-2 mb-0" style="color:var(--text-3);font-size:12.5px;">Tu carrito está vacío</p>';
+      } else {
+        box.innerHTML = this.items.map(i => `
+          <div class="cart-item d-flex align-items-center gap-2 py-2">
+            <img src="${i.image}" width="38" height="38" style="border-radius:6px;object-fit:cover;" alt="">
+            <div class="flex-grow-1">
+              <div class="cart-item-title">${i.title}</div>
+              <small style="color:var(--text-3);">${i.quantity} × $${i.price.toFixed(2)}</small>
+            </div>
+            <span style="font-weight:700;color:var(--text);font-size:13px;">$${(i.price*i.quantity).toFixed(2)}</span>
+            <button class="btn btn-sm remove-item" data-id="${i.id}" style="border:1px solid var(--rose);color:var(--rose);background:transparent;border-radius:6px;padding:2px 7px;font-size:12px;">×</button>
+          </div>`).join('');
+      }
+      document.getElementById('cartSubtotal').textContent = `$${(this.total||0).toFixed(2)}`;
+    },
+    saveToLocalStorage() { localStorage.setItem('shoppingCart', JSON.stringify(this.items)); },
+    loadFromLocalStorage() {
+      const s = localStorage.getItem('shoppingCart');
+      if (s) { this.items = JSON.parse(s); this.calculateTotal(); }
+    },
+    init() {
+      this.loadFromLocalStorage(); this.updateUI();
+      document.addEventListener('click', e => {
+        if (e.target.classList.contains('remove-item')) {
+          e.preventDefault(); e.stopPropagation();
+          this.removeItem(e.target.dataset.id);
         }
+      });
+    }
+  };
+  cart.init();
 
-        function updateUserNavbar(user) {
-            console.log('=== ACTUALIZANDO NAVBAR ===');
-            console.log('Usuario recibido:', user);
-            
-            // Verificar que los elementos existan
-            const loginButton = document.getElementById('loginButtonContainer');
-            const userContainer = document.getElementById('userDropdownContainer');
-            
-            console.log('Elementos encontrados:');
-            console.log('- loginButtonContainer:', !!loginButton);
-            console.log('- userDropdownContainer:', !!userContainer);
-            
-            if (!loginButton || !userContainer) {
-                console.error('Elementos críticos del navbar no encontrados');
-                return;
-            }
-            
-            // Ocultar botón de login
-            loginButton.style.display = 'none';
-            console.log('Botón de login ocultado');
-            
-            // Mostrar dropdown del usuario
-            userContainer.style.display = 'block';
-            console.log('Dropdown del usuario mostrado');
-            
-            // Actualizar información del usuario
-            const userName = user.name || user.email.split('@')[0];
-            const userEmail = user.email;
-            
-            // Determinar el rol del usuario
-            let userRole = 'student';
-            if (userEmail === 'admin@gmail.com') {
-                userRole = 'admin';
-            } else if (userEmail === 'profesor@gmail.com') {
-                userRole = 'teacher';
-            } else if (userEmail === 'estudiante@gmail.com') {
-                userRole = 'student';
-            } else {
-                userRole = user.role || 'student';
-            }
-            
-            // Avatar basado en el rol usando íconos
-            let avatarIcon = 'fa-user-circle';
-            if (userRole === 'admin') {
-                avatarIcon = 'fa-user-shield';
-            } else if (userRole === 'teacher') {
-                avatarIcon = 'fa-chalkboard-teacher';
-            } else {
-                avatarIcon = 'fa-user-graduate';
-            }
-            
-            // Actualizar elementos del navbar
-            document.getElementById('userName').textContent = userName;
-            document.getElementById('userNameLarge').textContent = userName;
-            document.getElementById('userEmail').textContent = userEmail;
-            document.getElementById('userAvatarIcon').className = `fas ${avatarIcon} me-1`;
-            document.getElementById('userAvatarLargeIcon').className = `fas ${avatarIcon} me-2`;
-            
-            // Mostrar/ocultar botón "Mis Cursos" según el rol
-            const misCursosContainer = document.getElementById('misCursosContainer');
-            if (userRole === 'student' || userEmail === 'estudiante@gmail.com') {
-                misCursosContainer.style.display = 'block';
-                console.log('Mostrando botón Mis Cursos para estudiante:', userEmail);
-            } else {
-                misCursosContainer.style.display = 'none';
-                console.log('Ocultando botón Mis Cursos para rol:', userRole);
-            }
-            
-            // Inicializar carrito para usuarios autenticados
-            if (window.cart && typeof window.cart.init === 'function') {
-                window.cart.init();
-            }
-            
-            console.log('=== NAVBAR ACTUALIZADO COMPLETAMENTE ===');
-        }
+  // ── Auth navbar ──
+  async function checkAuthAndUpdateNavbar() {
+    try {
+      const storedUser = localStorage.getItem('user');
+      const storedToken = localStorage.getItem('authToken');
+      if (storedUser && storedToken) {
+        updateUserNavbar(JSON.parse(storedUser)); return;
+      }
+      await Auth0Service.initialize();
+      const ok = await Auth0Service.isAuthenticated();
+      if (ok) { updateUserNavbar(await Auth0Service.getUser()); }
+      else { showLoginButton(); }
+    } catch(e) {
+      const s = localStorage.getItem('user'), t = localStorage.getItem('authToken');
+      if (s && t) { updateUserNavbar(JSON.parse(s)); } else { showLoginButton(); }
+    }
+  }
 
-        function showLoginButton() {
-            // Mostrar botón de login
-            document.getElementById('loginButtonContainer').style.display = 'block';
-            
-            // Ocultar dropdown del usuario
-            document.getElementById('userDropdownContainer').style.display = 'none';
+  function updateUserNavbar(user) {
+    document.getElementById('loginButtonContainer').style.display = 'none';
+    document.getElementById('userDropdownContainer').style.display = 'block';
+    const name = user.name || user.email.split('@')[0];
+    document.getElementById('userName').textContent = name;
+    const role = user.role || (user.email === 'admin@gmail.com' ? 'admin' : user.email === 'profesor@gmail.com' ? 'teacher' : 'student');
+    const icon = role === 'admin' ? 'fa-user-shield' : role === 'teacher' ? 'fa-chalkboard-teacher' : 'fa-user-graduate';
+    document.getElementById('userAvatarIcon').className = `fas ${icon}`;
+    // Update sidebar avatar
+    const sa = document.getElementById('sidebarAvatar');
+    const sn = document.getElementById('sidebarName');
+    const sr = document.getElementById('sidebarRole');
+    if (sa) sa.textContent = name.charAt(0).toUpperCase();
+    if (sn) sn.textContent = name;
+    if (sr) sr.textContent = role === 'admin' ? 'Administrador' : role === 'teacher' ? 'Docente' : 'Alumno';
+    let items = '';
+    if (role === 'admin') {
+      items = `<li><a class="dropdown-item" href="/html/monitoreo.html"><i class="fas fa-chart-line me-2" style="color:var(--accent)"></i>Panel de Monitoreo</a></li>
+               <li><a class="dropdown-item" href="/html/admin.html"><i class="fas fa-users-cog me-2" style="color:var(--accent)"></i>Gestión del Sistema</a></li>
+               <li><a class="dropdown-item" href="profile.html"><i class="fas fa-user me-2"></i>Mi Perfil</a></li>
+               <li><a class="dropdown-item" href="settings.html"><i class="fas fa-cog me-2"></i>Configuración</a></li>`;
+    } else if (role === 'teacher') {
+      items = `<li><a class="dropdown-item" href="/html/docente.html"><i class="fas fa-chalkboard-teacher me-2" style="color:var(--accent)"></i>Panel Docente</a></li>
+               <li><a class="dropdown-item" href="profile.html"><i class="fas fa-user me-2"></i>Mi Perfil</a></li>
+               <li><a class="dropdown-item" href="settings.html"><i class="fas fa-cog me-2"></i>Configuración</a></li>`;
+    } else {
+      items = `<li><a class="dropdown-item" href="profile.html"><i class="fas fa-user me-2"></i>Mi Perfil</a></li>
+               <li><a class="dropdown-item" href="settings.html"><i class="fas fa-cog me-2"></i>Configuración</a></li>
+               <li><a class="dropdown-item" href="courses.html"><i class="fas fa-graduation-cap me-2"></i>Mis Cursos</a></li>`;
+    }
+    document.getElementById('userDropdownMenu').innerHTML = `
+      <li><div class="dropdown-header d-flex align-items-center gap-2">
+        <i class="fas ${icon}" style="font-size:28px;color:var(--accent);"></i>
+        <div><div class="fw-bold">${name}</div><small class="text-muted">${user.email}</small></div>
+      </div></li>
+      <li><hr class="dropdown-divider"></li>
+      ${items}
+      <li><hr class="dropdown-divider"></li>
+      <li><a class="dropdown-item text-danger" href="#" onclick="handleLogout()"><i class="fas fa-sign-out-alt me-2"></i>Cerrar sesión</a></li>`;
+    if (window.cart && typeof window.cart.init === 'function') window.cart.init();
+  }
 
-            // Ocultar botón "Mis Cursos"
-            document.getElementById('misCursosContainer').style.display = 'none';
-        }
+  function showLoginButton() {
+    document.getElementById('loginButtonContainer').style.display = 'flex';
+    document.getElementById('userDropdownContainer').style.display = 'none';
+  }
 
-        // Función para manejar el logout
-        function handleLogout() {
-            Auth0Service.logout();
-            showLoginButton();
-            window.location.href = '../index.html';
-        }
+  async function handleLogout() {
+    localStorage.removeItem('user');
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('rememberMe');
+    try { await fetch('/auth/logout', { method: 'POST', credentials: 'include' }); } catch(_) {}
+    window.location.href = '/html/login.html';
+  }
 
-        // Inicializar verificación de autenticación
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('=== DOM CONTENT LOADED ===');
-            console.log('Auth0Service disponible:', typeof Auth0Service !== 'undefined');
-            
-            if (typeof Auth0Service === 'undefined') {
-                console.error('Auth0Service no está disponible en DOMContentLoaded');
-                return;
-            }
-            
-            console.log('Ejecutando verificación de autenticación...');
-            checkAuthAndUpdateNavbar();
-        });
-        
-        // Inicializar efectos de números luminosos
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('=== INICIALIZANDO EFECTOS VISUALES ===');
-            initializeGlowingNumbers();
-        });
-        
-        console.log('=== FIN DEL SCRIPT PRINCIPAL ===');
-        
-        // Función para efectos de números luminosos
-        function initializeGlowingNumbers() {
-            const glowingNumbers = document.querySelectorAll('.glowing-number');
-            
-            glowingNumbers.forEach((number, index) => {
-                // Efecto de entrada escalonada
-                setTimeout(() => {
-                    number.style.opacity = '0';
-                    number.style.transform = 'scale(0.5)';
-                    number.style.transition = 'all 0.8s ease';
-                    
-                    setTimeout(() => {
-                        number.style.opacity = '1';
-                        number.style.transform = 'scale(1)';
-                    }, 200);
-                }, index * 300);
-                
-                // Efecto de pulso al hacer clic
-                number.addEventListener('click', function() {
-                    this.classList.add('pulse');
-                    createNumberParticles(this);
-                    
-                    setTimeout(() => {
-                        this.classList.remove('pulse');
-                    }, 600);
-                });
-                
-                // Efecto de hover con partículas
-                number.addEventListener('mouseenter', function() {
-                    createHoverParticles(this);
-                });
-                
-                // Efecto de contador animado
-                animateNumberCounter(number);
-            });
-        }
-        
-        // Función para crear partículas al hacer clic
-        function createNumberParticles(element) {
-            const rect = element.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
-            
-            for (let i = 0; i < 12; i++) {
-                const particle = document.createElement('div');
-                particle.style.cssText = `
-                    position: fixed;
-                    width: 6px;
-                    height: 6px;
-                    background: linear-gradient(45deg, #4FC3F7, #29B6F6, #03A9F4);
-                    border-radius: 50%;
-                    pointer-events: none;
-                    z-index: 9999;
-                    left: ${centerX}px;
-                    top: ${centerY}px;
-                    animation: particleExplosion 1.2s ease-out forwards;
-                `;
-                
-                document.body.appendChild(particle);
-                
-                // Animación de partícula
-                const angle = (i / 12) * Math.PI * 2;
-                const distance = 60 + Math.random() * 40;
-                const endX = centerX + Math.cos(angle) * distance;
-                const endY = centerY + Math.sin(angle) * distance;
-                
-                setTimeout(() => {
-                    particle.style.left = endX + 'px';
-                    particle.style.top = endY + 'px';
-                    particle.style.opacity = '0';
-                }, 100);
-                
-                // Remover partícula después de la animación
-                setTimeout(() => {
-                    if (particle.parentNode) {
-                        particle.parentNode.removeChild(particle);
-                    }
-                }, 1200);
-            }
-        }
-        
-        // Función para crear partículas de hover
-        function createHoverParticles(element) {
-            const rect = element.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
-            
-            for (let i = 0; i < 6; i++) {
-                const particle = document.createElement('div');
-                particle.style.cssText = `
-                    position: fixed;
-                    width: 3px;
-                    height: 3px;
-                    background: #4FC3F7;
-                    border-radius: 50%;
-                    pointer-events: none;
-                    z-index: 9998;
-                    left: ${centerX}px;
-                    top: ${centerY}px;
-                    animation: hoverParticle 1s ease-out forwards;
-                `;
-                
-                document.body.appendChild(particle);
-                
-                // Animación de partícula de hover
-                const angle = (i / 6) * Math.PI * 2;
-                const distance = 30 + Math.random() * 20;
-                const endX = centerX + Math.cos(angle) * distance;
-                const endY = centerY + Math.sin(angle) * distance;
-                
-                setTimeout(() => {
-                    particle.style.left = endX + 'px';
-                    particle.style.top = endY + 'px';
-                    particle.style.opacity = '0';
-                }, 50);
-                
-                // Remover partícula después de la animación
-                setTimeout(() => {
-                    if (particle.parentNode) {
-                        particle.parentNode.removeChild(particle);
-                    }
-                }, 1000);
-            }
-        }
-        
-        // Función para animar contador de números
-        function animateNumberCounter(element) {
-            const finalValue = element.textContent;
-            const isHours = finalValue.includes('h');
-            const numericValue = parseInt(finalValue.replace(/\D/g, ''));
-            
-            let currentValue = 0;
-            const increment = numericValue / 50;
-            const duration = 2000;
-            const interval = duration / 50;
-            
-            const timer = setInterval(() => {
-                currentValue += increment;
-                if (currentValue >= numericValue) {
-                    currentValue = numericValue;
-                    clearInterval(timer);
-                }
-                
-                element.textContent = isHours ? 
-                    Math.floor(currentValue) + 'h' : 
-                    Math.floor(currentValue);
-            }, interval);
-        }
-        
-        // Agregar estilos CSS para las partículas
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes particleExplosion {
-                0% {
-                    opacity: 1;
-                    transform: scale(1);
-                }
-                100% {
-                    opacity: 0;
-                    transform: scale(0);
-                }
-            }
-            
-            @keyframes hoverParticle {
-                0% {
-                    opacity: 1;
-                    transform: scale(1);
-                }
-                100% {
-                    opacity: 0;
-                    transform: scale(0);
-                }
-            }
-        `;
-        document.head.appendChild(style);
-    </script>
+  document.addEventListener('DOMContentLoaded', () => {
+    checkAuthAndUpdateNavbar();
+    document.getElementById('currentYear') && (document.getElementById('currentYear').textContent = new Date().getFullYear());
+  });
+</script>
 </body>
-
 </html>

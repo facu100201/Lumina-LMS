@@ -11,20 +11,27 @@ const ROLE_CONFIG = {
 
 // Permisos por página
 const PAGE_PERMISSIONS = {
-    'docente.html': ['teacher'],
+    // Admin exclusivo
     'monitoreo.html': ['admin'],
-    // Todas las demás páginas son accesibles para estudiantes
-    'index.html': ['admin', 'teacher', 'student'],
-    'courses.html': ['admin', 'teacher', 'student'],
-    'blog.html': ['admin', 'teacher', 'student'],
-    'contact.html': ['admin', 'teacher', 'student'],
-    'cursos-venta.html': ['admin', 'teacher', 'student'],
-    'checkout.html': ['admin', 'teacher', 'student'],
-    'student-courses.html': ['admin', 'teacher', 'student'],
-    'calendar.html': ['admin', 'teacher', 'student'],
-    'schedule.html': ['admin', 'teacher', 'student'],
-    'login.html': ['admin', 'teacher', 'student'],
-    'callback.html': ['admin', 'teacher', 'student']
+    'admin.html':     ['admin'],
+    'usuarios.html':  ['admin'],
+    'reportes.html':  ['admin'],
+    // Docente exclusivo
+    'docente.html':   ['teacher'],
+    // Todos los roles autenticados
+    'index.html':          ['admin', 'teacher', 'student'],
+    'profile.html':        ['admin', 'teacher', 'student'],
+    'settings.html':       ['admin', 'teacher', 'student'],
+    'courses.html':        ['admin', 'teacher', 'student'],
+    'student-courses.html':['admin', 'teacher', 'student'],
+    'calendar.html':       ['admin', 'teacher', 'student'],
+    'schedule.html':       ['admin', 'teacher', 'student'],
+    'blog.html':           ['admin', 'teacher', 'student'],
+    'contact.html':        ['admin', 'teacher', 'student'],
+    'cursos-venta.html':   ['admin', 'teacher', 'student'],
+    'checkout.html':       ['admin', 'teacher', 'student'],
+    'login.html':          ['admin', 'teacher', 'student'],
+    'callback.html':       ['admin', 'teacher', 'student']
 };
 
 // ==================== //

@@ -1,95 +1,328 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calendario - Campus Virtual</title>
-    <meta name="description" content="Calendario académico universitario">
-    <meta name="keywords" content="calendario, eventos, fechas importantes">
-    <meta property="og:title" content="Calendario - Campus Virtual">
-    <meta property="og:description" content="Calendario académico universitario">
-    <meta name="twitter:title" content="Calendario - Campus Virtual">
-    <meta name="twitter:description" content="Calendario académico universitario">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
-    <link href="styles/main.css" rel="stylesheet">
-    </head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calendario — Lumina LMS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+  <script src="https://cdn.auth0.com/js/auth0-spa-js/2.1/auth0-spa-js.production.js"></script>
+  <script src="../js/auth0-config.js"></script>
+  <script src="../js/auth-guard.js"></script>
+  <style>
+    :root {
+      --bg: #09090b; --surface: #111113; --card: #18181b; --card-hover: #1c1c20;
+      --border: rgba(255,255,255,.07); --border-subtle: rgba(255,255,255,.04);
+      --accent: #6366f1; --accent-2: #818cf8;
+      --emerald: #10b981; --amber: #f59e0b; --rose: #f43f5e; --sky: #0ea5e9;
+      --text: #fafafa; --text-2: #a1a1aa; --text-3: #71717a;
+      --sidebar-w: 240px; --top-h: 56px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); display:flex; min-height:100vh; font-size:14px; -webkit-font-smoothing:antialiased; }
+
+    /* Sidebar */
+    .sidebar { position:fixed; top:0; left:0; width:var(--sidebar-w); height:100vh; background:var(--surface); border-right:1px solid var(--border); display:flex; flex-direction:column; z-index:100; }
+    .sidebar-logo { display:flex; align-items:center; gap:10px; padding:20px 20px 16px; border-bottom:1px solid var(--border); }
+    .logo-mark { width:32px; height:32px; background:var(--accent); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:700; color:#fff; flex-shrink:0; }
+    .logo-text { font-size:15px; font-weight:700; letter-spacing:-.3px; }
+    .logo-sub  { font-size:11px; color:var(--text-3); }
+    .sidebar-nav { flex:1; padding:12px 0; overflow-y:auto; }
+    .nav-label { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:1px; color:var(--text-3); padding:12px 20px 6px; }
+    .nav-item { display:flex; align-items:center; gap:10px; padding:9px 20px; color:var(--text-2); text-decoration:none; font-size:13.5px; font-weight:500; position:relative; transition:color .15s,background .15s; }
+    .nav-item:hover { color:var(--text); background:rgba(255,255,255,.04); }
+    .nav-item.active { color:var(--text); background:rgba(99,102,241,.12); }
+    .nav-item.active .nv-icon { color:var(--accent); }
+    .nav-item.active::before { content:''; position:absolute; left:0; top:50%; transform:translateY(-50%); width:3px; height:20px; background:var(--accent); border-radius:0 2px 2px 0; }
+    .nv-icon { width:16px; text-align:center; font-size:13px; color:var(--text-3); transition:color .15s; }
+    .sidebar-footer { padding:16px 20px; border-top:1px solid var(--border); }
+    .user-chip { display:flex; align-items:center; gap:10px; }
+    .u-av { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,var(--accent),var(--accent-2)); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:#fff; flex-shrink:0; }
+    .u-name { font-size:13px; font-weight:600; color:var(--text); }
+    .u-role { font-size:11px; color:var(--text-3); }
+
+    /* Topbar */
+    .topbar { position:fixed; top:0; left:var(--sidebar-w); right:0; height:var(--top-h); background:var(--surface); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; padding:0 28px; z-index:90; }
+    .tb-left { display:flex; align-items:center; gap:12px; }
+    .tb-title { font-size:15px; font-weight:600; }
+    .tb-right { display:flex; align-items:center; gap:8px; }
+    .tb-btn { display:flex; align-items:center; gap:6px; padding:7px 14px; border-radius:8px; font-size:13px; font-weight:500; border:1px solid var(--border); background:transparent; color:var(--text-2); cursor:pointer; text-decoration:none; transition:all .15s; }
+    .tb-btn:hover { color:var(--text); border-color:rgba(255,255,255,.15); background:rgba(255,255,255,.04); }
+    .tb-btn-danger { border-color:rgba(244,63,94,.2); color:var(--rose); }
+    .tb-btn-danger:hover { background:rgba(244,63,94,.08); border-color:rgba(244,63,94,.35); }
+
+    /* Main */
+    .main { margin-left:var(--sidebar-w); margin-top:var(--top-h); flex:1; padding:28px; }
+    .page-header { margin-bottom:24px; }
+    .page-title { font-size:22px; font-weight:700; letter-spacing:-.4px; margin-bottom:4px; }
+    .page-sub { font-size:13px; color:var(--text-3); }
+
+    /* Content grid */
+    .cal-grid { display:grid; grid-template-columns:1fr 300px; gap:20px; }
+
+    /* Panel */
+    .panel { background:var(--card); border:1px solid var(--border); border-radius:14px; overflow:hidden; }
+    .panel-head { padding:18px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+    .panel-title { font-size:14px; font-weight:600; color:var(--text); display:flex; align-items:center; gap:8px; }
+    .panel-title i { color:var(--text-3); font-size:12px; }
+
+    /* Calendar nav */
+    .cal-nav { display:flex; align-items:center; gap:12px; }
+    .cal-month { font-size:14px; font-weight:600; min-width:130px; text-align:center; }
+    .cal-nav-btn { width:28px; height:28px; border-radius:7px; border:1px solid var(--border); background:transparent; color:var(--text-2); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:11px; transition:all .15s; }
+    .cal-nav-btn:hover { color:var(--text); border-color:rgba(255,255,255,.15); background:rgba(255,255,255,.04); }
+
+    /* Month grid */
+    .month-grid { padding:16px 20px 20px; }
+    .cal-weekdays { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; margin-bottom:8px; }
+    .cal-weekday { text-align:center; font-size:11px; font-weight:600; color:var(--text-3); text-transform:uppercase; letter-spacing:.05em; padding:6px 0; }
+    .cal-days { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
+    .cal-day { height:44px; border-radius:8px; display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; transition:background .15s; position:relative; font-size:13px; font-weight:500; color:var(--text-2); }
+    .cal-day:hover { background:rgba(255,255,255,.05); color:var(--text); }
+    .cal-day.other-month { color:var(--text-3); opacity:.4; }
+    .cal-day.today { background:rgba(99,102,241,.15); color:var(--accent-2); font-weight:700; }
+    .cal-day.today::after { content:''; position:absolute; bottom:5px; width:4px; height:4px; border-radius:50%; background:var(--accent); }
+    .cal-day.has-event::before { content:''; position:absolute; bottom:5px; width:4px; height:4px; border-radius:50%; background:var(--emerald); }
+    .cal-day.has-event.today::before { background:var(--accent-2); bottom:3px; }
+    .cal-day.selected { background:var(--accent); color:#fff; font-weight:700; }
+
+    /* Side stack */
+    .side-stack { display:flex; flex-direction:column; gap:20px; }
+
+    /* Upcoming events */
+    .event-item { display:flex; align-items:flex-start; gap:12px; padding:13px 20px; border-bottom:1px solid var(--border-subtle); transition:background .15s; }
+    .event-item:last-child { border-bottom:none; }
+    .event-item:hover { background:rgba(255,255,255,.02); }
+    .event-date { flex-shrink:0; width:42px; text-align:center; }
+    .ev-day { font-size:20px; font-weight:800; color:var(--text); line-height:1; }
+    .ev-mon { font-size:10px; font-weight:600; color:var(--text-3); text-transform:uppercase; letter-spacing:.05em; }
+    .event-body { flex:1; min-width:0; }
+    .ev-title { font-size:13px; font-weight:600; color:var(--text); margin-bottom:3px; }
+    .ev-meta { font-size:11.5px; color:var(--text-3); display:flex; align-items:center; gap:6px; }
+    .ev-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+    .ev-dot.indigo  { background:var(--accent); }
+    .ev-dot.emerald { background:var(--emerald); }
+    .ev-dot.amber   { background:var(--amber); }
+    .ev-dot.rose    { background:var(--rose); }
+    .ev-dot.sky     { background:var(--sky); }
+    .ev-tag { font-size:10.5px; font-weight:600; padding:2px 7px; border-radius:20px; }
+    .tag-exam    { background:rgba(244,63,94,.12);  color:var(--rose); }
+    .tag-project { background:rgba(99,102,241,.12); color:var(--accent-2); }
+    .tag-class   { background:rgba(16,185,129,.12); color:var(--emerald); }
+    .tag-conf    { background:rgba(245,158,11,.12); color:var(--amber); }
+    .tag-event   { background:rgba(14,165,233,.12); color:var(--sky); }
+
+    /* Mini legend */
+    .legend { display:flex; flex-wrap:wrap; gap:10px; padding:14px 20px; }
+    .leg-item { display:flex; align-items:center; gap:5px; font-size:11.5px; color:var(--text-3); }
+    .leg-dot { width:7px; height:7px; border-radius:50%; }
+
+    ::-webkit-scrollbar { width:5px; }
+    ::-webkit-scrollbar-track { background:transparent; }
+    ::-webkit-scrollbar-thumb { background:rgba(255,255,255,.08); border-radius:3px; }
+  </style>
+</head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="index.html">
-                <img src="https://via.placeholder.com/32x32/ffffff/007bff?text=U" alt="Logo" width="32" height="32" class="me-2">
-                Campus Virtual
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-        </div>
-    </nav>
-    
-    <div class="offcanvas offcanvas-start bg-dark text-white" tabindex="-1" id="sidebarMenu">
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title">Menú Principal</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
-        </div>
-        <div class="offcanvas-body">
-            <nav class="nav flex-column">
-                <a class="nav-link" href="index.html">
-                    <i class="fas fa-home me-2"></i>Dashboard
-                </a>
-                <a class="nav-link" href="courses.html">
-                    <i class="fas fa-book me-2"></i>Cursos
-                </a>
-                <a class="nav-link" href="student-courses.html">
-                    <i class="fas fa-graduation-cap me-2"></i>Mis Cursos
-                </a>
-                <a class="nav-link active" href="calendar.html">
-                    <i class="fas fa-calendar me-2"></i>Calendario
-                </a>
-                <a class="nav-link" href="schedule.html">
-                    <i class="fas fa-clock me-2"></i>Horario
-                </a>
-                <a class="nav-link" href="blog.html">
-                    <i class="fas fa-blog me-2"></i>Blog
-                </a>
-                <a class="nav-link" href="administration.html">
-                    <i class="fas fa-cog me-2"></i>Administración
-                </a>
-                <a class="nav-link" href="contact.html">
-                    <i class="fas fa-envelope me-2"></i>Contacto
-                </a>
-            </nav>
-        </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">L</div>
+      <div><div class="logo-text">Lumina LMS</div><div class="logo-sub">Calendario</div></div>
     </div>
-    
-    <main class="main-content">
-        <div class="container">
-            <h2 class="section-title">Calendario Académico</h2>
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">Eventos Próximos</h5>
-                </div>
-                <div class="card-body">
-                    <div class="list-group list-group-flush">
-                        <div class="list-group-item">
-                            <strong>15 Enero 2024</strong> - Inicio de Clases
-                        </div>
-                        <div class="list-group-item">
-                            <strong>20 Enero 2024</strong> - Examen Matemáticas
-                        </div>
-                        <div class="list-group-item">
-                            <strong>25 Enero 2024</strong> - Entrega Proyecto Web
-                        </div>
-                        <div class="list-group-item">
-                            <strong>30 Enero 2024</strong> - Conferencia de Investigación
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <nav class="sidebar-nav">
+      <div class="nav-label">Navegación</div>
+      <a class="nav-item" href="courses.html"><span class="nv-icon"><i class="fas fa-th-large"></i></span> Dashboard</a>
+      <a class="nav-item" href="courses.html"><span class="nv-icon"><i class="fas fa-book-open"></i></span> Mis Cursos</a>
+      <a class="nav-item active" href="calendar.html"><span class="nv-icon"><i class="fas fa-calendar-alt"></i></span> Calendario</a>
+      <a class="nav-item" href="schedule.html"><span class="nv-icon"><i class="fas fa-clock"></i></span> Horario</a>
+      <a class="nav-item" href="student-courses.html"><span class="nv-icon"><i class="fas fa-graduation-cap"></i></span> Cursos Activos</a>
+      <div class="nav-label">Cuenta</div>
+      <a class="nav-item" href="profile.html"><span class="nv-icon"><i class="fas fa-user"></i></span> Mi Perfil</a>
+      <a class="nav-item" href="settings.html"><span class="nv-icon"><i class="fas fa-sliders-h"></i></span> Configuración</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="u-av">E</div>
+        <div><div class="u-name">Estudiante</div><div class="u-role">Alumno</div></div>
+      </div>
+    </div>
+  </aside>
+
+  <header class="topbar">
+    <div class="tb-left">
+      <span class="tb-title">Calendario Académico</span>
+    </div>
+    <div class="tb-right">
+      <a href="cursos-venta.html" class="tb-btn"><i class="fas fa-store"></i> Tienda</a>
+      <a href="profile.html" class="tb-btn"><i class="fas fa-user"></i> Perfil</a>
+      <button class="tb-btn tb-btn-danger" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Salir</button>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="page-header">
+      <div class="page-title">Calendario</div>
+      <div class="page-sub">Semestre Enero–Junio 2026 — Eventos y fechas importantes</div>
+    </div>
+
+    <div class="cal-grid">
+
+      <!-- Calendar panel -->
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-title"><i class="fas fa-calendar-alt"></i> Mayo 2026</div>
+          <div class="cal-nav">
+            <button class="cal-nav-btn" onclick="prevMonth()"><i class="fas fa-chevron-left"></i></button>
+            <span class="cal-month" id="calMonthLabel">Mayo 2026</span>
+            <button class="cal-nav-btn" onclick="nextMonth()"><i class="fas fa-chevron-right"></i></button>
+          </div>
         </div>
-    </main>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="js/main.js"></script>
+
+        <div class="month-grid">
+          <div class="cal-weekdays">
+            <div class="cal-weekday">Dom</div>
+            <div class="cal-weekday">Lun</div>
+            <div class="cal-weekday">Mar</div>
+            <div class="cal-weekday">Mié</div>
+            <div class="cal-weekday">Jue</div>
+            <div class="cal-weekday">Vie</div>
+            <div class="cal-weekday">Sáb</div>
+          </div>
+          <div class="cal-days" id="calDays"></div>
+        </div>
+
+        <div class="legend">
+          <div class="leg-item"><div class="leg-dot" style="background:var(--accent)"></div> Hoy</div>
+          <div class="leg-item"><div class="leg-dot" style="background:var(--rose)"></div> Examen</div>
+          <div class="leg-item"><div class="leg-dot" style="background:var(--accent-2)"></div> Proyecto</div>
+          <div class="leg-item"><div class="leg-dot" style="background:var(--emerald)"></div> Clase</div>
+          <div class="leg-item"><div class="leg-dot" style="background:var(--amber)"></div> Evento</div>
+        </div>
+      </div>
+
+      <!-- Side -->
+      <div class="side-stack">
+
+        <!-- Upcoming events -->
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title"><i class="fas fa-list-ul"></i> Próximos Eventos</div>
+          </div>
+          <div class="event-item">
+            <div class="event-date"><div class="ev-day">19</div><div class="ev-mon">May</div></div>
+            <div class="event-body">
+              <div class="ev-title">Inicio de Clases — Módulo 5</div>
+              <div class="ev-meta"><div class="ev-dot emerald"></div>08:00 AM · Programación Web<span class="ev-tag tag-class">Clase</span></div>
+            </div>
+          </div>
+          <div class="event-item">
+            <div class="event-date"><div class="ev-day">20</div><div class="ev-mon">May</div></div>
+            <div class="event-body">
+              <div class="ev-title">Examen Parcial — Matemáticas</div>
+              <div class="ev-meta"><div class="ev-dot rose"></div>10:00 AM · Aula 204<span class="ev-tag tag-exam">Examen</span></div>
+            </div>
+          </div>
+          <div class="event-item">
+            <div class="event-date"><div class="ev-day">22</div><div class="ev-mon">May</div></div>
+            <div class="event-body">
+              <div class="ev-title">Entrega: Proyecto Final Web</div>
+              <div class="ev-meta"><div class="ev-dot indigo"></div>11:59 PM · GitHub<span class="ev-tag tag-project">Proyecto</span></div>
+            </div>
+          </div>
+          <div class="event-item">
+            <div class="event-date"><div class="ev-day">25</div><div class="ev-mon">May</div></div>
+            <div class="event-body">
+              <div class="ev-title">Conferencia de Investigación</div>
+              <div class="ev-meta"><div class="ev-dot amber"></div>09:00 AM · Auditorio<span class="ev-tag tag-conf">Evento</span></div>
+            </div>
+          </div>
+          <div class="event-item">
+            <div class="event-date"><div class="ev-day">28</div><div class="ev-mon">May</div></div>
+            <div class="event-body">
+              <div class="ev-title">Quiz: Bases de Datos SQL</div>
+              <div class="ev-meta"><div class="ev-dot rose"></div>02:00 PM · En línea<span class="ev-tag tag-exam">Examen</span></div>
+            </div>
+          </div>
+          <div class="event-item">
+            <div class="event-date"><div class="ev-day">30</div><div class="ev-mon">May</div></div>
+            <div class="event-body">
+              <div class="ev-title">Webinar: IA en Educación 2026</div>
+              <div class="ev-meta"><div class="ev-dot sky"></div>04:00 PM · Zoom<span class="ev-tag tag-event">Webinar</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Summary -->
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title"><i class="fas fa-chart-bar"></i> Resumen del Mes</div>
+          </div>
+          <div style="padding:16px 20px;display:flex;flex-direction:column;gap:14px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <span style="font-size:13px;color:var(--text-2);">Clases programadas</span>
+              <span style="font-size:13px;font-weight:700;color:var(--text);">24</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <span style="font-size:13px;color:var(--text-2);">Exámenes pendientes</span>
+              <span style="font-size:13px;font-weight:700;color:var(--rose);">3</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <span style="font-size:13px;color:var(--text-2);">Proyectos por entregar</span>
+              <span style="font-size:13px;font-weight:700;color:var(--amber);">2</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <span style="font-size:13px;color:var(--text-2);">Eventos especiales</span>
+              <span style="font-size:13px;font-weight:700;color:var(--sky);">1</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const MONTHS = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+    const EVENT_DAYS = { '2026-5-20': 'rose', '2026-5-22': 'indigo', '2026-5-25': 'amber', '2026-5-28': 'rose', '2026-5-30': 'sky' };
+    let cur = new Date(2026, 4, 1);
+
+    function renderCal() {
+      const y = cur.getFullYear(), m = cur.getMonth();
+      document.getElementById('calMonthLabel').textContent = MONTHS[m] + ' ' + y;
+      const firstDay = new Date(y, m, 1).getDay();
+      const daysInMonth = new Date(y, m + 1, 0).getDate();
+      const prevDays = new Date(y, m, 0).getDate();
+      const today = new Date();
+      let html = '';
+      for (let i = 0; i < firstDay; i++) {
+        html += `<div class="cal-day other-month">${prevDays - firstDay + i + 1}</div>`;
+      }
+      for (let d = 1; d <= daysInMonth; d++) {
+        const key = `${y}-${m+1}-${d}`;
+        const isToday = today.getFullYear()===y && today.getMonth()===m && today.getDate()===d;
+        const hasEv = EVENT_DAYS[key];
+        html += `<div class="cal-day${isToday?' today':''}${hasEv?' has-event':''}" onclick="this.closest('.cal-days').querySelectorAll('.selected').forEach(e=>e.classList.remove('selected'));this.classList.add('selected')">${d}</div>`;
+      }
+      const remaining = 42 - firstDay - daysInMonth;
+      for (let i = 1; i <= remaining; i++) {
+        html += `<div class="cal-day other-month">${i}</div>`;
+      }
+      document.getElementById('calDays').innerHTML = html;
+    }
+
+    function prevMonth() { cur.setMonth(cur.getMonth()-1); renderCal(); }
+    function nextMonth() { cur.setMonth(cur.getMonth()+1); renderCal(); }
+
+    renderCal();
+
+    async function handleLogout() {
+      localStorage.removeItem('user');
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('rememberMe');
+      try { await fetch('/auth/logout', { method: 'POST', credentials: 'include' }); } catch(_) {}
+      window.location.href = '/html/login.html';
+    }
+  </script>
 </body>
 </html>

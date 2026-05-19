@@ -14,7 +14,8 @@
     "build": "echo 'Build completed'",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "playwright test",
+    "test:report": "playwright show-report tests/playwright-report"
   },
   "keywords": [
     "lms",
@@ -47,9 +48,10 @@
     "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1",
+    "@playwright/test": "^1.60.0",
+    "concurrently": "^8.2.2",
     "gh-pages": "^6.1.0",
-    "concurrently": "^8.2.2"
+    "nodemon": "^3.0.1"
   },
   "engines": {
     "node": ">=14.0.0"

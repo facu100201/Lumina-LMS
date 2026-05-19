@@ -1,664 +1,579 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cursos - Lumina Learning</title>
-    <meta name="description" content="Explora nuestra colección de cursos online de alta calidad">
-    <meta name="keywords" content="cursos online, educación, aprendizaje, certificación">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="../styles/main.css" rel="stylesheet">
-    <link href="../styles/cursos-venta.css" rel="stylesheet">
-    </head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cursos — Lumina Learning</title>
+  <meta name="description" content="Explora nuestra colección de cursos online de alta calidad">
 
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+
+  <!-- Styles -->
+  <link href="../styles/main.css" rel="stylesheet">
+  <link href="../styles/cursos-venta.css" rel="stylesheet">
+</head>
 <body class="cursos-venta-page">
-    <!-- Toast para notificaciones -->
-    <div class="toast-container position-fixed bottom-0 end-0 p-3">
-        <div id="addedToCartToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="toast-header bg-success text-white">
-                <strong class="me-auto">¡Añadido al carrito!</strong>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"
-                    aria-label="Close"></button>
-            </div>
-            <div class="toast-body">
-                El curso ha sido añadido a tu carrito de compras.
-            </div>
-        </div>
-    </div>
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="../index.html">
-                <img src="../img/LuminaLogoNoTextBlanco.webp" alt="Logo" width="32" height="32" class="me-2">
+  <!-- ─── Toast notification (Bootstrap) ─────────────────── -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index:9999;">
+    <div id="addedToCartToast" class="toast align-items-center border-0" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body d-flex align-items-center gap-2">
+          <i class="fas fa-check-circle text-success"></i>
+          <strong>¡Añadido al carrito!</strong>
+          <span class="text-muted">El curso fue añadido correctamente.</span>
+        </div>
+        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Cerrar"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Navbar ───────────────────────────────────────── -->
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container-fluid px-4">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="../index.html">
+        <img src="../img/LuminaLogoNoTextBlanco.webp" alt="Lumina" width="32" height="32">
+        <span class="fw-700 d-none d-sm-inline" style="font-weight:700;font-size:.95rem;">Lumina</span>
+      </a>
+
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarMain">
+        <ul class="navbar-nav me-auto gap-1">
+          <li class="nav-item"><a class="nav-link" href="../index.html"><i class="fas fa-home me-1"></i>Inicio</a></li>
+          <li class="nav-item"><a class="nav-link active" href="cursos-venta.html"><i class="fas fa-book me-1"></i>Cursos</a></li>
+          <li class="nav-item"><a class="nav-link" href="blog.html"><i class="fas fa-blog me-1"></i>Blog</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html"><i class="fas fa-envelope me-1"></i>Contacto</a></li>
+          <li class="nav-item" id="misCursosContainer" style="display:none;">
+            <a class="nav-link" href="courses.html"><i class="fas fa-graduation-cap me-1"></i>Mis Cursos</a>
+          </li>
+        </ul>
+
+        <ul class="navbar-nav align-items-center gap-2">
+          <!-- Cart -->
+          <li class="nav-item dropdown">
+            <a class="nav-link position-relative" href="#" id="cartDropdown" role="button"
+               data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fas fa-shopping-cart"></i>
+              <span id="cartCount"
+                class="position-absolute top-0 start-100 translate-middle badge rounded-pill"
+                style="background:#ef4444;font-size:.6rem;">0</span>
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="../index.html"><i class="fas fa-home me-1"></i> Inicio</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="cursos-venta.html"><i class="fas fa-book me-1"></i> Cursos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="blog.html"><i class="fas fa-blog me-1"></i> Blog</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="contact.html"><i class="fas fa-envelope me-1"></i> Contacto</a>
-                    </li>
-                    <!-- Botón Mis Cursos (solo para estudiantes) -->
-                    <li class="nav-item" id="misCursosContainer" style="display: none;">
-                        <a class="nav-link mis-cursos-btn" href="courses.html">
-                            <i class="fas fa-graduation-cap me-1"></i> Mis Cursos
-                        </a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" aria-label="Notificaciones">
-                            <i class="fas fa-bell"></i>
-                        </a>
-                    </li>
-
-                    <!-- Dropdown del Carrito -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle position-relative" href="#" id="cartDropdown" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
-                            <i class="fas fa-shopping-cart"></i>
-                            <span id="cartCount"
-                                class="position-absolute top-0 start-100 translate-middle badge bg-danger rounded-pill">0</span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end dropdown-cart" aria-labelledby="cartDropdown">
-                            <li>
-                                <h6 class="dropdown-header fw-bold">Tu carrito</h6>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider my-1">
-                            </li>
-                            <li>
-                                <div id="cartItems" class="px-2" style="max-height: 50vh; overflow-y: auto;">
-                                    <p class="text-muted text-center py-2 mb-0">Tu carrito está vacío</p>
-                                </div>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider my-1">
-                            </li>
-                            <li class="px-2">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <strong>Subtotal:</strong>
-                                    <span id="cartSubtotal" class="fw-bold">$0.00</span>
-                                </div>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider my-1">
-                            </li>
-                            <li class="px-2 mb-1">
-                                <a href="checkout.html" class="btn btn-primary w-100 py-2">
-                                    Ir a pagar
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    <!-- Dropdown del Usuario -->
-                    <li class="nav-item dropdown" id="userDropdownContainer" style="display: none;">
-                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
-                            <i id="userAvatarIcon" class="fas fa-user-circle me-1" style="font-size: 24px;"></i>
-                            <span id="userName">Usuario</span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                            <li>
-                                <div class="dropdown-header">
-                                    <div class="d-flex align-items-center">
-                                        <i id="userAvatarLargeIcon" class="fas fa-user-circle me-2" style="font-size: 32px;"></i>
-                                        <div>
-                                            <div id="userNameLarge" class="fw-bold">Usuario</div>
-                                            <small id="userEmail" class="text-muted">usuario@email.com</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="profile.html"><i class="fas fa-user me-2"></i> Mi Perfil</a></li>
-                            <li><a class="dropdown-item" href="settings.html"><i class="fas fa-cog me-2"></i> Configuración</a></li>
-                            <li><a class="dropdown-item" href="courses.html"><i class="fas fa-book me-2"></i> Mis Cursos</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item text-danger" href="#" onclick="handleLogout()"><i class="fas fa-sign-out-alt me-2"></i> Cerrar sesión</a></li>
-                        </ul>
-                    </li>
-                    
-                    <!-- Botón de Login (cuando no está autenticado) -->
-                    <li class="nav-item" id="loginButtonContainer">
-                        <a class="nav-link" href="login.html">
-                            <i class="fas fa-sign-in-alt me-1"></i> Iniciar Sesión
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Hero Section para Cursos -->
-    <section class="courses-hero">
-        <div class="hero-overlay"></div>
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-8 mx-auto text-center">
-                    <h1 class="hero-title">Explora Nuestros Cursos</h1>
-                    <p class="hero-subtitle">Descubre programas diseñados para impulsar tu carrera y expandir tus
-                        conocimientos</p>
-                    <div class="search-container">
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" id="courseSearch" placeholder="Buscar cursos...">
-                            <button class="btn btn-primary" type="button">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </div>
-                    </div>
+            <ul class="dropdown-menu dropdown-menu-end dropdown-cart" aria-labelledby="cartDropdown">
+              <li><h6 class="dropdown-header fw-bold">Tu carrito</h6></li>
+              <li><hr class="dropdown-divider my-1"></li>
+              <li>
+                <div id="cartItems" class="px-2" style="max-height:50vh;overflow-y:auto;">
+                  <p class="text-muted text-center py-2 mb-0" style="font-size:.85rem;">Tu carrito está vacío</p>
                 </div>
-            </div>
-        </div>
-    </section>
+              </li>
+              <li><hr class="dropdown-divider my-1"></li>
+              <li class="px-3 py-1">
+                <div class="d-flex justify-content-between align-items-center">
+                  <span class="text-muted" style="font-size:.85rem;">Subtotal:</span>
+                  <span id="cartSubtotal" class="fw-bold text-dark">$0.00</span>
+                </div>
+              </li>
+              <li><hr class="dropdown-divider my-1"></li>
+              <li class="px-2 pb-2">
+                <a href="checkout.html" class="btn btn-primary w-100 rounded-pill">Ir a pagar</a>
+              </li>
+            </ul>
+          </li>
 
-    <!-- Filtros y Ordenamiento -->
-    <section class="filters-section py-4">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <div class="d-flex flex-wrap gap-2">
-                        <button class="btn btn-outline-primary filter-btn active" data-filter="all">Todos</button>
-                        <button class="btn btn-outline-primary filter-btn"
-                            data-filter="programacion">Programación</button>
-                        <button class="btn btn-outline-primary filter-btn" data-filter="marketing">Marketing</button>
-                        <button class="btn btn-outline-primary filter-btn" data-filter="finanzas">Finanzas</button>
-                        <button class="btn btn-outline-primary filter-btn" data-filter="diseno">Diseño</button>
-                    </div>
-                </div>
-                <div class="col-md-6 text-md-end mt-3 mt-md-0">
-                    <select class="form-select d-inline-block w-auto" id="sortSelect">
-                        <option value="default">Ordenar por</option>
-                        <option value="price-low">Precio: Menor a Mayor</option>
-                        <option value="price-high">Precio: Mayor a Menor</option>
-                        <option value="duration">Duración</option>
-                        <option value="popularity">Popularidad</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-    </section>
+          <!-- User dropdown (authenticated) -->
+          <li class="nav-item dropdown" id="userDropdownContainer" style="display:none;">
+            <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#"
+               id="userDropdown" role="button" data-bs-toggle="dropdown">
+              <i id="userAvatarIcon" class="fas fa-user-circle" style="font-size:1.4rem;"></i>
+              <span id="userName" style="font-size:.875rem;">Usuario</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" id="userDropdownMenu" aria-labelledby="userDropdown">
+              <!-- Populated by updateUserNavbar() -->
+            </ul>
+          </li>
 
-    <!-- Cursos Grid -->
-    <section class="courses-section py-5">
-        <div class="container">
-            <div class="row" id="coursesGrid">
-                <!-- Curso 1: Desarrollo Web Full Stack -->
-                <div class="col-lg-4 col-md-6 mb-4" data-category="programacion">
-                    <div class="course-card" data-id="1">
-                        <div class="course-image">
-                            <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
-                                alt="Desarrollo Web Full Stack" class="img-fluid">
-                            <div class="course-overlay">
-                                <button class="btn btn-primary btn-sm quick-view-btn" data-course-id="1">
-                                    <i class="fas fa-eye me-1"></i>Vista Previa
-                                </button>
-                            </div>
-                            <div class="course-badge">Más Popular</div>
-                        </div>
-                        <div class="course-content">
-                            <div class="course-header">
-                                <h3 class="course-title">Desarrollo Web Full Stack</h3>
-                                <p class="course-subtitle">De principiante a experto</p>
-                            </div>
-                            <div class="course-info">
-                                <div class="course-meta">
-                                    <span class="instructor"><i class="fas fa-user me-1"></i>Carlos Rodríguez</span>
-                                    <span class="duration"><i class="fas fa-clock me-1"></i>120 horas</span>
-                                    <span class="level"><i class="fas fa-signal me-1"></i>Intermedio</span>
-                                </div>
-                                <p class="course-description">
-                                    Aprende a crear aplicaciones web completas con las tecnologías más demandadas del
-                                    mercado: HTML, CSS, JavaScript, React, Node.js y más.
-                                </p>
-                                <div class="course-features">
-                                    <span class="feature"><i class="fas fa-certificate text-success"></i>
-                                        Certificado</span>
-                                    <span class="feature"><i class="fas fa-video text-primary"></i> 50+ videos</span>
-                                    <span class="feature"><i class="fas fa-file-alt text-info"></i> Proyectos
-                                        prácticos</span>
-                                </div>
-                            </div>
-                            <div class="course-footer">
-                                <div class="price-container">
-                                    <span class="current-price">$349</span>
-                                </div>
-                                <button class="btn btn-primary add-to-cart-btn" data-course-id="1">
-                                    <i class="fas fa-shopping-cart me-1"></i>Añadir al Carrito
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Curso 2: Marketing Digital Avanzado -->
-                <div class="col-lg-4 col-md-6 mb-4" data-category="marketing">
-                    <div class="course-card" data-id="2">
-                        <div class="course-image">
-                            <img src="https://images.unsplash.com/photo-1499750310107-5fef28a66643?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
-                                alt="Marketing Digital Avanzado" class="img-fluid">
-                            <div class="course-overlay">
-                                <button class="btn btn-primary btn-sm quick-view-btn" data-course-id="2">
-                                    <i class="fas fa-eye me-1"></i>Vista Previa
-                                </button>
-                            </div>
-                            <div class="course-badge">Nuevo</div>
-                        </div>
-                        <div class="course-content">
-                            <div class="course-header">
-                                <h3 class="course-title">Marketing Digital Avanzado</h3>
-                                <p class="course-subtitle">Estrategias del mundo digital</p>
-                            </div>
-                            <div class="course-info">
-                                <div class="course-meta">
-                                    <span class="instructor"><i class="fas fa-user me-1"></i>Ana Martínez</span>
-                                    <span class="duration"><i class="fas fa-clock me-1"></i>80 horas</span>
-                                    <span class="level"><i class="fas fa-signal me-1"></i>Avanzado</span>
-                                </div>
-                                <p class="course-description">
-                                    Domina las últimas estrategias de marketing digital, SEO, redes sociales, email
-                                    marketing y análisis de datos para posicionar tu marca.
-                                </p>
-                                <div class="course-features">
-                                    <span class="feature"><i class="fas fa-certificate text-success"></i>
-                                        Certificado</span>
-                                    <span class="feature"><i class="fas fa-video text-primary"></i> 35+ videos</span>
-                                    <span class="feature"><i class="fas fa-chart-line text-warning"></i> Casos de
-                                        estudio</span>
-                                </div>
-                            </div>
-                            <div class="course-footer">
-                                <div class="price-container">
-                                    <span class="current-price">$349</span>
-                                </div>
-                                <button class="btn btn-primary add-to-cart-btn" data-course-id="2">
-                                    <i class="fas fa-shopping-cart me-1"></i>Añadir al Carrito
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Curso 3: Inversiones Financieras -->
-                <div class="col-lg-4 col-md-6 mb-4" data-category="finanzas">
-                    <div class="course-card" data-id="3">
-                        <div class="course-image">
-                            <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
-                                alt="Inversiones Financieras" class="img-fluid">
-                            <div class="course-overlay">
-                                <button class="btn btn-primary btn-sm quick-view-btn" data-course-id="3">
-                                    <i class="fas fa-eye me-1"></i>Vista Previa
-                                </button>
-                            </div>
-                        </div>
-                        <div class="course-content">
-                            <div class="course-header">
-                                <h3 class="course-title">Inversiones Financieras</h3>
-                                <p class="course-subtitle">Gestión de portafolios</p>
-                            </div>
-                            <div class="course-info">
-                                <div class="course-meta">
-                                    <span class="instructor"><i class="fas fa-user me-1"></i>Roberto Silva</span>
-                                    <span class="duration"><i class="fas fa-clock me-1"></i>60 horas</span>
-                                    <span class="level"><i class="fas fa-signal me-1"></i>Principiante</span>
-                                </div>
-                                <p class="course-description">
-                                    Aprende a invertir de manera inteligente y haz crecer tu capital con estrategias
-                                    comprobadas de gestión de riesgos y diversificación.
-                                </p>
-                                <div class="course-features">
-                                    <span class="feature"><i class="fas fa-certificate text-success"></i>
-                                        Certificado</span>
-                                    <span class="feature"><i class="fas fa-video text-primary"></i> 25+ videos</span>
-                                    <span class="feature"><i class="fas fa-calculator text-danger"></i>
-                                        Herramientas</span>
-                                </div>
-                            </div>
-                            <div class="course-footer">
-                                <div class="price-container">
-                                    <span class="current-price">$349</span>
-                                </div>
-                                <button class="btn btn-primary add-to-cart-btn" data-course-id="3">
-                                    <i class="fas fa-shopping-cart me-1"></i>Añadir al Carrito
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Curso 4: Meta-finance® -->
-                <div class="col-lg-4 col-md-6 mb-4" data-category="finanzas">
-                    <div class="course-card" data-id="4">
-                        <div class="course-image">
-                            <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
-                                alt="Meta-finance®" class="img-fluid">
-                            <div class="course-overlay">
-                                <button class="btn btn-primary btn-sm quick-view-btn" data-course-id="4">
-                                    <i class="fas fa-eye me-1"></i>Vista Previa
-                                </button>
-                            </div>
-                            <div class="course-badge">Premium</div>
-                        </div>
-                        <div class="course-content">
-                            <div class="course-header">
-                                <h3 class="course-title">Meta-finance®</h3>
-                                <p class="course-subtitle">Estrategias avanzadas</p>
-                            </div>
-                            <div class="course-info">
-                                <div class="course-meta">
-                                    <span class="instructor"><i class="fas fa-user me-1"></i>Dr. Elena Vargas</span>
-                                    <span class="duration"><i class="fas fa-clock me-1"></i>100 horas</span>
-                                    <span class="level"><i class="fas fa-signal me-1"></i>Avanzado</span>
-                                </div>
-                                <p class="course-description">
-                                    Descubre el revolucionario método Meta-finance® para maximizar tus ganancias
-                                    financieras con estrategias de trading avanzadas.
-                                </p>
-                                <div class="course-features">
-                                    <span class="feature"><i class="fas fa-certificate text-success"></i>
-                                        Certificado</span>
-                                    <span class="feature"><i class="fas fa-video text-primary"></i> 40+ videos</span>
-                                    <span class="feature"><i class="fas fa-users text-info"></i> Comunidad VIP</span>
-                                </div>
-                            </div>
-                            <div class="course-footer">
-                                <div class="price-container">
-                                    <span class="current-price">$349</span>
-                                </div>
-                                <button class="btn btn-primary add-to-cart-btn" data-course-id="4">
-                                    <i class="fas fa-shopping-cart me-1"></i>Añadir al Carrito
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Curso 5: Diseño UX/UI -->
-                <div class="col-lg-4 col-md-6 mb-4" data-category="diseno">
-                    <div class="course-card" data-id="5">
-                        <div class="course-image">
-                            <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
-                                alt="Diseño UX/UI" class="img-fluid">
-                            <div class="course-overlay">
-                                <button class="btn btn-primary btn-sm quick-view-btn" data-course-id="5">
-                                    <i class="fas fa-eye me-1"></i>Vista Previa
-                                </button>
-                            </div>
-                        </div>
-                        <div class="course-content">
-                            <div class="course-header">
-                                <h3 class="course-title">Diseño UX/UI</h3>
-                                <p class="course-subtitle">Experiencia de usuario</p>
-                            </div>
-                            <div class="course-info">
-                                <div class="course-meta">
-                                    <span class="instructor"><i class="fas fa-user me-1"></i>María González</span>
-                                    <span class="duration"><i class="fas fa-clock me-1"></i>90 horas</span>
-                                    <span class="level"><i class="fas fa-signal me-1"></i>Intermedio</span>
-                                </div>
-                                <p class="course-description">
-                                    Aprende a crear interfaces intuitivas y experiencias de usuario excepcionales con
-                                    las mejores prácticas de UX/UI design.
-                                </p>
-                                <div class="course-features">
-                                    <span class="feature"><i class="fas fa-certificate text-success"></i>
-                                        Certificado</span>
-                                    <span class="feature"><i class="fas fa-video text-primary"></i> 30+ videos</span>
-                                    <span class="feature"><i class="fas fa-palette text-warning"></i> Portfolio</span>
-                                </div>
-                            </div>
-                            <div class="course-footer">
-                                <div class="price-container">
-                                    <span class="current-price">$349</span>
-                                </div>
-                                <button class="btn btn-primary add-to-cart-btn" data-course-id="5">
-                                    <i class="fas fa-shopping-cart me-1"></i>Añadir al Carrito
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Curso 6: Python para Data Science -->
-                <div class="col-lg-4 col-md-6 mb-4" data-category="programacion">
-                    <div class="course-card" data-id="6">
-                        <div class="course-image">
-                            <img src="https://images.unsplash.com/photo-1526379095098-d400fd0bf935?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
-                                alt="Python para Data Science" class="img-fluid">
-                            <div class="course-overlay">
-                                <button class="btn btn-primary btn-sm quick-view-btn" data-course-id="6">
-                                    <i class="fas fa-eye me-1"></i>Vista Previa
-                                </button>
-                            </div>
-                            <div class="course-badge">Tendencia</div>
-                        </div>
-                        <div class="course-content">
-                            <div class="course-header">
-                                <h3 class="course-title">Python para Data Science</h3>
-                                <p class="course-subtitle">Análisis de datos</p>
-                            </div>
-                            <div class="course-info">
-                                <div class="course-meta">
-                                    <span class="instructor"><i class="fas fa-user me-1"></i>Dr. Luis Mendoza</span>
-                                    <span class="duration"><i class="fas fa-clock me-1"></i>110 horas</span>
-                                    <span class="level"><i class="fas fa-signal me-1"></i>Intermedio</span>
-                                </div>
-                                <p class="course-description">
-                                    Domina Python para análisis de datos, machine learning y visualización con pandas,
-                                    numpy, matplotlib y scikit-learn.
-                                </p>
-                                <div class="course-features">
-                                    <span class="feature"><i class="fas fa-certificate text-success"></i>
-                                        Certificado</span>
-                                    <span class="feature"><i class="fas fa-video text-primary"></i> 45+ videos</span>
-                                    <span class="feature"><i class="fas fa-database text-info"></i> Datasets
-                                        reales</span>
-                                </div>
-                            </div>
-                            <div class="course-footer">
-                                <div class="price-container">
-                                    <span class="current-price">$349</span>
-                                </div>
-                                <button class="btn btn-primary add-to-cart-btn" data-course-id="6">
-                                    <i class="fas fa-shopping-cart me-1"></i>Añadir al Carrito
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Modal de Vista Previa -->
-    <div class="modal fade" id="coursePreviewModal" tabindex="-1" aria-labelledby="coursePreviewModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="coursePreviewModalLabel">Vista Previa del Curso</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div id="coursePreviewContent">
-                        <!-- Contenido dinámico del modal -->
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary" id="addToCartFromModal">
-                        <i class="fas fa-shopping-cart me-1"></i>Añadir al Carrito
-                    </button>
-                </div>
-            </div>
-        </div>
+          <!-- Login button (unauthenticated) -->
+          <li class="nav-item" id="loginButtonContainer">
+            <a class="nav-link" href="login.html"><i class="fas fa-sign-in-alt me-1"></i>Iniciar Sesión</a>
+          </li>
+        </ul>
+      </div>
     </div>
+  </nav>
 
-    <!-- Footer -->
-    <footer class="bg-dark text-light py-3 mt-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-4 mb-3">
-                    <img src="../img/LuminaLogoNoText.webp" alt="Logo" style="width: 40px; height: 40px;">
-                    <p class="mt-2 mb-2" style="font-size: 0.9rem;">Iluminando el futuro del aprendizaje en línea.</p>
-                    <div class="mt-2">
-                        <a href="#" class="text-light me-2"><i class="fab fa-facebook"></i></a>
-                        <a href="#" class="text-light me-2"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="text-light me-2"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="text-light me-2"><i class="fab fa-linkedin"></i></a>
-                        <a href="#" class="text-light"><i class="fab fa-youtube"></i></a>
-                    </div>
-                </div>
+  <!-- ─── Hero ─────────────────────────────────────────── -->
+  <section class="courses-hero">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-7">
+          <div class="courses-hero-badge">
+            <i class="fas fa-graduation-cap"></i>
+            Catálogo de cursos
+          </div>
+          <h1 class="courses-hero-title">
+            Aprende con los<br><span>mejores expertos</span>
+          </h1>
+          <p class="courses-hero-subtitle">
+            Descubre programas diseñados para impulsar tu carrera y expandir tus
+            conocimientos con tecnología de vanguardia.
+          </p>
 
-                <div class="col-lg-2 col-md-6 mb-3">
-                    <h6>Enlaces</h6>
-                    <a href="../index.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-home me-1"></i> Inicio</a>
-                    <a href="cursos-venta.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-book me-1"></i> Cursos</a>
-                    <a href="blog.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-blog me-1"></i> Blog</a>
-                    <a href="contact.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-envelope me-1"></i> Contacto</a>
-                </div>
-
-                <div class="col-lg-2 col-md-6 mb-3">
-                    <h6>Mi cuenta</h6>
-                    <a href="courses.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-graduation-cap me-1"></i> Mis<br>Cursos</a>
-                    <a href="calendar.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-calendar me-1"></i> Calendario</a>
-                    <a href="schedule.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-clock me-1"></i> Horario</a>
-                    <a href="profile.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-user me-1"></i> Perfil</a>
-                </div>
-
-                <div class="col-lg-4 mb-3">
-                    <h6>Contacto</h6>
-                    <p class="mb-1" style="font-size: 0.85rem;"><i class="fas fa-map-marker-alt me-1"></i> 123 Calle Universidad, Ciudad</p>
-                    <p class="mb-1" style="font-size: 0.85rem;"><i class="fas fa-phone me-1"></i> +1 234 567 8900</p>
-                    <p class="mb-1" style="font-size: 0.85rem;"><i class="fas fa-envelope me-1"></i> luminalearning.mx@gmail.com</p>
-                    <a href="contact.html" class="btn btn-outline-light btn-sm mt-1">Contáctanos</a>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-12 text-center">
-                    <p class="mb-0" style="font-size: 0.8rem;">© <span id="currentYear"></span> Lumina Learning. Todos los derechos reservados.</p>
-                </div>
-            </div>
+          <!-- Search -->
+          <div class="hero-search-wrap">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" class="hero-search-input" id="courseSearch" placeholder="Buscar cursos, instructores...">
+            <button class="hero-search-btn" type="button">
+              <i class="fas fa-search me-1"></i>Buscar
+            </button>
+          </div>
         </div>
-    </footer>
+      </div>
+    </div>
+  </section>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../js/cursos-venta.js"></script>
-    <script src="../js/footer-utils.js"></script>
-    <script src="../js/auth0-config.js"></script>
-    <script>
-        // Verificar autenticación y actualizar navbar
-        async function checkAuthAndUpdateNavbar() {
-            try {
-                await Auth0Service.initialize();
-                const isAuthenticated = await Auth0Service.isAuthenticated();
-                
-                if (isAuthenticated) {
-                    const user = await Auth0Service.getUser();
-                    updateUserNavbar(user);
-                } else {
-                    showLoginButton();
-                }
-            } catch (error) {
-                console.error('Error verificando autenticación:', error);
-                showLoginButton();
-            }
+  <!-- ─── Filters bar ───────────────────────────────────── -->
+  <div class="filters-bar">
+    <div class="container">
+      <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+        <div class="filter-chips">
+          <button class="filter-chip active filter-btn" data-filter="all">Todos</button>
+          <button class="filter-chip filter-btn" data-filter="programacion">
+            <i class="fas fa-code me-1"></i>Programación
+          </button>
+          <button class="filter-chip filter-btn" data-filter="marketing">
+            <i class="fas fa-chart-line me-1"></i>Marketing
+          </button>
+          <button class="filter-chip filter-btn" data-filter="finanzas">
+            <i class="fas fa-coins me-1"></i>Finanzas
+          </button>
+          <button class="filter-chip filter-btn" data-filter="diseno">
+            <i class="fas fa-palette me-1"></i>Diseño
+          </button>
+        </div>
+        <div class="d-flex align-items-center gap-3">
+          <span class="results-count" id="resultsCount">6 cursos</span>
+          <select class="sort-select" id="sortSelect">
+            <option value="default">Ordenar por</option>
+            <option value="price-low">Precio: Menor a Mayor</option>
+            <option value="price-high">Precio: Mayor a Menor</option>
+            <option value="duration">Duración</option>
+            <option value="popularity">Popularidad</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Courses grid ──────────────────────────────────── -->
+  <section class="courses-section">
+    <div class="container">
+      <div class="row g-4" id="coursesGrid">
+
+        <!-- Course 1 -->
+        <div class="col-lg-4 col-md-6" data-category="programacion">
+          <div class="cv-course-card course-card" data-id="1">
+            <div class="cv-course-img-wrap">
+              <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=600&q=70"
+                   alt="Desarrollo Web Full Stack" loading="lazy">
+              <div class="cv-course-overlay">
+                <button class="cv-preview-btn quick-view-btn" data-course-id="1">
+                  <i class="fas fa-play me-1"></i>Vista Previa
+                </button>
+              </div>
+              <span class="cv-course-badge badge-popular">Más Popular</span>
+            </div>
+            <div class="cv-course-body">
+              <span class="cv-course-category">Programación</span>
+              <h3 class="cv-course-title">Desarrollo Web Full Stack</h3>
+              <p class="cv-course-subtitle">De principiante a experto</p>
+              <div class="cv-course-meta">
+                <span><i class="fas fa-user"></i>Carlos Rodríguez</span>
+                <span><i class="fas fa-clock"></i>120 h</span>
+                <span><i class="fas fa-signal"></i>Intermedio</span>
+              </div>
+              <p class="cv-course-desc">
+                Aprende a crear aplicaciones web completas con HTML, CSS, JavaScript, React, Node.js y más.
+              </p>
+              <div class="cv-course-features">
+                <span class="cv-feature-chip"><i class="fas fa-certificate" style="color:#10b981;"></i>Certificado</span>
+                <span class="cv-feature-chip"><i class="fas fa-video" style="color:#6366f1;"></i>50+ videos</span>
+                <span class="cv-feature-chip"><i class="fas fa-code" style="color:#0ea5e9;"></i>Proyectos</span>
+              </div>
+            </div>
+            <div class="cv-course-footer">
+              <span class="cv-price">$349</span>
+              <button class="cv-add-btn add-to-cart-btn" data-course-id="1">
+                <i class="fas fa-cart-plus"></i>Añadir
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Course 2 -->
+        <div class="col-lg-4 col-md-6" data-category="marketing">
+          <div class="cv-course-card course-card" data-id="2">
+            <div class="cv-course-img-wrap">
+              <img src="https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=600&q=70"
+                   alt="Marketing Digital Avanzado" loading="lazy">
+              <div class="cv-course-overlay">
+                <button class="cv-preview-btn quick-view-btn" data-course-id="2">
+                  <i class="fas fa-play me-1"></i>Vista Previa
+                </button>
+              </div>
+              <span class="cv-course-badge badge-new">Nuevo</span>
+            </div>
+            <div class="cv-course-body">
+              <span class="cv-course-category">Marketing</span>
+              <h3 class="cv-course-title">Marketing Digital Avanzado</h3>
+              <p class="cv-course-subtitle">Estrategias del mundo digital</p>
+              <div class="cv-course-meta">
+                <span><i class="fas fa-user"></i>Ana Martínez</span>
+                <span><i class="fas fa-clock"></i>80 h</span>
+                <span><i class="fas fa-signal"></i>Avanzado</span>
+              </div>
+              <p class="cv-course-desc">
+                Domina SEO, redes sociales, email marketing y análisis de datos para posicionar tu marca.
+              </p>
+              <div class="cv-course-features">
+                <span class="cv-feature-chip"><i class="fas fa-certificate" style="color:#10b981;"></i>Certificado</span>
+                <span class="cv-feature-chip"><i class="fas fa-video" style="color:#6366f1;"></i>35+ videos</span>
+                <span class="cv-feature-chip"><i class="fas fa-chart-line" style="color:#f59e0b;"></i>Casos de estudio</span>
+              </div>
+            </div>
+            <div class="cv-course-footer">
+              <span class="cv-price">$349</span>
+              <button class="cv-add-btn add-to-cart-btn" data-course-id="2">
+                <i class="fas fa-cart-plus"></i>Añadir
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Course 3 -->
+        <div class="col-lg-4 col-md-6" data-category="finanzas">
+          <div class="cv-course-card course-card" data-id="3">
+            <div class="cv-course-img-wrap">
+              <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=600&q=70"
+                   alt="Inversiones Financieras" loading="lazy">
+              <div class="cv-course-overlay">
+                <button class="cv-preview-btn quick-view-btn" data-course-id="3">
+                  <i class="fas fa-play me-1"></i>Vista Previa
+                </button>
+              </div>
+            </div>
+            <div class="cv-course-body">
+              <span class="cv-course-category">Finanzas</span>
+              <h3 class="cv-course-title">Inversiones Financieras</h3>
+              <p class="cv-course-subtitle">Gestión de portafolios</p>
+              <div class="cv-course-meta">
+                <span><i class="fas fa-user"></i>Roberto Silva</span>
+                <span><i class="fas fa-clock"></i>60 h</span>
+                <span><i class="fas fa-signal"></i>Principiante</span>
+              </div>
+              <p class="cv-course-desc">
+                Aprende a invertir inteligentemente con estrategias comprobadas de gestión de riesgos.
+              </p>
+              <div class="cv-course-features">
+                <span class="cv-feature-chip"><i class="fas fa-certificate" style="color:#10b981;"></i>Certificado</span>
+                <span class="cv-feature-chip"><i class="fas fa-video" style="color:#6366f1;"></i>25+ videos</span>
+                <span class="cv-feature-chip"><i class="fas fa-calculator" style="color:#ef4444;"></i>Herramientas</span>
+              </div>
+            </div>
+            <div class="cv-course-footer">
+              <span class="cv-price">$349</span>
+              <button class="cv-add-btn add-to-cart-btn" data-course-id="3">
+                <i class="fas fa-cart-plus"></i>Añadir
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Course 4 -->
+        <div class="col-lg-4 col-md-6" data-category="finanzas">
+          <div class="cv-course-card course-card" data-id="4">
+            <div class="cv-course-img-wrap">
+              <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=600&q=70"
+                   alt="Meta-finance" loading="lazy">
+              <div class="cv-course-overlay">
+                <button class="cv-preview-btn quick-view-btn" data-course-id="4">
+                  <i class="fas fa-play me-1"></i>Vista Previa
+                </button>
+              </div>
+              <span class="cv-course-badge badge-premium">Premium</span>
+            </div>
+            <div class="cv-course-body">
+              <span class="cv-course-category">Finanzas</span>
+              <h3 class="cv-course-title">Meta-finance®</h3>
+              <p class="cv-course-subtitle">Estrategias avanzadas</p>
+              <div class="cv-course-meta">
+                <span><i class="fas fa-user"></i>Dra. Elena Vargas</span>
+                <span><i class="fas fa-clock"></i>100 h</span>
+                <span><i class="fas fa-signal"></i>Avanzado</span>
+              </div>
+              <p class="cv-course-desc">
+                Método Meta-finance® para maximizar ganancias con estrategias de trading avanzadas.
+              </p>
+              <div class="cv-course-features">
+                <span class="cv-feature-chip"><i class="fas fa-certificate" style="color:#10b981;"></i>Certificado</span>
+                <span class="cv-feature-chip"><i class="fas fa-video" style="color:#6366f1;"></i>40+ videos</span>
+                <span class="cv-feature-chip"><i class="fas fa-users" style="color:#0ea5e9;"></i>Comunidad VIP</span>
+              </div>
+            </div>
+            <div class="cv-course-footer">
+              <span class="cv-price">$349</span>
+              <button class="cv-add-btn add-to-cart-btn" data-course-id="4">
+                <i class="fas fa-cart-plus"></i>Añadir
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Course 5 -->
+        <div class="col-lg-4 col-md-6" data-category="diseno">
+          <div class="cv-course-card course-card" data-id="5">
+            <div class="cv-course-img-wrap">
+              <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=600&q=70"
+                   alt="Diseño UX/UI" loading="lazy">
+              <div class="cv-course-overlay">
+                <button class="cv-preview-btn quick-view-btn" data-course-id="5">
+                  <i class="fas fa-play me-1"></i>Vista Previa
+                </button>
+              </div>
+            </div>
+            <div class="cv-course-body">
+              <span class="cv-course-category">Diseño</span>
+              <h3 class="cv-course-title">Diseño UX/UI</h3>
+              <p class="cv-course-subtitle">Experiencia de usuario</p>
+              <div class="cv-course-meta">
+                <span><i class="fas fa-user"></i>María González</span>
+                <span><i class="fas fa-clock"></i>90 h</span>
+                <span><i class="fas fa-signal"></i>Intermedio</span>
+              </div>
+              <p class="cv-course-desc">
+                Crea interfaces intuitivas y experiencias de usuario excepcionales con las mejores prácticas de UX/UI.
+              </p>
+              <div class="cv-course-features">
+                <span class="cv-feature-chip"><i class="fas fa-certificate" style="color:#10b981;"></i>Certificado</span>
+                <span class="cv-feature-chip"><i class="fas fa-video" style="color:#6366f1;"></i>30+ videos</span>
+                <span class="cv-feature-chip"><i class="fas fa-palette" style="color:#f59e0b;"></i>Portfolio</span>
+              </div>
+            </div>
+            <div class="cv-course-footer">
+              <span class="cv-price">$349</span>
+              <button class="cv-add-btn add-to-cart-btn" data-course-id="5">
+                <i class="fas fa-cart-plus"></i>Añadir
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Course 6 -->
+        <div class="col-lg-4 col-md-6" data-category="programacion">
+          <div class="cv-course-card course-card" data-id="6">
+            <div class="cv-course-img-wrap">
+              <img src="https://images.unsplash.com/photo-1526379095098-d400fd0bf935?auto=format&fit=crop&w=600&q=70"
+                   alt="Python para Data Science" loading="lazy">
+              <div class="cv-course-overlay">
+                <button class="cv-preview-btn quick-view-btn" data-course-id="6">
+                  <i class="fas fa-play me-1"></i>Vista Previa
+                </button>
+              </div>
+              <span class="cv-course-badge badge-trend">Tendencia</span>
+            </div>
+            <div class="cv-course-body">
+              <span class="cv-course-category">Programación</span>
+              <h3 class="cv-course-title">Python para Data Science</h3>
+              <p class="cv-course-subtitle">Análisis de datos</p>
+              <div class="cv-course-meta">
+                <span><i class="fas fa-user"></i>Dr. Luis Mendoza</span>
+                <span><i class="fas fa-clock"></i>110 h</span>
+                <span><i class="fas fa-signal"></i>Intermedio</span>
+              </div>
+              <p class="cv-course-desc">
+                Domina Python para análisis de datos, machine learning y visualización con pandas, numpy y scikit-learn.
+              </p>
+              <div class="cv-course-features">
+                <span class="cv-feature-chip"><i class="fas fa-certificate" style="color:#10b981;"></i>Certificado</span>
+                <span class="cv-feature-chip"><i class="fas fa-video" style="color:#6366f1;"></i>45+ videos</span>
+                <span class="cv-feature-chip"><i class="fas fa-database" style="color:#0ea5e9;"></i>Datasets reales</span>
+              </div>
+            </div>
+            <div class="cv-course-footer">
+              <span class="cv-price">$349</span>
+              <button class="cv-add-btn add-to-cart-btn" data-course-id="6">
+                <i class="fas fa-cart-plus"></i>Añadir
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /row -->
+    </div>
+  </section>
+
+  <!-- ─── Course Preview Modal ──────────────────────────── -->
+  <div class="modal fade" id="coursePreviewModal" tabindex="-1"
+       aria-labelledby="coursePreviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="coursePreviewModalLabel">Vista Previa del Curso</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body" id="coursePreviewContent"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cerrar</button>
+          <button type="button" class="btn btn-primary rounded-pill" id="addToCartFromModal">
+            <i class="fas fa-cart-plus me-1"></i>Añadir al Carrito
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Footer ───────────────────────────────────────── -->
+  <footer class="cv-footer">
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-lg-4">
+          <div class="cv-footer-brand">
+            <img src="../img/LuminaLogoNoText.webp" alt="Lumina" width="40" height="40">
+          </div>
+          <div class="cv-footer-name">Lumina Learning</div>
+          <p class="cv-footer-tagline">Iluminando el futuro del aprendizaje en línea.</p>
+          <div class="cv-footer-socials">
+            <a href="#" class="cv-footer-social"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="cv-footer-social"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="cv-footer-social"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="cv-footer-social"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#" class="cv-footer-social"><i class="fab fa-youtube"></i></a>
+          </div>
+        </div>
+
+        <div class="col-lg-2 col-md-4 col-6">
+          <p class="cv-footer-heading">Plataforma</p>
+          <a href="../index.html" class="cv-footer-link">Inicio</a>
+          <a href="cursos-venta.html" class="cv-footer-link">Cursos</a>
+          <a href="blog.html" class="cv-footer-link">Blog</a>
+          <a href="contact.html" class="cv-footer-link">Contacto</a>
+        </div>
+
+        <div class="col-lg-2 col-md-4 col-6">
+          <p class="cv-footer-heading">Mi Cuenta</p>
+          <a href="courses.html" class="cv-footer-link">Mis Cursos</a>
+          <a href="calendar.html" class="cv-footer-link">Calendario</a>
+          <a href="schedule.html" class="cv-footer-link">Horario</a>
+          <a href="profile.html" class="cv-footer-link">Perfil</a>
+        </div>
+
+        <div class="col-lg-4 col-md-4">
+          <p class="cv-footer-heading">Contacto</p>
+          <p class="cv-footer-link"><i class="fas fa-map-marker-alt me-2"></i>123 Calle Universidad, Ciudad</p>
+          <p class="cv-footer-link"><i class="fas fa-phone me-2"></i>+1 234 567 8900</p>
+          <p class="cv-footer-link"><i class="fas fa-envelope me-2"></i>luminalearning.mx@gmail.com</p>
+        </div>
+      </div>
+
+      <hr class="cv-footer-divider">
+      <p class="cv-footer-copyright">
+        © <span id="currentYear"></span> Lumina Learning. Todos los derechos reservados.
+      </p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../js/cursos-venta.js"></script>
+  <script src="../js/footer-utils.js"></script>
+  <script src="../js/auth0-config.js"></script>
+  <script>
+    // Update results count when filter changes
+    function updateResultsCount() {
+      const visible = document.querySelectorAll('#coursesGrid > .col-lg-4:not([style*="display: none"])').length;
+      const el = document.getElementById('resultsCount');
+      if (el) el.textContent = visible + ' curso' + (visible !== 1 ? 's' : '');
+    }
+
+    // Patch toast to use new element
+    const _origToast = window.showCartToast;
+
+    // Auth check + navbar update
+    async function checkAuthAndUpdateNavbar() {
+      try {
+        await Auth0Service.initialize();
+        const isAuthenticated = await Auth0Service.isAuthenticated();
+        if (isAuthenticated) {
+          const user = await Auth0Service.getUser();
+          updateUserNavbar(user);
+        } else {
+          showLoginButton();
         }
+      } catch (e) {
+        showLoginButton();
+      }
+    }
 
-        function updateUserNavbar(user) {
-            // Ocultar botón de login
-            document.getElementById('loginButtonContainer').style.display = 'none';
-            
-            // Mostrar dropdown del usuario
-            const userContainer = document.getElementById('userDropdownContainer');
-            userContainer.style.display = 'block';
-            
-            // Actualizar información del usuario
-            const userName = user.name || user.email.split('@')[0];
-            const userEmail = user.email;
-            
-            // Determinar el rol del usuario
-            let userRole = 'student';
-            if (userEmail === 'admin@gmail.com') {
-                userRole = 'admin';
-            } else if (userEmail === 'profesor@gmail.com') {
-                userRole = 'teacher';
-            } else if (userEmail === 'estudiante@gmail.com') {
-                userRole = 'student';
-            } else {
-                userRole = user.role || 'student';
-            }
-            
-            // Avatar basado en el rol usando íconos
-            let avatarIcon = 'fa-user-circle';
-            if (userRole === 'admin') {
-                avatarIcon = 'fa-user-shield';
-            } else if (userRole === 'teacher') {
-                avatarIcon = 'fa-chalkboard-teacher';
-            } else {
-                avatarIcon = 'fa-user-graduate';
-            }
-            
-            // Actualizar elementos del navbar
-            document.getElementById('userName').textContent = userName;
-            document.getElementById('userNameLarge').textContent = userName;
-            document.getElementById('userEmail').textContent = userEmail;
-            document.getElementById('userAvatarIcon').className = `fas ${avatarIcon} me-1`;
-            document.getElementById('userAvatarLargeIcon').className = `fas ${avatarIcon} me-2`;
-            
-            // Mostrar/ocultar botón "Mis Cursos" según el rol
-            const misCursosContainer = document.getElementById('misCursosContainer');
-            if (userRole === 'student' || userEmail === 'estudiante@gmail.com') {
-                misCursosContainer.style.display = 'block';
-                console.log('Mostrando botón Mis Cursos para estudiante:', userEmail);
-            } else {
-                misCursosContainer.style.display = 'none';
-                console.log('Ocultando botón Mis Cursos para rol:', userRole);
-            }
-        }
+    function updateUserNavbar(user) {
+      document.getElementById('loginButtonContainer').style.display = 'none';
+      document.getElementById('userDropdownContainer').style.display = 'block';
+      const name = user.name || user.email.split('@')[0];
+      document.getElementById('userName').textContent = name;
+      const role = user.role || (user.email === 'admin@gmail.com' ? 'admin' : user.email === 'profesor@gmail.com' ? 'teacher' : 'student');
+      const icon = role === 'admin' ? 'fa-user-shield' : role === 'teacher' ? 'fa-chalkboard-teacher' : 'fa-user-graduate';
+      document.getElementById('userAvatarIcon').className = `fas ${icon}`;
+      const mc = document.getElementById('misCursosContainer');
+      if (mc) mc.style.display = role === 'student' ? 'block' : 'none';
+      let items = '';
+      if (role === 'admin') {
+        items = `<li><a class="dropdown-item" href="/html/monitoreo.html"><i class="fas fa-chart-line me-2" style="color:#6366f1"></i>Panel de Monitoreo</a></li>
+                 <li><a class="dropdown-item" href="/html/admin.html"><i class="fas fa-users-cog me-2" style="color:#6366f1"></i>Gestión del Sistema</a></li>
+                 <li><a class="dropdown-item" href="profile.html"><i class="fas fa-user me-2"></i>Mi Perfil</a></li>
+                 <li><a class="dropdown-item" href="settings.html"><i class="fas fa-cog me-2"></i>Configuración</a></li>`;
+      } else if (role === 'teacher') {
+        items = `<li><a class="dropdown-item" href="/html/docente.html"><i class="fas fa-chalkboard-teacher me-2" style="color:#6366f1"></i>Panel Docente</a></li>
+                 <li><a class="dropdown-item" href="profile.html"><i class="fas fa-user me-2"></i>Mi Perfil</a></li>
+                 <li><a class="dropdown-item" href="settings.html"><i class="fas fa-cog me-2"></i>Configuración</a></li>`;
+      } else {
+        items = `<li><a class="dropdown-item" href="profile.html"><i class="fas fa-user me-2"></i>Mi Perfil</a></li>
+                 <li><a class="dropdown-item" href="settings.html"><i class="fas fa-cog me-2"></i>Configuración</a></li>
+                 <li><a class="dropdown-item" href="courses.html"><i class="fas fa-graduation-cap me-2"></i>Mis Cursos</a></li>`;
+      }
+      document.getElementById('userDropdownMenu').innerHTML = `
+        <li><div class="dropdown-header d-flex align-items-center gap-2">
+          <i class="fas ${icon}" style="font-size:2rem;color:#6366f1;"></i>
+          <div><div class="fw-bold" style="font-size:.9rem;">${name}</div><small class="text-muted">${user.email}</small></div>
+        </div></li>
+        <li><hr class="dropdown-divider"></li>
+        ${items}
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item text-danger" href="#" onclick="handleLogout()"><i class="fas fa-sign-out-alt me-2"></i>Cerrar sesión</a></li>`;
+    }
 
-        function showLoginButton() {
-            // Mostrar botón de login
-            document.getElementById('loginButtonContainer').style.display = 'block';
-            
-            // Ocultar dropdown del usuario
-            document.getElementById('userDropdownContainer').style.display = 'none';
+    function showLoginButton() {
+      document.getElementById('loginButtonContainer').style.display = 'block';
+      document.getElementById('userDropdownContainer').style.display = 'none';
+    }
 
-            // Ocultar botón "Mis Cursos"
-            document.getElementById('misCursosContainer').style.display = 'none';
-        }
+    async function handleLogout() {
+      localStorage.removeItem('user');
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('rememberMe');
+      try { await fetch('/auth/logout', { method: 'POST', credentials: 'include' }); } catch(_) {}
+      window.location.href = '/html/login.html';
+    }
 
-        // Función para manejar el logout
-        function handleLogout() {
-            Auth0Service.logout();
-            showLoginButton();
-            window.location.href = '../index.html';
-        }
-
-        // Inicializar verificación de autenticación
-        document.addEventListener('DOMContentLoaded', function() {
-            checkAuthAndUpdateNavbar();
-        });
-    </script>
+    document.addEventListener('DOMContentLoaded', () => {
+      checkAuthAndUpdateNavbar();
+      if (document.getElementById('currentYear'))
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+    });
+  </script>
 </body>
-
 </html>

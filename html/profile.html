@@ -1,717 +1,381 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Perfil - Lumina LMS</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
-    <link href="../styles/main.css" rel="stylesheet">
-    <link href="../styles/unified-styles.css" rel="stylesheet">
-    <link href="../styles/profile.css" rel="stylesheet">
-    </head>
-<body class="profile-page">
-    <style>
-        /* Estilos temporales para forzar aplicación */
-        body.profile-page {
-            background-color: #ffffff !important;
-            background-image: none !important;
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-        body.profile-page .main-content {
-            background-color: #ffffff !important;
-            background-image: none !important;
-            padding-top: 0 !important;
-            margin-top: 0 !important;
-        }
-        .profile-white-section {
-            background-color: #ffffff !important;
-            padding: 76px 0 0 0 !important;
-            margin: 0 !important;
-        }
-    </style>
-    <!-- Toast para notificaciones -->
-    <div class="toast-container position-fixed bottom-0 end-0 p-3">
-        <div id="addedToCartToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="toast-header bg-success text-white">
-                <strong class="me-auto">¡Añadido al carrito!</strong>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"
-                    aria-label="Close"></button>
-            </div>
-            <div class="toast-body">
-                El curso ha sido añadido a tu carrito de compras.
-            </div>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Perfil — Lumina LMS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+  <script src="https://cdn.auth0.com/js/auth0-spa-js/2.1/auth0-spa-js.production.js"></script>
+  <script src="../js/auth0-config.js"></script>
+  <script src="../js/auth-guard.js"></script>
+  <style>
+    :root {
+      --bg:#09090b; --surface:#111113; --card:#18181b; --card-hover:#1c1c20;
+      --border:rgba(255,255,255,.07); --border-subtle:rgba(255,255,255,.04);
+      --accent:#6366f1; --accent-2:#818cf8;
+      --emerald:#10b981; --amber:#f59e0b; --rose:#f43f5e; --sky:#0ea5e9;
+      --text:#fafafa; --text-2:#a1a1aa; --text-3:#71717a;
+      --sidebar-w:240px; --top-h:56px;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;font-size:14px;-webkit-font-smoothing:antialiased;}
+
+    .sidebar{position:fixed;top:0;left:0;width:var(--sidebar-w);height:100vh;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100;}
+    .sidebar-logo{display:flex;align-items:center;gap:10px;padding:20px 20px 16px;border-bottom:1px solid var(--border);}
+    .logo-mark{width:32px;height:32px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0;}
+    .logo-text{font-size:15px;font-weight:700;letter-spacing:-.3px;}
+    .logo-sub{font-size:11px;color:var(--text-3);}
+    .sidebar-nav{flex:1;padding:12px 0;overflow-y:auto;}
+    .nav-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-3);padding:12px 20px 6px;}
+    .nav-item{display:flex;align-items:center;gap:10px;padding:9px 20px;color:var(--text-2);text-decoration:none;font-size:13.5px;font-weight:500;position:relative;transition:color .15s,background .15s;}
+    .nav-item:hover{color:var(--text);background:rgba(255,255,255,.04);}
+    .nav-item.active{color:var(--text);background:rgba(99,102,241,.12);}
+    .nav-item.active .nv-icon{color:var(--accent);}
+    .nav-item.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:20px;background:var(--accent);border-radius:0 2px 2px 0;}
+    .nv-icon{width:16px;text-align:center;font-size:13px;color:var(--text-3);}
+    .sidebar-footer{padding:16px 20px;border-top:1px solid var(--border);}
+    .user-chip{display:flex;align-items:center;gap:10px;}
+    .u-av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;}
+    .u-name-s{font-size:13px;font-weight:600;color:var(--text);}
+    .u-role-s{font-size:11px;color:var(--text-3);}
+
+    .topbar{position:fixed;top:0;left:var(--sidebar-w);right:0;height:var(--top-h);background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:90;}
+    .tb-title{font-size:15px;font-weight:600;}
+    .tb-right{display:flex;align-items:center;gap:8px;}
+    .tb-btn{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;font-size:13px;font-weight:500;border:1px solid var(--border);background:transparent;color:var(--text-2);cursor:pointer;text-decoration:none;transition:all .15s;}
+    .tb-btn:hover{color:var(--text);border-color:rgba(255,255,255,.15);background:rgba(255,255,255,.04);}
+    .tb-btn-danger{border-color:rgba(244,63,94,.2);color:var(--rose);}
+    .tb-btn-danger:hover{background:rgba(244,63,94,.08);border-color:rgba(244,63,94,.35);}
+
+    .main{margin-left:var(--sidebar-w);margin-top:var(--top-h);flex:1;padding:28px;}
+
+    /* Profile hero */
+    .profile-hero{background:linear-gradient(135deg,#0f172a 0%,#1e1b4b 60%,#1e3a8a 100%);border:1px solid var(--border);border-radius:18px;padding:32px;margin-bottom:24px;position:relative;overflow:hidden;}
+    .profile-hero::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(99,102,241,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(99,102,241,.05) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;}
+    .hero-inner{display:flex;align-items:center;gap:24px;position:relative;}
+    .hero-avatar-wrap{position:relative;flex-shrink:0;}
+    .hero-avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;border:3px solid rgba(255,255,255,.15);}
+    .hero-avatar i,#profileAvatarIcon{font-size:36px;color:#fff;}
+    .avatar-edit{position:absolute;bottom:0;right:0;width:26px;height:26px;background:var(--accent);border-radius:50%;border:2px solid var(--bg);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:10px;color:#fff;}
+    .hero-info{flex:1;}
+    .hero-name{font-size:24px;font-weight:800;color:#fff;letter-spacing:-.4px;margin-bottom:4px;}
+    .hero-email{font-size:13px;color:rgba(255,255,255,.5);margin-bottom:10px;}
+    .hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(99,102,241,.2);border:1px solid rgba(99,102,241,.35);color:#a5b4fc;border-radius:9999px;padding:4px 12px;font-size:12px;font-weight:600;}
+    .hero-actions{display:flex;gap:8px;margin-top:16px;}
+    .hero-btn{padding:8px 16px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:'Inter',sans-serif;transition:all .15s;}
+    .hero-btn-primary{background:var(--accent);color:#fff;}
+    .hero-btn-primary:hover{background:var(--accent-2);}
+    .hero-btn-ghost{background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.12);}
+    .hero-btn-ghost:hover{background:rgba(255,255,255,.12);}
+
+    /* KPI strip */
+    .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:24px;}
+    .kpi-cell{background:var(--card);padding:20px 18px;display:flex;flex-direction:column;gap:8px;transition:background .2s;}
+    .kpi-cell:hover{background:var(--card-hover);}
+    .kpi-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:14px;}
+    .ki-indigo{background:rgba(99,102,241,.15);color:var(--accent);}
+    .ki-emerald{background:rgba(16,185,129,.15);color:var(--emerald);}
+    .ki-amber{background:rgba(245,158,11,.15);color:var(--amber);}
+    .ki-sky{background:rgba(14,165,233,.15);color:var(--sky);}
+    .kpi-value{font-size:24px;font-weight:800;letter-spacing:-.5px;color:var(--text);}
+    .kpi-label{font-size:11.5px;color:var(--text-3);font-weight:500;}
+
+    /* Content grid */
+    .content-grid{display:grid;grid-template-columns:1fr 300px;gap:20px;}
+
+    /* Panel */
+    .panel{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:20px;}
+    .panel-head{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
+    .panel-title{font-size:14px;font-weight:600;color:var(--text);}
+    .panel-title i{color:var(--text-3);font-size:12px;}
+
+    /* Info grid */
+    .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;padding:4px 0;}
+    .info-field{padding:14px 20px;border-bottom:1px solid var(--border-subtle);}
+    .info-field:nth-child(odd){border-right:1px solid var(--border-subtle);}
+    .info-field:last-child,.info-field:nth-last-child(2){border-bottom:none;}
+    .info-label{font-size:10.5px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;}
+    .info-value{font-size:13.5px;color:var(--text);font-weight:500;}
+
+    /* Activity */
+    .act-item{display:flex;align-items:flex-start;gap:12px;padding:12px 20px;border-bottom:1px solid var(--border-subtle);}
+    .act-item:last-child{border-bottom:none;}
+    .act-ico{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;}
+    .ai-play{background:rgba(99,102,241,.15);color:var(--accent);}
+    .ai-check{background:rgba(16,185,129,.15);color:var(--emerald);}
+    .ai-cert{background:rgba(245,158,11,.15);color:var(--amber);}
+    .ai-star{background:rgba(14,165,233,.15);color:var(--sky);}
+    .act-body{flex:1;}
+    .act-text{font-size:13px;color:var(--text-2);line-height:1.4;}
+    .act-text strong{color:var(--text);font-weight:600;}
+    .act-time{font-size:11px;color:var(--text-3);margin-top:2px;}
+
+    /* Quick actions */
+    .qa-item{display:flex;align-items:center;gap:12px;padding:13px 20px;border-bottom:1px solid var(--border-subtle);cursor:pointer;transition:background .15s;text-decoration:none;}
+    .qa-item:last-child{border-bottom:none;}
+    .qa-item:hover{background:rgba(255,255,255,.02);}
+    .qa-ico{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;}
+    .qa-text{font-size:13px;font-weight:500;color:var(--text-2);}
+    .qa-item:hover .qa-text{color:var(--text);}
+    .qa-arrow{margin-left:auto;font-size:11px;color:var(--text-3);}
+
+    /* Security */
+    .sec-item{display:flex;align-items:center;gap:10px;padding:13px 20px;border-bottom:1px solid var(--border-subtle);}
+    .sec-item:last-child{border-bottom:none;}
+    .sec-dot{width:8px;height:8px;border-radius:50%;}
+    .sec-ok{background:var(--emerald);}
+    .sec-warn{background:var(--amber);}
+    .sec-txt{flex:1;font-size:13px;color:var(--text-2);}
+
+    ::-webkit-scrollbar{width:5px;}
+    ::-webkit-scrollbar-track{background:transparent;}
+    ::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:3px;}
+  </style>
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">L</div>
+      <div><div class="logo-text">Lumina LMS</div><div class="logo-sub">Mi Perfil</div></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-label">Navegación</div>
+      <a class="nav-item" href="courses.html"><span class="nv-icon"><i class="fas fa-th-large"></i></span> Dashboard</a>
+      <a class="nav-item" href="courses.html"><span class="nv-icon"><i class="fas fa-book-open"></i></span> Mis Cursos</a>
+      <a class="nav-item" href="calendar.html"><span class="nv-icon"><i class="fas fa-calendar-alt"></i></span> Calendario</a>
+      <a class="nav-item" href="schedule.html"><span class="nv-icon"><i class="fas fa-clock"></i></span> Horario</a>
+      <a class="nav-item" href="student-courses.html"><span class="nv-icon"><i class="fas fa-graduation-cap"></i></span> Cursos Activos</a>
+      <div class="nav-label">Cuenta</div>
+      <a class="nav-item active" href="profile.html"><span class="nv-icon"><i class="fas fa-user"></i></span> Mi Perfil</a>
+      <a class="nav-item" href="settings.html"><span class="nv-icon"><i class="fas fa-sliders-h"></i></span> Configuración</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="u-av">E</div>
+        <div><div class="u-name-s" id="profileName">Estudiante</div><div class="u-role-s" id="profileRole">Alumno</div></div>
+      </div>
+    </div>
+  </aside>
+
+  <header class="topbar">
+    <span class="tb-title">Mi Perfil</span>
+    <div class="tb-right">
+      <a href="settings.html" class="tb-btn"><i class="fas fa-sliders-h"></i> Configuración</a>
+      <button class="tb-btn tb-btn-danger" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Salir</button>
+    </div>
+  </header>
+
+  <main class="main">
+
+    <!-- Profile hero -->
+    <div class="profile-hero">
+      <div class="hero-inner">
+        <div class="hero-avatar-wrap">
+          <div class="hero-avatar">
+            <i id="profileAvatarIcon" class="fas fa-user-graduate"></i>
+          </div>
+          <div class="avatar-edit" onclick="editAvatar()"><i class="fas fa-camera"></i></div>
         </div>
+        <div class="hero-info">
+          <div class="hero-name" id="profileName">Estudiante</div>
+          <div class="hero-email" id="profileEmail">estudiante@gmail.com</div>
+          <div class="hero-badge"><i class="fas fa-user-graduate"></i> <span id="profileRole">Estudiante</span></div>
+          <div class="hero-actions">
+            <button class="hero-btn hero-btn-primary" onclick="editProfile()"><i class="fas fa-edit me-1"></i> Editar Perfil</button>
+            <button class="hero-btn hero-btn-ghost" onclick="viewSettings()"><i class="fas fa-cog me-1"></i> Configuración</button>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="../index.html">
-                <img src="../img/LuminaLogoNoTextBlanco.webp" alt="Logo" width="32" height="32" class="me-2">
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+    <!-- KPI strip -->
+    <div class="kpi-grid">
+      <div class="kpi-cell">
+        <div class="kpi-icon ki-indigo"><i class="fas fa-book"></i></div>
+        <div class="kpi-value" id="coursesCount">6</div>
+        <div class="kpi-label">Cursos Inscritos</div>
+      </div>
+      <div class="kpi-cell">
+        <div class="kpi-icon ki-emerald"><i class="fas fa-certificate"></i></div>
+        <div class="kpi-value" id="certificatesCount">2</div>
+        <div class="kpi-label">Certificados</div>
+      </div>
+      <div class="kpi-cell">
+        <div class="kpi-icon ki-amber"><i class="fas fa-clock"></i></div>
+        <div class="kpi-value" id="hoursStudied">45h</div>
+        <div class="kpi-label">Horas de Estudio</div>
+      </div>
+      <div class="kpi-cell">
+        <div class="kpi-icon ki-sky"><i class="fas fa-trophy"></i></div>
+        <div class="kpi-value" id="achievementsCount">8</div>
+        <div class="kpi-label">Logros</div>
+      </div>
+    </div>
 
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="../index.html"><i class="fas fa-home me-1"></i> Inicio</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="cursos-venta.html"><i class="fas fa-book me-1"></i> Cursos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="blog.html"><i class="fas fa-blog me-1"></i> Blog</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="contact.html"><i class="fas fa-envelope me-1"></i> Contacto</a>
-                    </li>
-                    <!-- Botón Mis Cursos (solo para estudiantes) -->
-                    <li class="nav-item" id="misCursosContainer" style="display: none;">
-                        <a class="nav-link mis-cursos-btn" href="courses.html">
-                            <i class="fas fa-graduation-cap me-1"></i> Mis Cursos
-                        </a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" aria-label="Notificaciones">
-                            <i class="fas fa-bell"></i>
-                        </a>
-                    </li>
+    <!-- Content grid -->
+    <div class="content-grid">
 
-                    <!-- Dropdown del Carrito -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle position-relative" href="#" id="cartDropdown" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
-                            <i class="fas fa-shopping-cart"></i>
-                            <span id="cartCount"
-                                class="position-absolute top-0 start-100 translate-middle badge bg-danger rounded-pill">0</span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end dropdown-cart" aria-labelledby="cartDropdown">
-                            <li>
-                                <h6 class="dropdown-header fw-bold">Tu carrito</h6>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider my-1">
-                            </li>
-                            <li>
-                                <div id="cartItems" class="px-2" style="max-height: 50vh; overflow-y: auto;">
-                                    <p class="text-muted text-center py-2 mb-0">Tu carrito está vacío</p>
-                                </div>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider my-1">
-                            </li>
-                            <li class="px-2">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <strong>Subtotal:</strong>
-                                    <span id="cartSubtotal" class="fw-bold">$0.00</span>
-                                </div>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider my-1">
-                            </li>
-                            <li class="px-2 mb-1">
-                                <a href="checkout.html" class="btn btn-primary w-100 py-2">
-                                    Ir a pagar
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    <!-- Dropdown del Usuario -->
-                    <li class="nav-item dropdown" id="userDropdownContainer" style="display: none;">
-                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
-                            <i id="userAvatarIcon" class="fas fa-user-circle me-1" style="font-size: 24px;"></i>
-                            <span id="userName">Usuario</span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                            <li>
-                                <div class="dropdown-header">
-                                    <div class="d-flex align-items-center">
-                                        <i id="userAvatarLargeIcon" class="fas fa-user-circle me-2" style="font-size: 32px;"></i>
-                                        <div>
-                                            <div id="userNameLarge" class="fw-bold">Usuario</div>
-                                            <small id="userEmail" class="text-muted">usuario@email.com</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item active" href="profile.html"><i class="fas fa-user me-2"></i> Mi Perfil</a></li>
-                            <li><a class="dropdown-item" href="settings.html"><i class="fas fa-cog me-2"></i> Configuración</a></li>
-                            <li><a class="dropdown-item" href="courses.html"><i class="fas fa-book me-2"></i> Mis Cursos</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item text-danger" href="#" onclick="handleLogout()"><i class="fas fa-sign-out-alt me-2"></i> Cerrar sesión</a></li>
-                        </ul>
-                    </li>
-                    
-                    <!-- Botón de Login (cuando no está autenticado) -->
-                    <li class="nav-item" id="loginButtonContainer">
-                        <a class="nav-link" href="login.html">
-                            <i class="fas fa-sign-in-alt me-1"></i> Iniciar Sesión
-                        </a>
-                    </li>
-                </ul>
+      <!-- Left -->
+      <div>
+        <!-- Personal info -->
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title"><i class="fas fa-user"></i> Información Personal</div>
+          </div>
+          <div class="info-grid">
+            <div class="info-field">
+              <div class="info-label">Nombre Completo</div>
+              <div class="info-value" id="fullName">Estudiante Demo</div>
             </div>
+            <div class="info-field">
+              <div class="info-label">Email</div>
+              <div class="info-value" id="userEmailDisplay">estudiante@gmail.com</div>
+            </div>
+            <div class="info-field">
+              <div class="info-label">Rol</div>
+              <div class="info-value" id="userRoleDisplay">Estudiante</div>
+            </div>
+            <div class="info-field">
+              <div class="info-label">Fecha de Registro</div>
+              <div class="info-value" id="registrationDate">15 de Enero, 2024</div>
+            </div>
+            <div class="info-field">
+              <div class="info-label">Teléfono</div>
+              <div class="info-value" id="userPhone">+52 55 1234 5678</div>
+            </div>
+            <div class="info-field">
+              <div class="info-label">País</div>
+              <div class="info-value" id="userCountry">México</div>
+            </div>
+          </div>
         </div>
-    </nav>
 
-    <!-- Main Content -->
-    <main class="main-content">
-        <div class="profile-white-section">
-            <div class="container py-5">
-                <!-- Breadcrumb -->
-                <nav aria-label="breadcrumb" class="mb-4">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="../index.html">Inicio</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Mi Perfil</li>
-                    </ol>
-                </nav>
-
-                <!-- Profile Header -->
-                <div class="profile-header mb-5">
-                <div class="row align-items-center">
-                    <div class="col-md-3 text-center">
-                        <div class="profile-avatar-container">
-                            <i id="profileAvatarIcon" class="fas fa-user-circle profile-avatar-icon"></i>
-                            <button class="avatar-edit-btn" onclick="editAvatar()">
-                                <i class="fas fa-camera"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="col-md-9">
-                        <div class="profile-info">
-                            <h1 id="profileName" class="profile-name">Estudiante</h1>
-                            <p id="profileEmail" class="profile-email text-muted">estudiante@gmail.com</p>
-                            <div class="profile-badge" id="profileRole">
-                                <i class="fas fa-user-graduate me-1"></i>
-                                <span>Estudiante</span>
-                            </div>
-                            <div class="profile-actions mt-3">
-                                <button class="btn btn-primary me-2" onclick="editProfile()">
-                                    <i class="fas fa-edit me-1"></i> Editar Perfil
-                                </button>
-                                <button class="btn btn-outline-secondary" onclick="viewSettings()">
-                                    <i class="fas fa-cog me-1"></i> Configuración
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <!-- Activity -->
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title"><i class="fas fa-history"></i> Actividad Reciente</div>
+          </div>
+          <div id="activityList">
+            <div class="act-item">
+              <div class="act-ico ai-play"><i class="fas fa-play-circle"></i></div>
+              <div class="act-body">
+                <div class="act-text">Continuaste con <strong>JavaScript desde Cero</strong></div>
+                <div class="act-time">Hace 2 horas</div>
+              </div>
             </div>
-
-                <!-- Profile Stats -->
-                <div class="row mb-5">
-                    <div class="col-lg-3 col-md-6 mb-3">
-                        <div class="metric-card">
-                            <div class="metric-icon">
-                                <i class="fas fa-book"></i>
-                            </div>
-                            <div class="metric-content">
-                                <h3 class="metric-value" id="coursesCount">6</h3>
-                                <p class="metric-label">Cursos Inscritos</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6 mb-3">
-                        <div class="metric-card">
-                            <div class="metric-icon">
-                                <i class="fas fa-certificate"></i>
-                            </div>
-                            <div class="metric-content">
-                                <h3 class="metric-value" id="certificatesCount">2</h3>
-                                <p class="metric-label">Certificados</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6 mb-3">
-                        <div class="metric-card">
-                            <div class="metric-icon">
-                                <i class="fas fa-clock"></i>
-                            </div>
-                            <div class="metric-content">
-                                <h3 class="metric-value" id="hoursStudied">45h</h3>
-                                <p class="metric-label">Horas de Estudio</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6 mb-3">
-                        <div class="metric-card">
-                            <div class="metric-icon">
-                                <i class="fas fa-trophy"></i>
-                            </div>
-                            <div class="metric-content">
-                                <h3 class="metric-value" id="achievementsCount">8</h3>
-                                <p class="metric-label">Logros</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            <!-- Profile Content -->
-            <div class="row">
-                <!-- Personal Information -->
-                <div class="col-lg-8 mb-4">
-                    <div class="profile-section">
-                        <h3 class="section-title">
-                            <i class="fas fa-user me-2"></i> Información Personal
-                        </h3>
-                        <div class="profile-details">
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Nombre Completo</label>
-                                    <p id="fullName" class="form-control-plaintext">Estudiante</p>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Email</label>
-                                    <p id="userEmailDisplay" class="form-control-plaintext">estudiante@gmail.com</p>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Rol</label>
-                                    <p id="userRoleDisplay" class="form-control-plaintext">Estudiante</p>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Fecha de Registro</label>
-                                    <p id="registrationDate" class="form-control-plaintext">15 de Enero, 2024</p>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Teléfono</label>
-                                    <p id="userPhone" class="form-control-plaintext">+52 55 1234 5678</p>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">País</label>
-                                    <p id="userCountry" class="form-control-plaintext">México</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Recent Activity -->
-                    <div class="profile-section">
-                        <h3 class="section-title">
-                            <i class="fas fa-history me-2"></i> Actividad Reciente
-                        </h3>
-                        <div class="activity-list" id="activityList">
-                            <div class="activity-item">
-                                <div class="activity-icon">
-                                    <i class="fas fa-play-circle"></i>
-                                </div>
-                                <div class="activity-content">
-                                    <p class="activity-text">Continuaste con el curso "JavaScript desde Cero"</p>
-                                    <small class="activity-time">Hace 2 horas</small>
-                                </div>
-                            </div>
-                            <div class="activity-item">
-                                <div class="activity-icon">
-                                    <i class="fas fa-check-circle"></i>
-                                </div>
-                                <div class="activity-content">
-                                    <p class="activity-text">Completaste la tarea "Quiz: Fundamentos JS"</p>
-                                    <small class="activity-time">Hace 1 día</small>
-                                </div>
-                            </div>
-                            <div class="activity-item">
-                                <div class="activity-icon">
-                                    <i class="fas fa-certificate"></i>
-                                </div>
-                                <div class="activity-content">
-                                    <p class="activity-text">Obtuviste el certificado "HTML y CSS Básico"</p>
-                                    <small class="activity-time">Hace 3 días</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Sidebar -->
-                <div class="col-lg-4">
-                    <!-- Quick Actions -->
-                    <div class="profile-section">
-                        <h3 class="section-title">
-                            <i class="fas fa-bolt me-2"></i> Acciones Rápidas
-                        </h3>
-                        <div class="quick-actions">
-                            <a href="./courses.html" class="quick-action-item">
-                                <i class="fas fa-book me-2"></i>
-                                Ver Mis Cursos
-                            </a>
-                            <a href="./settings.html" class="quick-action-item">
-                                <i class="fas fa-cog me-2"></i>
-                                Configuración
-                            </a>
-                            <a href="../html/cursos-venta.html" class="quick-action-item">
-                                <i class="fas fa-plus me-2"></i>
-                                Explorar Nuevos Cursos
-                            </a>
-                            <a href="#" class="quick-action-item" onclick="downloadCertificate()">
-                                <i class="fas fa-download me-2"></i>
-                                Descargar Certificados
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Security Status -->
-                    <div class="profile-section">
-                        <h3 class="section-title">
-                            <i class="fas fa-shield-alt me-2"></i> Estado de Seguridad
-                        </h3>
-                        <div class="security-status">
-                            <div class="security-item">
-                                <i class="fas fa-check-circle text-success me-2"></i>
-                                <span>Email verificado</span>
-                            </div>
-                            <div class="security-item">
-                                <i class="fas fa-check-circle text-success me-2"></i>
-                                <span>Sesión activa</span>
-                            </div>
-                            <div class="security-item">
-                                <i class="fas fa-exclamation-circle text-warning me-2"></i>
-                                <span>Cambiar contraseña</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                </div>
+            <div class="act-item">
+              <div class="act-ico ai-check"><i class="fas fa-check-circle"></i></div>
+              <div class="act-body">
+                <div class="act-text">Completaste <strong>Quiz: Fundamentos JS</strong></div>
+                <div class="act-time">Hace 1 día</div>
+              </div>
             </div>
+            <div class="act-item">
+              <div class="act-ico ai-cert"><i class="fas fa-certificate"></i></div>
+              <div class="act-body">
+                <div class="act-text">Obtuviste el certificado <strong>HTML y CSS Básico</strong></div>
+                <div class="act-time">Hace 3 días</div>
+              </div>
+            </div>
+            <div class="act-item">
+              <div class="act-ico ai-star"><i class="fas fa-star"></i></div>
+              <div class="act-body">
+                <div class="act-text">Calificaste con 5 estrellas el curso <strong>UX/UI Design</strong></div>
+                <div class="act-time">Hace 5 días</div>
+              </div>
+            </div>
+          </div>
         </div>
-    </main>
+      </div>
 
-    <!-- Footer -->
-    <footer class="bg-dark text-light py-3 mt-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-4 mb-3">
-                    <img src="../img/LuminaLogoNoText.webp" alt="Logo" style="width: 40px; height: 40px;">
-                    <p class="mt-2 mb-2" style="font-size: 0.9rem;">Iluminando el futuro del aprendizaje en línea.</p>
-                    <div class="mt-2">
-                        <a href="#" class="text-light me-2"><i class="fab fa-facebook"></i></a>
-                        <a href="#" class="text-light me-2"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="text-light me-2"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="text-light me-2"><i class="fab fa-linkedin"></i></a>
-                        <a href="#" class="text-light"><i class="fab fa-youtube"></i></a>
-                    </div>
-                </div>
-
-                <div class="col-lg-2 col-md-6 mb-3">
-                    <h6>Enlaces</h6>
-                    <a href="../index.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-home me-1"></i> Inicio</a>
-                    <a href="cursos-venta.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-book me-1"></i> Cursos</a>
-                    <a href="blog.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-blog me-1"></i> Blog</a>
-                    <a href="contact.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-envelope me-1"></i> Contacto</a>
-                </div>
-
-                <div class="col-lg-2 col-md-6 mb-3">
-                    <h6>Mi cuenta</h6>
-                    <a href="courses.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-graduation-cap me-1"></i> Mis Cursos</a>
-                    <a href="calendar.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-calendar me-1"></i> Calendario</a>
-                    <a href="schedule.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-clock me-1"></i> Horario</a>
-                    <a href="profile.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-user me-1"></i> Perfil</a>
-                </div>
-
-                <div class="col-lg-4 mb-3">
-                    <h6>Contacto</h6>
-                    <p class="mb-1" style="font-size: 0.85rem;"><i class="fas fa-map-marker-alt me-1"></i> 123 Calle Universidad, Ciudad</p>
-                    <p class="mb-1" style="font-size: 0.85rem;"><i class="fas fa-phone me-1"></i> +1 234 567 8900</p>
-                    <p class="mb-1" style="font-size: 0.85rem;"><i class="fas fa-envelope me-1"></i> luminalearning.mx@gmail.com</p>
-                    <a href="contact.html" class="btn btn-outline-light btn-sm mt-1">Contáctanos</a>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-12 text-center">
-                    <p class="mb-0" style="font-size: 0.8rem;">© <span id="currentYear"></span> Lumina Learning. Todos los derechos reservados.</p>
-                </div>
-            </div>
+      <!-- Right -->
+      <div>
+        <!-- Quick actions -->
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title"><i class="fas fa-bolt"></i> Acciones Rápidas</div>
+          </div>
+          <a class="qa-item" href="courses.html">
+            <div class="qa-ico" style="background:rgba(99,102,241,.15);color:var(--accent)"><i class="fas fa-book"></i></div>
+            <span class="qa-text">Ver Mis Cursos</span>
+            <i class="fas fa-chevron-right qa-arrow"></i>
+          </a>
+          <a class="qa-item" href="settings.html">
+            <div class="qa-ico" style="background:rgba(245,158,11,.15);color:var(--amber)"><i class="fas fa-cog"></i></div>
+            <span class="qa-text">Configuración</span>
+            <i class="fas fa-chevron-right qa-arrow"></i>
+          </a>
+          <a class="qa-item" href="cursos-venta.html">
+            <div class="qa-ico" style="background:rgba(16,185,129,.15);color:var(--emerald)"><i class="fas fa-plus"></i></div>
+            <span class="qa-text">Explorar Cursos</span>
+            <i class="fas fa-chevron-right qa-arrow"></i>
+          </a>
+          <a class="qa-item" href="#" onclick="downloadCertificate()">
+            <div class="qa-ico" style="background:rgba(14,165,233,.15);color:var(--sky)"><i class="fas fa-download"></i></div>
+            <span class="qa-text">Descargar Certificados</span>
+            <i class="fas fa-chevron-right qa-arrow"></i>
+          </a>
         </div>
-    </footer>
 
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../js/auth0-config.js"></script>
-    <script>
-        // Objeto del carrito
-        const cart = {
-            items: [],
-            total: 0,
+        <!-- Security status -->
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title"><i class="fas fa-shield-alt"></i> Estado de Seguridad</div>
+          </div>
+          <div class="sec-item">
+            <div class="sec-dot sec-ok"></div>
+            <span class="sec-txt">Email verificado</span>
+          </div>
+          <div class="sec-item">
+            <div class="sec-dot sec-ok"></div>
+            <span class="sec-txt">Sesión activa</span>
+          </div>
+          <div class="sec-item">
+            <div class="sec-dot sec-warn"></div>
+            <span class="sec-txt">Cambiar contraseña recomendado</span>
+          </div>
+        </div>
+      </div>
+    </div>
 
-            addItem: function (item) {
-                const existingItem = this.items.find(cartItem => cartItem.id === item.id);
-                if (existingItem) {
-                    existingItem.quantity += 1;
-                } else {
-                    this.items.push({ ...item, quantity: 1 });
-                }
-                this.calculateTotal();
-                this.updateUI();
-                this.saveToLocalStorage();
+  </main>
 
-                // Mostrar toast
-                const toast = new bootstrap.Toast(document.getElementById('addedToCartToast'));
-                toast.show();
-            },
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../js/auth0-config.js"></script>
+  <script>
+    function editProfile() { window.location.href = 'settings.html'; }
+    function viewSettings() { window.location.href = 'settings.html'; }
+    function editAvatar() { alert('Función de cambio de avatar disponible próximamente.'); }
+    function downloadCertificate() { alert('Tus certificados se están preparando para descarga.'); }
 
-            removeItem: function (id) {
-                // Convertir id a string para comparación consistente
-                const itemId = String(id);
-                this.items = this.items.filter(item => String(item.id) !== itemId);
-                this.calculateTotal();
-                this.updateUI();
-                this.saveToLocalStorage();
-            },
+    async function handleLogout() {
+      localStorage.removeItem('user');
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('rememberMe');
+      try { await fetch('/auth/logout', { method: 'POST', credentials: 'include' }); } catch(_) {}
+      window.location.href = '/html/login.html';
+    }
 
-            calculateTotal: function () {
-                this.total = this.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            },
-
-            updateUI: function () {
-                // Actualizar contador
-                const totalItems = this.items.reduce((sum, item) => sum + item.quantity, 0);
-                document.getElementById('cartCount').textContent = totalItems;
-
-                // Actualizar lista de items
-                const cartItemsContainer = document.getElementById('cartItems');
-                cartItemsContainer.innerHTML = '';
-
-                if (this.items.length === 0) {
-                    cartItemsContainer.innerHTML = '<p class="text-muted text-center py-2">Tu carrito está vacío</p>';
-                } else {
-                    this.items.forEach(item => {
-                        const itemElement = document.createElement('div');
-                        itemElement.className = 'cart-item d-flex justify-content-between align-items-center py-2';
-                        itemElement.innerHTML = `
-                            <img src="${item.image}" class="cart-item-img rounded" width="40" height="40" alt="${item.title}">
-                            <div class="flex-grow-1 mx-3">
-                                <div class="cart-item-title">${item.title}</div>
-                                <small class="text-muted">${item.quantity} x $${item.price.toFixed(2)}</small>
-                            </div>
-                            <span class="cart-item-price fw-bold">$${(item.price * item.quantity).toFixed(2)}</span>
-                            <button class="btn btn-sm btn-outline-danger remove-item ms-2" data-id="${item.id}" aria-label="Eliminar">
-                                &times;
-                            </button>
-                        `;
-                        cartItemsContainer.appendChild(itemElement);
-                    });
-                }
-
-                // Actualizar subtotal
-                document.getElementById('cartSubtotal').textContent = `$${this.total.toFixed(2)}`;
-            },
-
-            saveToLocalStorage: function () {
-                localStorage.setItem('shoppingCart', JSON.stringify(this.items));
-            },
-
-            loadFromLocalStorage: function () {
-                const savedCart = localStorage.getItem('shoppingCart');
-                if (savedCart) {
-                    this.items = JSON.parse(savedCart);
-                    this.calculateTotal();
-                    this.updateUI();
-                }
-            },
-
-            init: function () {
-                this.loadFromLocalStorage();
-
-                // Delegación de eventos para los botones de eliminar
-                document.addEventListener('click', (e) => {
-                    if (e.target.classList.contains('remove-item')) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        const itemId = e.target.getAttribute('data-id');
-                        if (itemId) {
-                            this.removeItem(itemId);
-                        }
-                    }
-                });
-            }
-        };
-
-        // Inicializar el carrito
-        cart.init();
-
-        // Verificar autenticación y actualizar navbar
-        async function checkAuthAndUpdateNavbar() {
-            try {
-                await Auth0Service.initialize();
-                const isAuthenticated = await Auth0Service.isAuthenticated();
-                
-                if (isAuthenticated) {
-                    const user = await Auth0Service.getUser();
-                    updateUserNavbar(user);
-                } else {
-                    showLoginButton();
-                }
-            } catch (error) {
-                console.error('Error verificando autenticación:', error);
-                showLoginButton();
-            }
+    document.addEventListener('DOMContentLoaded', () => {
+      try {
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        if (user.name || user.email) {
+          const name = user.name || user.email.split('@')[0];
+          document.querySelectorAll('#profileName').forEach(el => el.textContent = name);
+          document.getElementById('fullName').textContent = name;
+          if (user.email) {
+            document.querySelectorAll('#profileEmail').forEach(el => el.textContent = user.email);
+            document.getElementById('userEmailDisplay').textContent = user.email;
+          }
         }
-
-        function updateUserNavbar(user) {
-            // Ocultar botón de login
-            document.getElementById('loginButtonContainer').style.display = 'none';
-            
-            // Mostrar dropdown del usuario
-            const userContainer = document.getElementById('userDropdownContainer');
-            userContainer.style.display = 'block';
-            
-            // Actualizar información del usuario
-            const userName = user.name || user.email.split('@')[0];
-            const userEmail = user.email;
-            
-            // Determinar el rol del usuario
-            let userRole = 'student';
-            if (userEmail === 'admin@gmail.com') {
-                userRole = 'admin';
-            } else if (userEmail === 'profesor@gmail.com') {
-                userRole = 'teacher';
-            } else if (userEmail === 'estudiante@gmail.com') {
-                userRole = 'student';
-            } else {
-                userRole = user.role || 'student';
-            }
-            
-            // Avatar basado en el rol usando íconos
-            let avatarIcon = 'fa-user-circle';
-            if (userRole === 'admin') {
-                avatarIcon = 'fa-user-shield';
-            } else if (userRole === 'teacher') {
-                avatarIcon = 'fa-chalkboard-teacher';
-            } else {
-                avatarIcon = 'fa-user-graduate';
-            }
-            
-            // Actualizar elementos del navbar
-            document.getElementById('userName').textContent = userName;
-            document.getElementById('userNameLarge').textContent = userName;
-            document.getElementById('userEmail').textContent = userEmail;
-            document.getElementById('userAvatarIcon').className = `fas ${avatarIcon} me-1`;
-            document.getElementById('userAvatarLargeIcon').className = `fas ${avatarIcon} me-2`;
-            
-            // Mostrar/ocultar botón "Mis Cursos" según el rol
-            const misCursosContainer = document.getElementById('misCursosContainer');
-            if (userRole === 'student' || userEmail === 'estudiante@gmail.com') {
-                misCursosContainer.style.display = 'block';
-                console.log('Mostrando botón Mis Cursos para estudiante:', userEmail);
-            } else {
-                misCursosContainer.style.display = 'none';
-                console.log('Ocultando botón Mis Cursos para rol:', userRole);
-            }
-            
-            // Inicializar carrito para usuarios autenticados
-            if (window.cart && typeof window.cart.init === 'function') {
-                window.cart.init();
-            }
-        }
-
-        function showLoginButton() {
-            // Mostrar botón de login
-            document.getElementById('loginButtonContainer').style.display = 'block';
-            
-            // Ocultar dropdown del usuario
-            document.getElementById('userDropdownContainer').style.display = 'none';
-
-            // Ocultar botón "Mis Cursos"
-            document.getElementById('misCursosContainer').style.display = 'none';
-        }
-
-        // Función para manejar el logout
-        function handleLogout() {
-            Auth0Service.logout();
-            showLoginButton();
-            window.location.href = '../index.html';
-        }
-
-        // Inicializar verificación de autenticación
-        document.addEventListener('DOMContentLoaded', function() {
-            checkAuthAndUpdateNavbar();
-            updateProfileInfo();
-        });
-
-        // Funciones adicionales para el perfil
-        function editAvatar() {
-            alert('Función de edición de avatar en desarrollo');
-        }
-
-        function editProfile() {
-            window.location.href = 'settings.html';
-        }
-
-        function viewSettings() {
-            window.location.href = 'settings.html';
-        }
-
-        function downloadCertificate() {
-            alert('Función de descarga de certificados en desarrollo');
-        }
-
-        function updateProfileInfo() {
-            // Cargar datos del usuario desde localStorage si están disponibles
-            const userData = localStorage.getItem('auth0.user');
-            if (userData) {
-                try {
-                    const user = JSON.parse(userData);
-                    updateProfileDisplay(user);
-                } catch (error) {
-                    console.error('Error parsing user data:', error);
-                }
-            }
-        }
-
-        function updateProfileDisplay(user) {
-            const userName = user.name || user.email.split('@')[0];
-            const userEmail = user.email;
-            const userRole = user.role || 'student';
-            
-            // Avatar basado en el rol usando íconos
-            let avatarIcon = 'fa-user-circle';
-            if (userRole === 'admin') {
-                avatarIcon = 'fa-user-shield';
-            } else if (userRole === 'teacher') {
-                avatarIcon = 'fa-chalkboard-teacher';
-            } else {
-                avatarIcon = 'fa-user-graduate';
-            }
-            
-            // Actualizar elementos del perfil
-            document.getElementById('profileAvatarIcon').className = `fas ${avatarIcon} profile-avatar-icon`;
-            document.getElementById('profileName').textContent = userName;
-            document.getElementById('profileEmail').textContent = userEmail;
-            document.getElementById('userEmailDisplay').textContent = userEmail;
-            document.getElementById('userRoleDisplay').textContent = userRole === 'admin' ? 'Administrador' : 
-                                                                   userRole === 'teacher' ? 'Profesor' : 'Estudiante';
-            
-            // Actualizar badge del perfil
-            const profileRole = document.getElementById('profileRole');
-            profileRole.innerHTML = `<i class="fas ${avatarIcon} me-1"></i><span>${userRole === 'admin' ? 'Administrador' : 
-                                                                                    userRole === 'teacher' ? 'Profesor' : 'Estudiante'}</span>`;
-            
-            // Actualizar formulario si hay datos guardados
-            const savedSettings = localStorage.getItem('userSettings');
-            if (savedSettings) {
-                try {
-                    const settings = JSON.parse(savedSettings);
-                    document.getElementById('fullName').textContent = settings.fullName || userName;
-                    document.getElementById('userPhone').textContent = settings.phone || '+52 55 1234 5678';
-                    document.getElementById('userCountry').textContent = settings.country === 'MX' ? 'México' : 
-                                                                       settings.country === 'ES' ? 'España' : 
-                                                                       settings.country === 'AR' ? 'Argentina' : 
-                                                                       settings.country === 'CO' ? 'Colombia' : 
-                                                                       settings.country === 'PE' ? 'Perú' : 
-                                                                       settings.country === 'CL' ? 'Chile' : 
-                                                                       settings.country === 'US' ? 'Estados Unidos' : 'México';
-                } catch (error) {
-                    console.error('Error parsing saved settings:', error);
-                }
-            }
-        }
-    </script>
+        document.getElementById('currentYear') && (document.getElementById('currentYear').textContent = new Date().getFullYear());
+      } catch(e) {}
+    });
+  </script>
+  <!-- Hidden elements for JS compatibility -->
+  <span id="currentYear" style="display:none"></span>
 </body>
-</html> 
+</html>

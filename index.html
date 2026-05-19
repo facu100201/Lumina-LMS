@@ -1,16 +1,19 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Campus Virtual - Universidad</title>
-    <meta name="description" content="Plataforma LMS para gestión académica universitaria">
-    <meta name="keywords" content="LMS, educación, universidad, cursos online">
-    <meta property="og:title" content="Campus Virtual - Universidad">
-    <meta property="og:description" content="Plataforma LMS para gestión académica universitaria">
-    <meta name="twitter:title" content="Campus Virtual - Universidad">
-    <meta name="twitter:description" content="Plataforma LMS para gestión académica universitaria">
+    <title>Lumina LMS — Plataforma Educativa</title>
+    <meta name="description" content="Lumina LMS — Plataforma moderna de aprendizaje en línea">
+    <meta name="keywords" content="LMS, educación, cursos online, Lumina, aprendizaje">
+    <meta property="og:title" content="Lumina LMS — Plataforma Educativa">
+    <meta property="og:description" content="Lumina LMS — Plataforma moderna de aprendizaje en línea">
+    <meta name="twitter:title" content="Lumina LMS — Plataforma Educativa">
+    <meta name="twitter:description" content="Lumina LMS — Plataforma moderna de aprendizaje en línea">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <link href="styles/main.css" rel="stylesheet">
@@ -115,7 +118,7 @@
                             <i id="userAvatarIcon" class="fas fa-user-circle me-1" style="font-size: 24px;"></i>
                             <span id="userName">Usuario</span>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <ul class="dropdown-menu dropdown-menu-end" id="userDropdownMenu" aria-labelledby="userDropdown">
                             <li>
                                 <div class="dropdown-header">
                                     <div class="d-flex align-items-center">
@@ -147,268 +150,339 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
+    <!-- ═══════════════════════════════════════════
+         HERO SECTION
+    ═══════════════════════════════════════════ -->
     <section class="hero-section">
-        <video autoplay muted loop class="hero-video">
+        <video autoplay muted loop playsinline class="hero-video">
             <source src="./video/BackgroundTechFinal.mp4" type="video/mp4">
-            Tu navegador no soporta videos HTML5.
         </video>
         <div class="hero-overlay"></div>
         <div class="hero-content">
-            <img src="./img/LuminaLogoNoTextBlanco.webp" alt="Logo Campus Virtual" class="hero-logo">
-            <h1 class="hero-title">Lumina Learning</h1>
-            <p class="hero-subtitle">Iluminando el futuro del aprendizaje en línea.</p>
+            <span class="hero-badge">
+                <i class="fas fa-star"></i> Plataforma Educativa #1
+            </span>
+            <img src="./img/LuminaLogoNoTextBlanco.webp" alt="Logo Lumina" class="hero-logo">
+            <h1 class="hero-title">
+                <span class="hero-gradient">Lumina</span> Learning
+            </h1>
+            <p class="hero-subtitle">
+                Iluminando el futuro del aprendizaje en línea. Cursos de calidad,
+                certificados reconocidos y una comunidad global de aprendices.
+            </p>
             <div class="hero-cta">
                 <a href="./html/cursos-venta.html" class="btn btn-primary btn-lg hero-btn">
-                    <i class="fas fa-book me-2"></i>Explorar Cursos
+                    <i class="fas fa-rocket"></i> Explorar Cursos
                 </a>
                 <a href="./html/contact.html" class="btn btn-outline-light btn-lg hero-btn">
-                    <i class="fas fa-envelope me-2"></i>Contáctanos
+                    <i class="fas fa-envelope"></i> Contáctanos
                 </a>
+            </div>
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <span class="hero-stat-number">10K+</span>
+                    <span class="hero-stat-label">Estudiantes</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="hero-stat-number">120+</span>
+                    <span class="hero-stat-label">Cursos</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="hero-stat-number">98%</span>
+                    <span class="hero-stat-label">Satisfacción</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="hero-stat-number">50+</span>
+                    <span class="hero-stat-label">Instructores</span>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Main Content -->
+    <!-- ═══════════════════════════════════════════
+         MAIN CONTENT
+    ═══════════════════════════════════════════ -->
     <main class="main-content">
         <div class="container">
-            <!-- Sección Quiénes Somos -->
-            <h2 class="section-title text-center">¿Quiénes somos?</h2>
-            <h5 class="index-desc">Somos una plataforma educativa digital comprometida con hacer el aprendizaje
-                accesible, práctico y transformador. Nacimos para romper las barreras de la educación tradicional,
-                ofreciendo cursos en línea de alta calidad a precios asequibles, diseñados para estudiantes,
-                profesionales y lifelong learners que buscan crecer sin límites.</h5>
 
-            <!-- Misión, Visión y Valores -->
-            <section class="mission-section mb-5">
-                <div class="info-sections">
-                    <div class="row g-4">
-                        <div class="col-md-6 col-lg-4">
-                            <div class="card h-100">
-                                <div class="card-body text-center">
-                                    <i class="fas fa-bullseye fa-3x text-primary mb-3"></i>
-                                    <h5 class="card-title">Nuestra Misión</h5>
-                                    <p class="card-text">Formar profesionales íntegros y competentes, comprometidos con
-                                        el desarrollo sostenible.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-4">
-                            <div class="card h-100">
-                                <div class="card-body text-center">
-                                    <i class="fas fa-eye fa-3x text-success mb-3"></i>
-                                    <h5 class="card-title">Nuestra Visión</h5>
-                                    <p class="card-text">Ser una institución educativa líder en innovación académica y
-                                        tecnológica.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-4">
-                            <div class="card h-100">
-                                <div class="card-body text-center">
-                                    <i class="fas fa-heart fa-3x text-danger mb-3"></i>
-                                    <h5 class="card-title">Nuestros Valores</h5>
-                                    <ul class="list-unstyled">
-                                        <li><i class="fas fa-check text-success me-2"></i>Excelencia Académica</li>
-                                        <li><i class="fas fa-check text-success me-2"></i>Integridad</li>
-                                        <li><i class="fas fa-check text-success me-2"></i>Responsabilidad Social</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Cómo funciona la plataforma -->
-            <section class="how-it-works-section mb-5">
-                <div class="section-header text-center mb-5">
-                    <h2 class="section-title">¿Cómo funciona nuestra plataforma?</h2>
-                    <p class="index-desc">Descubre el proceso simple y efectivo para comenzar tu aprendizaje</p>
-                </div>
-                <div class="row steps-container">
-                    <!-- Paso 1 -->
-                    <div class="col-md-6 col-lg-3 step-item">
-                        <div class="step-number">1</div>
-                        <div class="step-icon">
-                            <i class="fas fa-search fa-2x" style="color: #1e3a8a; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); filter: drop-shadow(3px 3px 6px rgba(30,58,138,0.4));"></i>
-                        </div>
-                        <h5 class="step-title">Explora nuestros cursos</h5>
-                        <p class="step-description">Encuentra el curso
-                            perfecto para tus necesidades de aprendizaje.</p>
-                    </div>
-
-                    <!-- Paso 2 -->
-                    <div class="col-md-6 col-lg-3 step-item">
-                        <div class="step-number">2</div>
-                        <div class="step-icon">
-                            <i class="fas fa-shopping-cart fa-2x" style="color: #3b82f6; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); filter: drop-shadow(3px 3px 6px rgba(59,130,246,0.4));"></i>
-                        </div>
-                        <h5 class="step-title">Realiza tu compra</h5>
-                        <p class="step-description">Elige el curso que deseas y completa el proceso de
-                            compra de forma segura.</p>
-                    </div>
-
-                    <!-- Paso 3 -->
-                    <div class="col-md-6 col-lg-3 step-item">
-                        <div class="step-number">3</div>
-                        <div class="step-icon">
-                            <i class="fas fa-book-open fa-2x" style="color: #60a5fa; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); filter: drop-shadow(3px 3px 6px rgba(96,165,250,0.4));"></i>
-                        </div>
-                        <h5 class="step-title">Completa el curso</h5>
-                        <p class="step-description">Accede al contenido, realiza las actividades y
-                            avanza a tu propio ritmo.</p>
-                    </div>
-
-                    <!-- Paso 4 -->
-                    <div class="col-md-6 col-lg-3 step-item">
-                        <div class="step-number">4</div>
-                        <div class="step-icon">
-                            <i class="fas fa-certificate fa-2x" style="color: #93c5fd; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); filter: drop-shadow(3px 3px 6px rgba(147,197,253,0.4));"></i>
-                        </div>
-                        <h5 class="step-title">Obtén tu certificado</h5>
-                        <p class="step-description">Al finalizar, recibe tu certificado digital que
-                            acredita tu aprendizaje.</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Cursos Destacados -->
-            <section class="featured-courses">
+            <!-- ── Quiénes Somos ──────────────────── -->
+            <section class="py-5" data-animate>
                 <div class="section-header">
+                    <span class="section-label">Nuestra historia</span>
+                    <h2 class="section-title">¿Quiénes somos?</h2>
+                    <p class="section-subtitle">
+                        Somos una plataforma educativa digital comprometida con hacer el aprendizaje
+                        accesible, práctico y transformador. Nacimos para romper las barreras de la
+                        educación tradicional, ofreciendo cursos en línea de alta calidad a precios
+                        asequibles para estudiantes, profesionales y lifelong learners.
+                    </p>
+                </div>
+            </section>
+
+            <!-- ── Misión, Visión y Valores ──────── -->
+            <section class="mission-section mb-5">
+                <div class="row g-4">
+                    <div class="col-md-6 col-lg-4" data-animate data-animate-delay="1">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <div class="card-icon" style="background:var(--clr-primary-50);color:var(--color-primary);">
+                                    <i class="fas fa-bullseye"></i>
+                                </div>
+                                <h5 class="card-title">Nuestra Misión</h5>
+                                <p class="card-text">Formar profesionales íntegros y competentes,
+                                    comprometidos con el desarrollo sostenible y la innovación.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4" data-animate data-animate-delay="2">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <div class="card-icon" style="background:#ecfdf5;color:#059669;">
+                                    <i class="fas fa-eye"></i>
+                                </div>
+                                <h5 class="card-title">Nuestra Visión</h5>
+                                <p class="card-text">Ser una institución educativa líder en innovación
+                                    académica y tecnológica a nivel latinoamericano.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4" data-animate data-animate-delay="3">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <div class="card-icon" style="background:#fff7ed;color:#ea580c;">
+                                    <i class="fas fa-heart"></i>
+                                </div>
+                                <h5 class="card-title">Nuestros Valores</h5>
+                                <ul class="list-unstyled mt-3 text-start" style="color:var(--text-secondary);font-size:.9rem;">
+                                    <li class="d-flex align-items-center gap-2 mb-2">
+                                        <i class="fas fa-check-circle text-success"></i> Excelencia Académica
+                                    </li>
+                                    <li class="d-flex align-items-center gap-2 mb-2">
+                                        <i class="fas fa-check-circle text-success"></i> Integridad
+                                    </li>
+                                    <li class="d-flex align-items-center gap-2">
+                                        <i class="fas fa-check-circle text-success"></i> Responsabilidad Social
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── Cómo Funciona ─────────────────── -->
+            <section class="how-it-works-section py-5 mb-4">
+                <div class="section-header">
+                    <span class="section-label">Proceso simple</span>
+                    <h2 class="section-title">¿Cómo funciona nuestra plataforma?</h2>
+                    <p class="section-subtitle">
+                        Cuatro pasos simples para comenzar tu camino de aprendizaje
+                    </p>
+                </div>
+                <div class="steps-container">
+                    <div class="step-item" data-animate data-animate-delay="1">
+                        <div class="step-number">1</div>
+                        <div class="step-icon"><i class="fas fa-search"></i></div>
+                        <h5 class="step-title">Explora cursos</h5>
+                        <p class="step-description">Encuentra el programa perfecto para tus objetivos de aprendizaje.</p>
+                    </div>
+                    <div class="step-item" data-animate data-animate-delay="2">
+                        <div class="step-number">2</div>
+                        <div class="step-icon"><i class="fas fa-shopping-cart"></i></div>
+                        <h5 class="step-title">Realiza tu compra</h5>
+                        <p class="step-description">Proceso de pago seguro en pocos clics, múltiples métodos.</p>
+                    </div>
+                    <div class="step-item" data-animate data-animate-delay="3">
+                        <div class="step-number">3</div>
+                        <div class="step-icon"><i class="fas fa-play-circle"></i></div>
+                        <h5 class="step-title">Aprende a tu ritmo</h5>
+                        <p class="step-description">Accede a videos, lecturas y actividades interactivas cuando quieras.</p>
+                    </div>
+                    <div class="step-item" data-animate data-animate-delay="4">
+                        <div class="step-number">4</div>
+                        <div class="step-icon"><i class="fas fa-certificate"></i></div>
+                        <h5 class="step-title">Obtén tu certificado</h5>
+                        <p class="step-description">Recibe un certificado digital que acredita tu aprendizaje.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── Cursos Destacados ──────────────── -->
+            <section class="featured-courses py-5">
+                <div class="section-header">
+                    <span class="section-label">Lo más popular</span>
                     <h2 class="section-title">Cursos Destacados</h2>
-                    <h5 class="index-desc">Descubre nuestros programas más populares y comienza tu viaje de
-                        aprendizaje hoy mismo</h5>
+                    <p class="section-subtitle">
+                        Nuestros programas más populares, avalados por miles de estudiantes
+                    </p>
                 </div>
 
-                <div class="row">
+                <div class="row g-4">
                     <!-- Curso 1 -->
-                    <div class="col-md-6 col-lg-3">
+                    <div class="col-md-6 col-lg-3" data-animate data-animate-delay="1">
                         <div class="course-card" data-id="1">
-                            <img src="https://images.unsplash.com/photo-1499750310107-5fef28a66643?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
-                                class="course-img" alt="Marketing Digital">
+                            <div class="course-img-wrapper">
+                                <img src="https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=600&q=70"
+                                    class="course-img" alt="Marketing Digital" loading="lazy">
+                                <div class="course-img-overlay">
+                                    <span class="tag tag-sky">Marketing</span>
+                                </div>
+                            </div>
                             <div class="course-body">
+                                <span class="course-badge">Más vendido</span>
                                 <h3 class="course-title">Mundo Spiral</h3>
                                 <p class="course-subtitle">Marketing Digital Avanzado</p>
-                                <p class="course-text">Domina las últimas estrategias de marketing digital y posiciona
-                                    tu marca en el mundo digital.</p>
+                                <p class="course-text">Domina las estrategias de marketing digital y posiciona tu marca.</p>
                                 <div class="course-meta">
                                     <span class="course-price">$349</span>
-                                    <a href="#" class="btn btn-sm btn-primary course-btn">Comprar</a>
+                                    <button class="btn btn-sm btn-primary course-btn">
+                                        <i class="fas fa-cart-plus"></i> Comprar
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                     <!-- Curso 2 -->
-                    <div class="col-md-6 col-lg-3">
+                    <div class="col-md-6 col-lg-3" data-animate data-animate-delay="2">
                         <div class="course-card" data-id="2">
-                            <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
-                                class="course-img" alt="Desarrollo Web">
+                            <div class="course-img-wrapper">
+                                <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=600&q=70"
+                                    class="course-img" alt="Desarrollo Web" loading="lazy">
+                                <div class="course-img-overlay">
+                                    <span class="tag tag-primary">Desarrollo</span>
+                                </div>
+                            </div>
                             <div class="course-body">
-                                <h3 class="course-title">Desarrollo Web Full Stack</h3>
+                                <span class="course-badge">Nuevo</span>
+                                <h3 class="course-title">Web Full Stack</h3>
                                 <p class="course-subtitle">De principiante a experto</p>
-                                <p class="course-text">Aprende a crear aplicaciones web completas con las tecnologías
-                                    más demandadas del mercado.</p>
+                                <p class="course-text">Crea aplicaciones web completas con las tecnologías más demandadas.</p>
                                 <div class="course-meta">
                                     <span class="course-price">$349</span>
-                                    <a href="#" class="btn btn-sm btn-primary course-btn">Comprar</a>
+                                    <button class="btn btn-sm btn-primary course-btn">
+                                        <i class="fas fa-cart-plus"></i> Comprar
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                     <!-- Curso 3 -->
-                    <div class="col-md-6 col-lg-3">
+                    <div class="col-md-6 col-lg-3" data-animate data-animate-delay="3">
                         <div class="course-card" data-id="3">
-                            <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
-                                class="course-img" alt="Inversiones">
+                            <div class="course-img-wrapper">
+                                <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=600&q=70"
+                                    class="course-img" alt="Inversiones" loading="lazy">
+                                <div class="course-img-overlay">
+                                    <span class="tag tag-success">Finanzas</span>
+                                </div>
+                            </div>
                             <div class="course-body">
+                                <span class="course-badge">Destacado</span>
                                 <h3 class="course-title">Inversiones Financieras</h3>
                                 <p class="course-subtitle">Gestión de portafolios</p>
-                                <p class="course-text">Aprende a invertir de manera inteligente y haz crecer tu capital
-                                    con estrategias comprobadas.</p>
+                                <p class="course-text">Invierte de manera inteligente y haz crecer tu capital.</p>
                                 <div class="course-meta">
                                     <span class="course-price">$349</span>
-                                    <a href="#" class="btn btn-sm btn-primary course-btn">Comprar</a>
+                                    <button class="btn btn-sm btn-primary course-btn">
+                                        <i class="fas fa-cart-plus"></i> Comprar
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                     <!-- Curso 4 -->
-                    <div class="col-md-6 col-lg-3">
+                    <div class="col-md-6 col-lg-3" data-animate data-animate-delay="4">
                         <div class="course-card" data-id="4">
-                            <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
-                                class="course-img" alt="Meta Finance">
+                            <div class="course-img-wrapper">
+                                <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=600&q=70"
+                                    class="course-img" alt="Meta Finance" loading="lazy">
+                                <div class="course-img-overlay">
+                                    <span class="tag tag-warning">Avanzado</span>
+                                </div>
+                            </div>
                             <div class="course-body">
+                                <span class="course-badge">Premium</span>
                                 <h3 class="course-title">Meta-finance®</h3>
                                 <p class="course-subtitle">Estrategias avanzadas</p>
-                                <p class="course-text">Descubre el revolucionario método Meta-finance® para maximizar
-                                    tus ganancias financieras.</p>
+                                <p class="course-text">El método Meta-finance® para maximizar tus ganancias financieras.</p>
                                 <div class="course-meta">
                                     <span class="course-price">$349</span>
-                                    <a href="#" class="btn btn-sm btn-primary course-btn">Comprar</a>
+                                    <button class="btn btn-sm btn-primary course-btn">
+                                        <i class="fas fa-cart-plus"></i> Comprar
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="view-all">
-                    <a href="./html/cursos-venta.html" class="btn mis-cursos-btn">
+                <div class="text-center mt-5">
+                    <a href="./html/cursos-venta.html" class="btn btn-primary btn-lg">
                         Ver todos los cursos <i class="fas fa-arrow-right ms-2"></i>
                     </a>
                 </div>
             </section>
-        </div>
+
+        </div><!-- /container -->
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-dark text-light py-3 mt-5">
+    <!-- ═══════════════════════════════════════════
+         FOOTER
+    ═══════════════════════════════════════════ -->
+    <footer class="footer">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-4 mb-3">
-                    <img src="./img/LuminaLogoNoText.webp" alt="Logo" style="width: 40px; height: 40px;">
-                    <p class="mt-2 mb-2" style="font-size: 0.9rem;">Iluminando el futuro del aprendizaje en línea.</p>
-                    <div class="mt-2">
-                        <a href="#" class="text-light me-2"><i class="fab fa-facebook"></i></a>
-                        <a href="#" class="text-light me-2"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="text-light me-2"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="text-light me-2"><i class="fab fa-linkedin"></i></a>
-                        <a href="#" class="text-light"><i class="fab fa-youtube"></i></a>
+            <div class="row g-5">
+                <!-- Brand -->
+                <div class="col-lg-4">
+                    <img src="./img/LuminaLogoNoText.webp" alt="Lumina Logo" class="footer-logo">
+                    <p class="footer-brand-name">Lumina Learning</p>
+                    <p class="footer-tagline">
+                        Iluminando el futuro del aprendizaje en línea con tecnología y pasión por la educación.
+                    </p>
+                    <div class="social-icons mt-4">
+                        <a href="#" class="social-icon" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-icon" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
-
-                <div class="col-lg-2 col-md-6 mb-3">
-                    <h6>Enlaces</h6>
-                    <a href="index.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-home me-1"></i> Inicio</a>
-                    <a href="./html/cursos-venta.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-book me-1"></i> Cursos</a>
-                    <a href="./html/blog.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-blog me-1"></i> Blog</a>
-                    <a href="./html/contact.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-envelope me-1"></i> Contacto</a>
+                <!-- Plataforma -->
+                <div class="col-6 col-lg-2">
+                    <p class="footer-title">Plataforma</p>
+                    <a href="index.html" class="footer-link">Inicio</a>
+                    <a href="./html/cursos-venta.html" class="footer-link">Cursos</a>
+                    <a href="./html/blog.html" class="footer-link">Blog</a>
+                    <a href="./html/contact.html" class="footer-link">Contacto</a>
                 </div>
-
-                <div class="col-lg-2 col-md-6 mb-3">
-                    <h6>Mi cuenta</h6>
-                    <a href="student-courses.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-graduation-cap me-1"></i> Mis Cursos</a>
-                    <a href="calendar.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-calendar me-1"></i> Calendario</a>
-                    <a href="schedule.html" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-clock me-1"></i> Horario</a>
-                    <a href="#" class="text-light d-block mb-1" style="font-size: 0.85rem;"><i class="fas fa-user me-1"></i> Perfil</a>
+                <!-- Cuenta -->
+                <div class="col-6 col-lg-2">
+                    <p class="footer-title">Mi cuenta</p>
+                    <a href="./html/courses.html" class="footer-link">Mis Cursos</a>
+                    <a href="./html/calendar.html" class="footer-link">Calendario</a>
+                    <a href="./html/schedule.html" class="footer-link">Horario</a>
+                    <a href="./html/profile.html" class="footer-link">Perfil</a>
                 </div>
-
-                <div class="col-lg-4 mb-3">
-                    <h6>Contacto</h6>
-                    <p class="mb-1" style="font-size: 0.85rem;"><i class="fas fa-map-marker-alt me-1"></i> 123 Calle Universidad, Ciudad</p>
-                    <p class="mb-1" style="font-size: 0.85rem;"><i class="fas fa-phone me-1"></i> +1 234 567 8900</p>
-                    <p class="mb-1" style="font-size: 0.85rem;"><i class="fas fa-envelope me-1"></i> luminalearning.mx@gmail.com</p>
-                    <a href="./html/contact.html" class="btn btn-outline-light btn-sm mt-1">Contáctanos</a>
+                <!-- Contacto -->
+                <div class="col-lg-4">
+                    <p class="footer-title">Contacto</p>
+                    <p style="color:rgba(255,255,255,.55);font-size:.88rem;line-height:1.8;margin:0;">
+                        <i class="fas fa-map-marker-alt me-2" style="color:var(--color-accent)"></i>
+                        123 Calle Universidad, Ciudad<br>
+                        <i class="fas fa-phone me-2" style="color:var(--color-accent)"></i>
+                        +1 234 567 8900<br>
+                        <i class="fas fa-envelope me-2" style="color:var(--color-accent)"></i>
+                        luminalearning.mx@gmail.com
+                    </p>
+                    <a href="./html/contact.html" class="btn btn-outline-light btn-sm mt-4">
+                        Contáctanos
+                    </a>
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-12 text-center">
-                    <p class="mb-0" style="font-size: 0.8rem;">© <span id="currentYear"></span> Lumina Learning. Todos los derechos reservados.</p>
-                </div>
+            <div class="copyright">
+                © <span id="currentYear"></span> Lumina Learning. Todos los derechos reservados.
+                Desarrollado con <i class="fas fa-heart text-danger mx-1"></i> para la educación.
             </div>
         </div>
     </footer>
@@ -640,24 +714,65 @@
                     avatarIcon = 'fa-user-graduate';
                 }
                 
-                // Actualizar elementos del navbar
+                // Actualizar trigger del dropdown (nombre + ícono del botón)
                 document.getElementById('userName').textContent = userName;
-                document.getElementById('userNameLarge').textContent = userName;
-                document.getElementById('userEmail').textContent = userEmail;
                 document.getElementById('userAvatarIcon').className = `fas ${avatarIcon} me-1`;
-                document.getElementById('userAvatarLargeIcon').className = `fas ${avatarIcon} me-2`;
-                
-                // Mostrar/ocultar botón "Mis Cursos" según el rol
-                const misCursosContainer = document.getElementById('misCursosContainer');
-                if (userRole === 'student' || userEmail === 'estudiante@gmail.com') {
-                    misCursosContainer.style.display = 'block';
-                    console.log('Mostrando botón Mis Cursos para estudiante:', userEmail);
+
+                // Construir items del menú según el rol
+                let roleMenuItems = '';
+                if (userRole === 'admin') {
+                    roleMenuItems = `
+                        <li><a class="dropdown-item" href="/html/monitoreo.html">
+                            <i class="fas fa-chart-line me-2" style="color:#6366f1"></i> Panel de Monitoreo</a></li>
+                        <li><a class="dropdown-item" href="/html/admin.html">
+                            <i class="fas fa-users-cog me-2" style="color:#6366f1"></i> Gestión del Sistema</a></li>
+                        <li><a class="dropdown-item" href="./html/profile.html">
+                            <i class="fas fa-user me-2"></i> Mi Perfil</a></li>
+                        <li><a class="dropdown-item" href="./html/settings.html">
+                            <i class="fas fa-cog me-2"></i> Configuración</a></li>`;
+                } else if (userRole === 'teacher') {
+                    roleMenuItems = `
+                        <li><a class="dropdown-item" href="/html/docente.html">
+                            <i class="fas fa-chalkboard-teacher me-2" style="color:#6366f1"></i> Panel Docente</a></li>
+                        <li><a class="dropdown-item" href="./html/profile.html">
+                            <i class="fas fa-user me-2"></i> Mi Perfil</a></li>
+                        <li><a class="dropdown-item" href="./html/settings.html">
+                            <i class="fas fa-cog me-2"></i> Configuración</a></li>`;
                 } else {
-                    misCursosContainer.style.display = 'none';
-                    console.log('Ocultando botón Mis Cursos para rol:', userRole);
+                    roleMenuItems = `
+                        <li><a class="dropdown-item" href="./html/profile.html">
+                            <i class="fas fa-user me-2"></i> Mi Perfil</a></li>
+                        <li><a class="dropdown-item" href="./html/settings.html">
+                            <i class="fas fa-cog me-2"></i> Configuración</a></li>
+                        <li><a class="dropdown-item" href="./html/courses.html">
+                            <i class="fas fa-graduation-cap me-2"></i> Mis Cursos</a></li>`;
                 }
-                
-                // Inicializar carrito para usuarios autenticados
+
+                // Reconstruir el dropdown completo con header + items de rol + logout
+                document.getElementById('userDropdownMenu').innerHTML = `
+                    <li>
+                        <div class="dropdown-header">
+                            <div class="d-flex align-items-center">
+                                <i class="fas ${avatarIcon} me-2" style="font-size:32px"></i>
+                                <div>
+                                    <div class="fw-bold">${userName}</div>
+                                    <small class="text-muted">${userEmail}</small>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    ${roleMenuItems}
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item text-danger" href="#" onclick="handleLogout()">
+                        <i class="fas fa-sign-out-alt me-2"></i> Cerrar sesión</a></li>
+                `;
+
+                // "Mis Cursos" en la barra de nav solo para estudiantes
+                document.getElementById('misCursosContainer').style.display =
+                    userRole === 'student' ? 'block' : 'none';
+
+                // Inicializar carrito
                 if (window.cart && typeof window.cart.init === 'function') {
                     window.cart.init();
                 }
