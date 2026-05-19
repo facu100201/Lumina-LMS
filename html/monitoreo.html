@@ -638,24 +638,24 @@
       <!-- KPIs -->
       <div class="kpi-grid">
         <div class="kpi-card">
-          <div class="kpi-label"><i class="fas fa-users"></i>Usuarios Totales</div>
-          <div class="kpi-value">1,247</div>
-          <span class="kpi-trend up"><i class="fas fa-arrow-up"></i>+12% este mes</span>
+          <div class="kpi-label"><i class="fas fa-users"></i>Usuarios Activos</div>
+          <div class="kpi-value" id="kpiUsers">—</div>
+          <span class="kpi-trend up" id="kpiUsersEnroll"><i class="fas fa-arrow-up"></i>cargando…</span>
         </div>
         <div class="kpi-card">
-          <div class="kpi-label"><i class="fas fa-book"></i>Cursos Activos</div>
-          <div class="kpi-value">89</div>
-          <span class="kpi-trend up"><i class="fas fa-arrow-up"></i>+5 nuevos</span>
+          <div class="kpi-label"><i class="fas fa-book"></i>Cursos Publicados</div>
+          <div class="kpi-value" id="kpiCourses">—</div>
+          <span class="kpi-trend up" id="kpiEnroll"><i class="fas fa-graduation-cap"></i>cargando…</span>
         </div>
         <div class="kpi-card">
-          <div class="kpi-label"><i class="fas fa-dollar-sign"></i>Ingresos</div>
-          <div class="kpi-value">$45,230</div>
-          <span class="kpi-trend up"><i class="fas fa-arrow-up"></i>+8% este mes</span>
+          <div class="kpi-label"><i class="fas fa-terminal"></i>Req. / 2s</div>
+          <div class="kpi-value" id="kpiReq">—</div>
+          <span class="kpi-trend warn" id="kpiClients"><i class="fas fa-circle"></i>clientes SSE: —</span>
         </div>
         <div class="kpi-card">
           <div class="kpi-label"><i class="fas fa-server"></i>Uptime</div>
-          <div class="kpi-value">99.9%</div>
-          <span class="kpi-trend warn"><i class="fas fa-circle"></i>Últimos 30 días</span>
+          <div class="kpi-value" id="kpiUptime">—</div>
+          <span class="kpi-trend warn"><i class="fas fa-circle"></i>proceso activo</span>
         </div>
       </div>
 
@@ -702,44 +702,12 @@
           <div class="card">
             <div class="card-header">
               <span class="card-title"><i class="fas fa-history"></i>Actividad reciente</span>
-              <button class="card-action">Ver todo</button>
+              <span id="liveIndicator" style="font-size:.68rem;color:#4ade80;font-weight:600;display:flex;align-items:center;gap:5px;">
+                <span style="width:6px;height:6px;border-radius:50%;background:#4ade80;display:inline-block;animation:pulse-dot 2s infinite"></span>EN VIVO
+              </span>
             </div>
-            <div class="card-body">
-              <div class="activity-item">
-                <div class="activity-dot blue"><i class="fas fa-user-plus"></i></div>
-                <div>
-                  <div class="activity-text">Nuevo usuario registrado — <strong>carlos.mendez@uni.mx</strong></div>
-                  <div class="activity-time">Hace 3 minutos</div>
-                </div>
-              </div>
-              <div class="activity-item">
-                <div class="activity-dot green"><i class="fas fa-graduation-cap"></i></div>
-                <div>
-                  <div class="activity-text">Curso <strong>"Python para Data Science"</strong> publicado</div>
-                  <div class="activity-time">Hace 18 minutos</div>
-                </div>
-              </div>
-              <div class="activity-item">
-                <div class="activity-dot yellow"><i class="fas fa-exclamation"></i></div>
-                <div>
-                  <div class="activity-text">Servidor de email reportando latencia elevada</div>
-                  <div class="activity-time">Hace 42 minutos</div>
-                </div>
-              </div>
-              <div class="activity-item">
-                <div class="activity-dot blue"><i class="fas fa-shopping-cart"></i></div>
-                <div>
-                  <div class="activity-text">Compra completada — <strong>Desarrollo Web Full Stack</strong> · $349</div>
-                  <div class="activity-time">Hace 1 hora</div>
-                </div>
-              </div>
-              <div class="activity-item">
-                <div class="activity-dot green"><i class="fas fa-certificate"></i></div>
-                <div>
-                  <div class="activity-text"><strong>Juan Pérez</strong> obtuvo certificado en Marketing Digital</div>
-                  <div class="activity-time">Hace 2 horas</div>
-                </div>
-              </div>
+            <div class="card-body" id="activityFeed">
+              <div style="padding:20px;text-align:center;color:var(--text-3);font-size:13px">Cargando actividad…</div>
             </div>
           </div>
 
@@ -817,38 +785,36 @@
               <div class="usage-item">
                 <div class="usage-header">
                   <span class="usage-label">CPU</span>
-                  <span class="usage-val">23%</span>
+                  <span class="usage-val" id="cpuVal">—%</span>
                 </div>
                 <div class="usage-track">
-                  <div class="usage-fill ok" style="width:23%"></div>
+                  <div class="usage-fill ok" id="cpuBar" style="width:0%"></div>
                 </div>
               </div>
               <div class="usage-item">
                 <div class="usage-header">
                   <span class="usage-label">Memoria RAM</span>
-                  <span class="usage-val">61%</span>
+                  <span class="usage-val" id="memVal">—%</span>
                 </div>
                 <div class="usage-track">
-                  <div class="usage-fill warn" style="width:61%"></div>
+                  <div class="usage-fill warn" id="memBar" style="width:0%"></div>
                 </div>
               </div>
               <div class="usage-item">
                 <div class="usage-header">
-                  <span class="usage-label">Almacenamiento</span>
-                  <span class="usage-val">38%</span>
+                  <span class="usage-label">RAM usada / total</span>
+                  <span class="usage-val" id="memAbsVal">— / — MB</span>
                 </div>
                 <div class="usage-track">
-                  <div class="usage-fill ok" style="width:38%"></div>
+                  <div class="usage-fill ok" id="memAbsBar" style="width:0%"></div>
                 </div>
               </div>
               <div class="usage-item">
                 <div class="usage-header">
-                  <span class="usage-label">Ancho de banda</span>
-                  <span class="usage-val">12%</span>
+                  <span class="usage-label">Node.js</span>
+                  <span class="usage-val" id="nodeVersion">—</span>
                 </div>
-                <div class="usage-track">
-                  <div class="usage-fill" style="width:12%"></div>
-                </div>
+                <div class="usage-track" style="background:transparent"></div>
               </div>
             </div>
           </div>
@@ -866,13 +832,124 @@
   </div><!-- /main -->
 
   <script>
+    // ── Logout ──────────────────────────────────────────────────────────
     async function handleLogout() {
+      if (window._sseSource) window._sseSource.close();
       localStorage.removeItem('user');
       localStorage.removeItem('authToken');
       localStorage.removeItem('rememberMe');
       try { await fetch('/auth/logout', { method: 'POST', credentials: 'include' }); } catch(_) {}
       window.location.href = '/html/login.html';
     }
+
+    // ── Helpers ──────────────────────────────────────────────────────────
+    function fmt(n)    { return n?.toLocaleString('es-MX') ?? '—'; }
+    function fmtUp(s)  {
+      const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
+      if (h > 0) return `${h}h ${m}m`;
+      if (m > 0) return `${m}m ${sec}s`;
+      return `${sec}s`;
+    }
+
+    const ACTION_ICONS = {
+      login:    { icon: 'fa-sign-in-alt',   cls: 'blue'  },
+      enroll:   { icon: 'fa-graduation-cap', cls: 'green' },
+      complete: { icon: 'fa-certificate',    cls: 'green' },
+      progress: { icon: 'fa-chart-line',     cls: 'yellow'},
+    };
+    function actionIcon(action) {
+      const d = ACTION_ICONS[action] || { icon: 'fa-circle', cls: 'blue' };
+      return `<div class="activity-dot ${d.cls}"><i class="fas ${d.icon}"></i></div>`;
+    }
+
+    function timeAgo(isoStr) {
+      const diff = (Date.now() - new Date(isoStr)) / 1000;
+      if (diff < 60)   return 'Hace unos segundos';
+      if (diff < 3600) return `Hace ${Math.floor(diff/60)} min`;
+      if (diff < 86400)return `Hace ${Math.floor(diff/3600)} h`;
+      return new Date(isoStr).toLocaleDateString('es-MX');
+    }
+
+    // ── Apply snapshot to DOM ────────────────────────────────────────────
+    function applySnapshot(d) {
+      // KPIs
+      setText('kpiUsers',   fmt(d.totalUsers));
+      setText('kpiCourses', fmt(d.totalCourses));
+      setText('kpiReq',     fmt(d.reqLast2s));
+      setText('kpiUptime',  fmtUp(d.uptime));
+      setText('kpiEnroll',  `${fmt(d.totalEnroll)} inscripciones`);
+      setText('kpiClients', `Clientes SSE: ${d.activeClients}`);
+
+      // Resources
+      const cpuColor = d.cpu > 80 ? 'danger' : d.cpu > 50 ? 'warn' : 'ok';
+      setBar('cpuBar', d.cpu, cpuColor);
+      setText('cpuVal', `${d.cpu}%`);
+
+      setBar('memBar', d.memPct, d.memPct > 80 ? 'danger' : 'warn');
+      setText('memVal', `${d.memPct}%`);
+
+      setBar('memAbsBar', d.memPct, 'ok');
+      setText('memAbsVal', `${fmt(d.memUsedMB)} / ${fmt(d.memTotalMB)} MB`);
+
+      setText('nodeVersion', d.nodeVersion || '—');
+
+      // Activity feed
+      const feed = document.getElementById('activityFeed');
+      if (feed && Array.isArray(d.recentActivity) && d.recentActivity.length) {
+        feed.innerHTML = d.recentActivity.map(a => `
+          <div class="activity-item">
+            ${actionIcon(a.action)}
+            <div>
+              <div class="activity-text"><strong>${a.user_name || 'Sistema'}</strong> — ${a.detail || a.action}</div>
+              <div class="activity-time">${timeAgo(a.created_at)}</div>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    function setText(id, val) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = val;
+    }
+    function setBar(id, pct, cls) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.style.width = `${Math.min(100, pct)}%`;
+      el.className = `usage-fill ${cls}`;
+    }
+
+    // ── SSE connection ───────────────────────────────────────────────────
+    function connectSSE() {
+      const es = new EventSource('/api/metrics/stream', { withCredentials: true });
+      window._sseSource = es;
+
+      es.onmessage = (e) => {
+        try { applySnapshot(JSON.parse(e.data)); } catch(_) {}
+      };
+
+      es.onerror = () => {
+        // Auto-reconnect handled by browser; update indicator
+        const ind = document.getElementById('liveIndicator');
+        if (ind) ind.style.color = '#f59e0b';
+      };
+
+      es.onopen = () => {
+        const ind = document.getElementById('liveIndicator');
+        if (ind) ind.style.color = '#4ade80';
+      };
+    }
+
+    // ── Init ─────────────────────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Load initial snapshot immediately (no waiting for first SSE tick)
+      try {
+        const r = await fetch('/api/metrics/snapshot', { credentials: 'include' });
+        if (r.ok) applySnapshot(await r.json());
+      } catch(_) {}
+
+      connectSSE();
+    });
   </script>
 </body>
 </html>

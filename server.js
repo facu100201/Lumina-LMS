@@ -7,8 +7,9 @@ const path = require('path');
 require('dotenv').config();
 
 const authRoutes = require('./routes/auth');
-const apiRoutes = require('./routes/api');
+const apiRoutes  = require('./routes/api');
 const chatbotRoutes = require('./routes/chatbot');
+const { router: metricsRouter, trackRequest } = require('./routes/metrics');
 
 const app = express();
 const PORT = process.env.PORT || 5501;
@@ -108,10 +109,14 @@ const requireAuth = (req, res, next) => {
   res.redirect('/html/login.html');
 };
 
+// Request counter for metrics (before rate limiters so every req is counted)
+app.use(trackRequest);
+
 // API routes
-app.use('/auth', authLimiter, authRoutes);
-app.use('/api',  apiLimiter,  apiRoutes);
-app.use('/chatbot', apiLimiter, chatbotRoutes);
+app.use('/auth',        authLimiter, authRoutes);
+app.use('/api',         apiLimiter,  apiRoutes);
+app.use('/api/metrics', apiLimiter,  metricsRouter);
+app.use('/chatbot',     apiLimiter,  chatbotRoutes);
 
 // Root dashboard — protected
 app.get('/', requireAuth, (req, res) => {
