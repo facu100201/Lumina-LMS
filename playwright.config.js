@@ -18,7 +18,7 @@ module.exports = defineConfig({
   webServer: {
     command: 'node server.js',
     url: 'http://localhost:5501/html/login.html',
-    reuseExistingServer: false,
+    reuseExistingServer: true,
     timeout: 15_000
   }
 });
